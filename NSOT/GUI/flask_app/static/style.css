@@ -1,0 +1,240 @@
+:root {
+    --bg-color-light: white;
+    --text-color-light: black;
+    --tile-bg-light: #f0f0f0;
+    --tile-text-light: #333;
+
+    --bg-color-dark: black;
+    --text-color-dark: white;
+    --tile-bg-dark: #333;
+    --tile-text-dark: #f0f0f0;
+    --navbar-bg-light: #f8f9fa;
+    --navbar-bg-dark: #333;
+}
+
+/* Light Mode */
+body.light-mode {
+    background-color: var(--bg-color-light);
+    color: var(--text-color-light);
+}
+
+body.dark-mode {
+    background-color: var(--bg-color-dark);
+    color: var(--text-color-dark);
+}
+
+/* Tiles styling */
+.tile-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 50px 0;
+}
+
+.tile {
+    width: 200px;
+    height: 100px;
+    background-color: var(--tile-bg-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px #aaa;
+    color: var(--tile-text-light);
+}
+
+body.dark-mode .tile {
+    background-color: var(--tile-bg-dark);
+    color: var(--tile-text-dark);
+}
+
+.tile a {
+    text-decoration: none;
+    color: inherit;
+    font-size: 18px;
+}
+
+/* Navbar styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--navbar-bg-light);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+body.dark-mode .navbar {
+    background-color: var(--navbar-bg-dark);
+}
+
+/* Navbar logo */
+.navbar-logo a {
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--text-color-light);
+}
+
+body.dark-mode .navbar-logo a {
+    color: var(--text-color-dark);
+}
+
+/* Navbar links */
+.navbar-links {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.navbar-links li {
+    margin-right: 20px;
+}
+
+.navbar-links li a {
+    text-decoration: none;
+    font-size: 16px;
+    color: var(--text-color-light);
+    padding: 10px;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode .navbar-links li a {
+    color: var(--text-color-dark);
+}
+
+.navbar-links li a:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+body.dark-mode .navbar-links li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Search bar */
+.navbar-search input {
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.navbar-search button {
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+}
+
+/* Dark mode for search bar */
+body.dark-mode .navbar-search input {
+    background-color: #333;
+    color: white;
+    border: 1px solid #555;
+}
+
+body.dark-mode .navbar-search button {
+    background-color: #444;
+    color: white;
+    border: 1px solid #555;
+}
+
+/* Profile dropdown */
+.profile-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: var(--text-color-light);
+}
+
+body.dark-mode .profile-button {
+    color: var(--text-color-dark);
+}
+
+.profile-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: var(--bg-color-light);
+    min-width: 150px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+body.dark-mode .profile-content {
+    background-color: var(--bg-color-dark);
+}
+
+.profile-content a {
+    color: var(--text-color-light);
+    padding: 10px;
+    text-decoration: none;
+    display: block;
+}
+
+body.dark-mode .profile-content a {
+    color: var(--text-color-dark);
+}
+
+.profile-content a:hover {
+    background-color: #ddd;
+}
+
+.profile-dropdown:hover .profile-content {
+    display: block;
+}
+
+/* Hamburger icon */
+.hamburger-icon {
+    font-size: 30px;
+}
+
+/* Dark Mode Toggle Button */
+#darkModeToggle {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    position: relative;
+    right: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar-links {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .navbar-links li {
+        margin-bottom: 10px;
+    }
+}
+
+/* Center the homepage header */
+.homepage-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40vh;
+    text-align: center;
+}
+
+.homepage-header h1 {
+    font-size: 36px;
+    font-weight: bold;
+    margin: 0;
+}

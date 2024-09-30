@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="homepage-header">
+    <h1>RCN Network Management</h1>
+</div>
+<div class="tile-container">
+    <div class="tile">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    </div>
+    <div class="tile">
+        <a href="{{ url_for('add_device') }}">Add Device</a>
+    </div>
+    <div class="tile">
+        <a href="{{ url_for('configure_device') }}">Configure Device</a>
+    </div>
+    <div class="tile">
+        <a href="{{ url_for('tools') }}">Tools</a>
+    </div>
+</div>
+{% endblock %}

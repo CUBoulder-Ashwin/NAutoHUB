@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Tools</h2>
+<p>Ping Test</p>
+<form method="POST">
+    <label for="ip">Enter IP to Ping:</label>
+    <input type="text" name="ip" required>
+    <button type="submit">Ping</button>
+</form>
+{% endblock %}

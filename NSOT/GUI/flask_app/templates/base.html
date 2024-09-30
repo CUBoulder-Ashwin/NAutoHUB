@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        // Function to toggle dark mode and store preference in localStorage
+        function toggleDarkMode() {
+            const body = document.body;
+            const currentMode = body.classList.contains('dark-mode') ? 'dark-mode' : 'light-mode';
+            body.classList.toggle('dark-mode');
+            body.classList.toggle('light-mode');
+
+            // Swap emoji
+            const toggleButton = document.getElementById('darkModeToggle');
+            if (currentMode === 'light-mode') {
+                toggleButton.textContent = '🌞'; // Switch to Sun in dark mode
+                localStorage.setItem('theme', 'dark-mode');
+            } else {
+                toggleButton.textContent = '🌜'; // Switch to Moon in light mode
+                localStorage.setItem('theme', 'light-mode');
+            }
+        }
+
+        // Function to apply saved theme on page load
+        window.onload = function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.body.classList.add(savedTheme);
+                const toggleButton = document.getElementById('darkModeToggle');
+                if (savedTheme === 'dark-mode') {
+                    toggleButton.textContent = '🌞'; // Set to Sun if dark mode is active
+                } else {
+                    toggleButton.textContent = '🌜'; // Set to Moon if light mode is active
+                }
+            } else {
+                document.body.classList.add('light-mode'); // Default to light mode
+            }
+        };
+    </script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-logo">
+            <a href="{{ url_for('homepage') }}">RoboControl</a>
+        </div>
+        <ul class="navbar-links">
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('add_device') }}">Add Device</a></li>
+            <li><a href="{{ url_for('configure_device') }}">Configure Device</a></li>
+            <li><a href="{{ url_for('tools') }}">Tools</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+        </ul>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input type="text" placeholder="Search.." />
+        </div>
+
+        <!-- Dark Mode Toggle -->
+        <button id="darkModeToggle" onclick="toggleDarkMode()">🌜</button>
+
+        <!-- Profile Dropdown (hamburger icon) -->
+        <div class="profile-dropdown">
+            <button class="profile-button">
+                <span class="hamburger-icon">&#x2630;</span>
+            </button>
+            <div class="profile-content">
+                <a href="#">Account</a>
+                <a href="#">Settings</a>
+                <a href="#">Login/Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

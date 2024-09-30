@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Network Dashboard</h2>
+
+<!-- Container for the iframe -->
+<iframe
+  id="dashboardIframe"
+  src="https://snapshots.raintank.io/dashboard/snapshot/k5wYv5OlhT4utqVUPBr0iJeJIHKVYjCf"
+  width="100%"
+  height="800px"
+  frameborder="0"
+></iframe>
+
+<!-- Bookmark-style navigation for the dashboards -->
+<div id="dashboardBookmarks" style="margin-top: 20px; display: flex; justify-content: center;">
+  <button onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/k5wYv5OlhT4utqVUPBr0iJeJIHKVYjCf')">CPU Utilization</button>
+  <button onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/AERfDDEPwfADL5p0AZwbyh9f22tkjkeX')">Interface Status</button>
+  <button onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/pqrstuvwxyz')">MTU</button>
+  <button onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/pqrstuvwxyz')">CPU Temperature</button>
+
+</div>
+
+<!-- JavaScript to change the iframe src -->
+<script>
+  function changeDashboard(url) {
+    document.getElementById('dashboardIframe').src = url;
+  }
+</script>
+{% endblock %}
