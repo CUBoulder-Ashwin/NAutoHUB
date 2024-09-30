@@ -1,0 +1,41 @@
+username: admin
+password: admin
+insecure: true
+
+targets:
+  R1:
+    address: 10.0.101.1:6030
+  R2:
+    address: 10.0.101.2:6030
+  R3:
+    address: 10.0.101.3:6030
+  R4:
+    address: 10.0.101.4:6030
+  S1:
+    address: 10.0.100.1:6030
+  S2:
+    address: 10.0.100.2:6030
+  S3:
+    address: 10.0.101.5:6030
+  S4:
+    address: 10.0.101.6:6030
+
+subscriptions:
+  interface-counters:
+    paths:
+      - /interfaces/interface/state/oper-status
+      - /components/component/cpu
+    sample-interval: 10s
+
+outputs:
+  influxdb:
+    type: influxdb
+    address: http://localhost:8086
+    org: networking
+    bucket: lab2-stream
+    token: j1ddEOAQzVuURStmvT_TbWRCl0PL3L581HExsRlWvgOOqQXbIPRl-HkFlYMfb8lO7s8j1aNiKgmRN_-6LF9Cgw==
+    override-timestamps: false
+    timestamp-precision: s
+    health-check-period: 30s
+    debug: true
+
