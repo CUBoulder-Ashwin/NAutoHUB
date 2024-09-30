@@ -5,7 +5,7 @@
 <!-- Container for the iframe -->
 <iframe
   id="grafanaFrame"
-  src="http://localhost:3000/d/cdymh31mwgjr4a/cpu-utilization-average?orgId=1&refresh=5s"
+  src="https://snapshots.raintank.io/dashboard/snapshot/rZRM9lHwdzy9dP6hLvH5QSOv7ahnN10k"
   width="100%"
   height="800px"
   frameborder="0"
@@ -13,7 +13,7 @@
 
 <!-- Bookmark-style navigation for the dashboards -->
 <div id="dashboardBookmarks" style="margin-top: 20px; display: flex; justify-content: center;">
-  <button onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/k5wYv5OlhT4utqVUPBr0iJeJIHKVYjCf')">CPU Utilization</button>
+  <button onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/rZRM9lHwdzy9dP6hLvH5QSOv7ahnN10k')">CPU Utilization</button>
   <button onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/AERfDDEPwfADL5p0AZwbyh9f22tkjkeX')">Interface Status</button>
   <button onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/pqrstuvwxyz')">MTU</button>
   <button onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/pqrstuvwxyz')">CPU Temperature</button>
@@ -23,7 +23,7 @@
 <!-- JavaScript to change the iframe src -->
 <script>
   function changeDashboard(url) {
-    document.getElementById('dashboardIframe').src = url;
+    document.getElementById('grafanaFrame').src = url;
   }
 </script>
 {% endblock %}
