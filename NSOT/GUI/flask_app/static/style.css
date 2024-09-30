@@ -1,3 +1,4 @@
+/* General root styles */
 :root {
     --bg-color-light: white;
     --text-color-light: black;
@@ -21,36 +22,6 @@ body.light-mode {
 body.dark-mode {
     background-color: var(--bg-color-dark);
     color: var(--text-color-dark);
-}
-
-/* Tiles styling */
-.tile-container {
-    display: flex;
-    justify-content: space-around;
-    margin: 50px 0;
-}
-
-.tile {
-    width: 200px;
-    height: 100px;
-    background-color: var(--tile-bg-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #ccc;
-    box-shadow: 2px 2px 5px #aaa;
-    color: var(--tile-text-light);
-}
-
-body.dark-mode .tile {
-    background-color: var(--tile-bg-dark);
-    color: var(--tile-text-dark);
-}
-
-.tile a {
-    text-decoration: none;
-    color: inherit;
-    font-size: 18px;
 }
 
 /* Navbar styling */
@@ -237,4 +208,145 @@ body.dark-mode .profile-content a {
     font-size: 36px;
     font-weight: bold;
     margin: 0;
+}
+
+/* Tile break to force new row */
+.tile-break {
+    flex-basis: 100%; /* Ensures this element takes full width and causes a new row */
+    height: 0; /* No height required, just a placeholder */
+}
+
+/* Tool Tiles Styling */
+.tile-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 50px 0;
+}
+
+/* Row 1 Tiles (Ping Test, Golden Config, Show Running Configs) */
+.tool-tile {
+    width: 600px; /* Increased width */
+    min-height: 500px; /* Increased height to accommodate larger output */
+    background-color: var(--tile-bg-light);
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px #aaa;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 20px;
+    padding: 20px;
+    transition: min-height 0.3s ease;
+}
+
+/* Row 2 Tile (Difference Comparator) */
+.tool-tile-large {
+    width: calc(100% - 40px); /* Full width minus margins */
+    min-height: 600px; /* Increased height */
+    margin-top: 20px;
+}
+
+body.dark-mode .tool-tile {
+    background-color: var(--tile-bg-dark);
+    color: var(--tile-text-dark);
+}
+
+.comparator-boxes {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.comparator-boxes textarea {
+    width: 45%;
+    height: 200px; /* Increased height for more space */
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.tool-tile h3 {
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+.tool-tile p {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.tool-tile form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tool-tile form input,
+.tool-tile form textarea {
+    margin-bottom: 10px;
+    padding: 10px;
+    width: 80%;
+}
+
+.tool-tile button {
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode .tool-tile button {
+    background-color: #444;
+    color: white;
+    border: 1px solid #555;
+}
+
+.tool-tile button:hover {
+    background-color: #ddd;
+}
+
+body.dark-mode .tool-tile button:hover {
+    background-color: #555;
+}
+
+
+.tool-tile .output {
+    margin-top: 20px;
+    word-wrap: break-word;
+    width: 100%;
+}
+
+body.dark-mode .tool-tile {
+    background-color: var(--tile-bg-dark);
+    color: var(--tile-text-dark);
+}
+
+/* Homepage tiles */
+.tile {
+    width: 300px; /* Increased width */
+    height: 150px; /* Increased height */
+    background-color: var(--tile-bg-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px #aaa;
+    margin: 20px;
+}
+
+body.dark-mode .tile {
+    background-color: var(--tile-bg-dark);
+    color: var(--tile-text-dark);
+}
+
+.tile a {
+    text-decoration: none;
+    color: #333;
+    font-size: 20px;
+}
+
+body.dark-mode .tile a {
+    color: var(--tile-text-dark);
 }

@@ -1,10 +1,93 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Tools</h2>
-<p>Ping Test</p>
-<form method="POST">
-    <label for="ip">Enter IP to Ping:</label>
-    <input type="text" name="ip" required>
-    <button type="submit">Ping</button>
-</form>
+
+<div class="tile-container">
+    <!-- Ping Test Tile -->
+    <div class="tool-tile">
+        <h3>Ping Test</h3>
+        <form method="POST">
+            <label for="source">Enter Source IP:</label>
+            <input type="text" name="source" required><br>
+
+            <label for="destination">Enter Destination IP:</label>
+            <input type="text" name="destination" required><br>
+
+            <label for="username">SSH Username (for remote ping):</label>
+            <input type="text" name="username" placeholder="root"><br>
+
+            <label for="password">SSH Password (for remote ping):</label>
+            <input type="password" name="password"><br>
+            <button type="submit">Ping</button>
+        </form>
+
+        <!-- Display result under Ping Test -->
+        {% if result %}
+        <div class="output">
+            {{ result|safe }}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Golden Config Generator Tile -->
+    <div class="tool-tile">
+        <h3>Golden Config Generator</h3>
+        <form method="POST">
+            <label for="device">Enter Device Name:</label>
+            <input type="text" name="device" id="device-name" required><br>
+
+            <label for="ip">Enter IP Address:</label>
+            <input type="text" name="ip" id="device-ip" required><br>
+
+            <label for="toggle">Select All Devices:</label>
+            <input type="checkbox" id="select-all" onclick="toggleInputFields()"><br>
+
+            <button type="submit">Generate Config</button>
+        </form>
+    </div>
+
+    <!-- Show Running Configs Tile -->
+    <div class="tool-tile">
+        <h3>Show Running Configs</h3>
+        <form method="POST">
+            <label for="device">Enter Device Name:</label>
+            <input type="text" name="device" required><br>
+
+            <label for="ip">Enter IP Address:</label>
+            <input type="text" name="ip" required><br>
+
+            <button type="submit">Show Configs</button>
+        </form>
+    </div>
+    
+    <!-- Force row break before the large tile -->
+    <div class="tile-break"></div>
+
+    <!-- Difference Comparator Tile (Bigger Tile on Second Row) -->
+    <div class="tool-tile tool-tile-large">
+        <h3>Difference Comparator</h3>
+        <p>Paste two sets of configurations to compare:</p>
+        <div class="comparator-boxes">
+            <textarea name="config1" placeholder="Paste first config here"></textarea>
+            <textarea name="config2" placeholder="Paste second config here"></textarea>
+        </div>
+        <button type="submit">Compare</button>
+    </div>
+</div>
+
+<script>
+    function toggleInputFields() {
+        const selectAll = document.getElementById('select-all');
+        const deviceName = document.getElementById('device-name');
+        const deviceIp = document.getElementById('device-ip');
+        if (selectAll.checked) {
+            deviceName.disabled = true;
+            deviceIp.disabled = true;
+        } else {
+            deviceName.disabled = false;
+            deviceIp.disabled = false;
+        }
+    }
+</script>
+
 {% endblock %}

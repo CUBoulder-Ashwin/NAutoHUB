@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
+from ping import ping_local, ping_remote  # Import the ping functions
 
 app = Flask(__name__)
 
@@ -29,9 +30,29 @@ def configure_device():
         return redirect(url_for('homepage'))
     return render_template("configure_device.html")
 
-@app.route("/tools")
+@app.route("/tools", methods=["GET", "POST"])
 def tools():
-    return render_template("tools.html")
+    result = None
+    if request.method == "POST":
+        source = request.form["source"]
+        destination = request.form["destination"]
+        
+        # If source is localhost, use local ping
+        if source == "localhost":
+            success, output = ping_local(destination)
+        else:
+            # For remote ping, add SSH username and password to the form
+            username = request.form.get('username', 'root')  # Default to root
+            password = request.form.get('password', 'password')  # Default password
+            success, output = ping_remote(source, destination, username, password)
+        
+        # Format the output with green for success and red for failure
+        if success:
+            result = f'<span style="color:green;">Ping successful!</span><br><pre>{output}</pre>'
+        else:
+            result = f'<span style="color:red;">Ping failed.</span><br><pre>{output}</pre>'
+
+    return render_template("tools.html", result=result)
 
 # New routes for About and Contact pages
 @app.route("/about")
