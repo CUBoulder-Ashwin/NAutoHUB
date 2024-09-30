@@ -1,5 +1,19 @@
+import os
+import sys
 from flask import Flask, render_template, request, redirect, url_for
-from ping import ping_local, ping_remote  # Import the ping functions
+
+# Get the current directory of this script
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Go up two levels and into the 'python-files' directory
+python_files_dir = os.path.join(current_dir, '..', '..', 'python-files')
+
+# Add 'python-files' to the system path
+sys.path.append(os.path.abspath(python_files_dir))
+
+# Import your custom modules from 'python-files'
+from ping import ping_local, ping_remote
+from goldenConfig import generate_configs
 
 app = Flask(__name__)
 
@@ -32,27 +46,43 @@ def configure_device():
 
 @app.route("/tools", methods=["GET", "POST"])
 def tools():
-    result = None
-    if request.method == "POST":
+    ping_result = None
+    config_result = None
+
+    # Handling Ping Test
+    if request.method == "POST" and "source" in request.form and "destination" in request.form:
         source = request.form["source"]
         destination = request.form["destination"]
         
-        # If source is localhost, use local ping
         if source == "localhost":
             success, output = ping_local(destination)
         else:
-            # For remote ping, add SSH username and password to the form
-            username = request.form.get('username', 'root')  # Default to root
-            password = request.form.get('password', 'password')  # Default password
+            username = request.form.get('username', 'root')
+            password = request.form.get('password', 'password')
             success, output = ping_remote(source, destination, username, password)
-        
-        # Format the output with green for success and red for failure
-        if success:
-            result = f'<span style="color:green;">Ping successful!</span><br><pre>{output}</pre>'
-        else:
-            result = f'<span style="color:red;">Ping failed.</span><br><pre>{output}</pre>'
 
-    return render_template("tools.html", result=result)
+        if success:
+            ping_result = f'<span style="color:green;">Ping successful!</span><br><pre>{output}</pre>'
+        else:
+            ping_result = f'<span style="color:red;">Ping failed.</span><br><pre>{output}</pre>'
+
+    # Handling Golden Config Generator
+    if request.method == "POST" and ("device" in request.form or "select_all" in request.form):
+        select_all = request.form.get('select_all', 'off')
+        hostname = request.form.get("device")
+
+        if select_all == 'on':
+            filenames = generate_configs(select_all=True)
+        elif hostname:
+            filenames = generate_configs(select_all=False, hostname=hostname)
+
+        if filenames:
+            config_result = f"<h3>Generated Config Files:</h3><ul>"
+            for file in filenames:
+                config_result += f"<li>{file}</li>"
+            config_result += "</ul>"
+
+    return render_template("tools.html", ping_result=ping_result, config_result=config_result)
 
 # New routes for About and Contact pages
 @app.route("/about")

@@ -22,9 +22,9 @@
         </form>
 
         <!-- Display result under Ping Test -->
-        {% if result %}
+        {% if ping_result %}
         <div class="output">
-            {{ result|safe }}
+            {{ ping_result|safe }}
         </div>
         {% endif %}
     </div>
@@ -34,17 +34,21 @@
         <h3>Golden Config Generator</h3>
         <form method="POST">
             <label for="device">Enter Device Name:</label>
-            <input type="text" name="device" id="device-name" required><br>
+            <input type="text" name="device" id="device-name"><br>
 
-            <label for="ip">Enter IP Address:</label>
-            <input type="text" name="ip" id="device-ip" required><br>
-
-            <label for="toggle">Select All Devices:</label>
-            <input type="checkbox" id="select-all" onclick="toggleInputFields()"><br>
+            <label for="toggle">Select All Devices from IPAM:</label>
+            <input type="checkbox" id="select-all" name="select_all" onclick="toggleInputFields()"><br>
 
             <button type="submit">Generate Config</button>
         </form>
+        <!-- Display result under Golden Config Generator -->
+        {% if config_result %}
+        <div class="output">
+            {{ config_result|safe }}
+        </div>
+        {% endif %}
     </div>
+
 
     <!-- Show Running Configs Tile -->
     <div class="tool-tile">
