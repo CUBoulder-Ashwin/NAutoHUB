@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}OSPF{% endblock %}
+
+{% block content %}
+<div style="padding-top: 50px;text-align: center; color: steelblue;">
+    <h1>OSPF Configuration</h1>
+</div>
+  <div class="form-container" >
+    <form action="/ospf" method="post">
+      <div class="form-row">
+          <text>Enter device name:</text>
+          <input 
+          type="text" 
+          placeholder="Device name" 
+          name="device"
+          />
+        </div>
+      <div class="form-row">
+          <text>OSPF Process ID:</text>
+          <input 
+          type="text" 
+          placeholder="Process ID" 
+          name="PID"
+          />
+      </div>
+      <div class="form-row">
+          <text>OSPF Area ID:</text>
+          <input  
+          type="text" 
+          placeholder="Area ID" 
+          name="AID"
+          />
+      </div>
+      <div class="form-row">
+        <text>Loopback IP:</text>
+        <input  
+        type="text" 
+        placeholder="Loopback" 
+        name="LIP"
+        />
+      </div>
+      <div class="form-row">
+        <text>Cost:</text>
+        <input  
+        type="text" 
+        placeholder="Cost" 
+        name="cost"
+        />
+      </div>
+
+    <div class="button-container">
+        <input type="hidden" name="submit" value="no" id="submit">
+        <button type="submit" class="btn btn-secondary" onclick="toggleSubmit()">Save</button>
+
+      <input type="hidden" name="prepare" value="no" id="prep">
+      <button type="submit" class="btn btn-secondary" onclick="togglePrepare()">prepare</button>
+
+        <form action="/ospf" method="post">
+            <input type="hidden" name="action" value="show_db" id="action-input">
+            <button class="btn btn-secondary" onclick="toggleDb()" id="btn-click">Show DB</button>
+    </div>
+ </div>
+
+ {%if dev%}
+ <div style="padding-top: 50px;padding-left: 450px">
+    <h2>Device OSPF Data</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Device</th>
+          <th>OSPF Process ID</th>
+          <th>OSPF Access ID</th>
+          <th>Loopback IP</th>
+          <th>Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in dev %}
+          <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.device }}</td>
+            <td>{{ user.processId }}</td>
+            <td>{{ user.areaId }}</td>
+            <td>{{ user.loopback }}</td>
+            <td>{{ user.cost }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+{% endif %}
+
+ <script>
+
+    function toggleSubmit(){
+        var sav = document.getElementById("submit")
+        var pre = document.getElementById("prep")
+        pre.value = "no"
+        if (sav.value == "no"){
+            sav.value = "save"
+        }
+    }
+
+    function togglePrepare(){
+        var sav = document.getElementById("submit")
+        var pre = document.getElementById("prep")
+        sav.value = "no"
+        if (pre.value == "no"){
+            pre.value = "prepare"
+        }
+    }
+
+    function toggleDb(){
+        var btn = document.getElementById("btn-click");
+        var act = document.getElementById("action-input")
+        var sav = document.getElementById("submit")
+        var pre = document.getElementById("prep")
+
+        sav.value = "no"
+        pre.value = "no"
+        if (btn.textContent == "Show DB"){
+            btn.textContent = "Hide DB"
+            act.value = "hide_db"
+            localStorage.setItem('btnText', 'Hide DB');
+        }
+        else{
+            btn.textContent = "Show DB"
+            act.value = "show_db"
+            localStorage.setItem('btnText', 'Show DB');
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+  var savedText = localStorage.getItem('btnText');
+  if (savedText) {
+    document.getElementById("btn-click").textContent = savedText;
+    document.getElementById("action-input").value = savedText === 'Show DB' ? 'show_db' : 'hide_db';
+  }
+});
+ </script>
+{% endblock %}
+

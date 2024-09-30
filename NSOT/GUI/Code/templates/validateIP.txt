@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Validate IP{% endblock %}
+
+{% block content %}
+
+    <div style="padding-top: 100px; padding-left: 500px;" >
+      <h2>IPv4 Address validation</h2>
+      <form action="/validIp" method="post">
+        <div class="form-row">
+            <text>Enter IPv4 address:</text>
+            <input 
+            type="text" 
+            placeholder="IP address" 
+            name="IPv4"
+            />
+            <div class="button-container">
+                    <button type="submit" class="btn btn-secondary">Check</button>
+            </div>
+                        
+        </div>
+            <div style="padding-top: 10px;">
+                {% if val == "valid" %}
+                <h3 id="valid" style="color: green;">IP Address is valid !!</h3>
+                {% elif val == "invalid" %}
+                <h3 id="valid" style="color: red;">IP Address is invalid !!</h3>
+                {% endif %}
+            </div>
+
+        </form>
+    </div>
+    <script>
+        // Function to hide an element by id
+        function hideElementAfterTimeout(elementId, timeout) {
+            setTimeout(function() {
+                var element = document.getElementById(elementId);
+                if (element) {
+                    element.style.display = 'none';
+                }
+            }, timeout);
+        }
+        hideElementAfterTimeout('valid', 4000); 
+
+    </script>
+
+{% endblock %}
