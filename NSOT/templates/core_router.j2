@@ -1,0 +1,62 @@
+! Command: show running-config
+{% if vlans %}
+{% for vlan in vlans %}
+vlan {{ vlan.id }}
+   name {{ vlan.name }}
+{% endfor %}
+{% endif %}
+!
+{% if interfaces %}
+{% for interface in interfaces %}
+interface {{ interface.type }}{{ interface.number }}
+   {% if interface.switchport %}
+   switchport mode trunk
+   no switchport
+   {% else %}
+   {% if interface.ip and interface.mask %}
+   ip address {{ interface.ip }}/{{ interface.mask }}
+   {% endif %}
+   {% endif %}
+{% endfor %}
+{% endif %}
+!
+{% if ospf %}
+router ospf {{ ospf.process_id }}
+   {% for network in ospf.networks %}
+   {% if network.ip and network.area %}
+   network {{ network.ip }} area {{ network.area }}
+   {% endif %}
+   {% endfor %}
+   {% if ospf.redistribute_bgp %}
+   redistribute bgp
+   {% endif %}
+{% endif %}
+!
+{% if bgp %}
+router bgp {{ bgp.asn }}
+   {% if bgp.router_id %}
+   router-id {{ bgp.router_id }}
+   {% endif %}
+   {% for family in bgp.address_families %}
+   address-family {{ family.type }}
+      {% for neighbor in family.neighbors %}
+      {% if neighbor.ip and neighbor.remote_as %}
+      neighbor {{ neighbor.ip }} remote-as {{ neighbor.remote_as }}
+      {% endif %}
+      {% endfor %}
+      {% for network in family.networks %}
+      {% if network %}
+      network {{ network }}
+      {% endif %}
+      {% endfor %}
+      {% if family.redistribute_connected %}
+      redistribute connected
+      {% endif %}
+      {% if family.redistribute_ospfv3 %}
+      redistribute ospfv3
+      {% endif %}
+   exit-address-family
+   {% endfor %}
+{% endif %}
+!
+end

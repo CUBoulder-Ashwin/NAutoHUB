@@ -1,0 +1,51 @@
+! Command: show running-config
+
+{% if dhcp_subnets %}
+dhcp server
+   {% for subnet in dhcp_subnets %}
+   subnet {{ subnet.network }}
+      range {{ subnet.range_start }} {{ subnet.range_end }}
+      default-gateway {{ subnet.default_gateway }}
+   {% endfor %}
+{% endif %}
+!
+{% if vlans %}
+{% for vlan in vlans %}
+vlan {{ vlan.id }}
+   name {{ vlan.name }}
+{% endfor %}
+{% endif %}
+!
+{% if interfaces %}
+{% for interface in interfaces %}
+interface {{ interface.type }}{{ interface.number }}
+   {% if interface.switchport %}
+   switchport mode trunk
+   no switchport
+   {% else %}
+   ip address {{ interface.ip }} {{ interface.mask }}
+   {% endif %}
+{% endfor %}
+{% endif %}
+!
+{% if ospf %}
+router ospf {{ ospf.process_id }}
+   {% for network in ospf.networks %}
+   network {{ network.ip }} area {{ network.area }}
+   {% endfor %}
+   {% if ospf.redistribute_rip %}
+   redistribute rip
+   {% endif %}
+{% endif %}
+!
+{% if rip %}
+router rip
+   {% for network in rip.networks %}
+   network {{ network }}
+   {% endfor %}
+   {% if rip.redistribute_ospf %}
+   redistribute ospf
+   {% endif %}
+   no shutdown
+{% endif %}
+end
