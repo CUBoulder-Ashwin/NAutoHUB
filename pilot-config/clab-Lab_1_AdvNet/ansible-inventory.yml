@@ -12,32 +12,32 @@ all:
         ansible_password: admin
       hosts:
         clab-Lab_1_AdvNet-R1:
-          ansible_host: 172.20.20.5
+          ansible_host: 172.20.20.14
         clab-Lab_1_AdvNet-R2:
           ansible_host: 172.20.20.3
         clab-Lab_1_AdvNet-R3:
-          ansible_host: 172.20.20.6
+          ansible_host: 172.20.20.13
         clab-Lab_1_AdvNet-R4:
-          ansible_host: 172.20.20.12
+          ansible_host: 172.20.20.10
         clab-Lab_1_AdvNet-R5:
-          ansible_host: 172.20.20.8
-        clab-Lab_1_AdvNet-S1:
-          ansible_host: 172.20.20.14
-        clab-Lab_1_AdvNet-S2:
-          ansible_host: 172.20.20.7
-        clab-Lab_1_AdvNet-S3:
-          ansible_host: 172.20.20.11
-        clab-Lab_1_AdvNet-S4:
           ansible_host: 172.20.20.9
+        clab-Lab_1_AdvNet-S1:
+          ansible_host: 172.20.20.7
+        clab-Lab_1_AdvNet-S2:
+          ansible_host: 172.20.20.8
+        clab-Lab_1_AdvNet-S3:
+          ansible_host: 172.20.20.6
+        clab-Lab_1_AdvNet-S4:
+          ansible_host: 172.20.20.15
     linux:
       hosts:
         clab-Lab_1_AdvNet-H1:
-          ansible_host: 172.20.20.13
+          ansible_host: 172.20.20.5
         clab-Lab_1_AdvNet-H2:
-          ansible_host: 172.20.20.15
-        clab-Lab_1_AdvNet-H3:
-          ansible_host: 172.20.20.10
-        clab-Lab_1_AdvNet-H4:
           ansible_host: 172.20.20.2
-        clab-Lab_1_AdvNet-Web_Server:
+        clab-Lab_1_AdvNet-H3:
           ansible_host: 172.20.20.4
+        clab-Lab_1_AdvNet-H4:
+          ansible_host: 172.20.20.12
+        clab-Lab_1_AdvNet-Web_Server:
+          ansible_host: 172.20.20.11
