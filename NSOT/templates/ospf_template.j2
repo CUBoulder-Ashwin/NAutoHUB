@@ -1,0 +1,12 @@
+router ospf {{ ospf_process }}
+ {% if ospf_networks -%}
+ {% for network in ospf_networks -%}
+   network {{ network.ip }} {{ network.wildcard }} area {{ network.area }}
+ {% endfor -%}
+ {% endif -%}
+ {% if ospf_redistribute and ospf_redistribute.bgp -%}
+   redistribute bgp {{ ospf_redistribute.as_number }} subnets
+ {% endif %}
+ {% if ospf_redistribute and ospf_redistribute.connected -%}
+   redistribute connected
+ {% endif %}

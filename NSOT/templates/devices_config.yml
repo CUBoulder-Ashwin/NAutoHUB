@@ -1,0 +1,7 @@
+devices:
+- hostname: R100
+  device_type: core
+  clear_config: 'no'
+  vlans:
+  - id: '10'
+    name: Ashwin
