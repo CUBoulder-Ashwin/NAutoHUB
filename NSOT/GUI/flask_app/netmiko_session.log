@@ -1,4 +1,4 @@
-Last login: Tue Oct  1 02:08:31 2024 from 10.0.101.200
+Last login: Tue Oct  1 05:49:37 2024 from 10.0.101.200
 
 
 R1>
@@ -12,14 +12,14 @@ R1>enable
 R1#
 R1#ping 10.0.100.1
 PING 10.0.100.1 (10.0.100.1) 72(100) bytes of data.
-80 bytes from 10.0.100.1: icmp_seq=1 ttl=64 time=3.95 ms
-80 bytes from 10.0.100.1: icmp_seq=2 ttl=64 time=0.645 ms
-80 bytes from 10.0.100.1: icmp_seq=3 ttl=64 time=0.882 ms
-80 bytes from 10.0.100.1: icmp_seq=4 ttl=64 time=0.992 ms
-80 bytes from 10.0.100.1: icmp_seq=5 ttl=64 time=1.91 ms
+80 bytes from 10.0.100.1: icmp_seq=1 ttl=64 time=1.06 ms
+80 bytes from 10.0.100.1: icmp_seq=2 ttl=64 time=0.573 ms
+80 bytes from 10.0.100.1: icmp_seq=3 ttl=64 time=0.562 ms
+80 bytes from 10.0.100.1: icmp_seq=4 ttl=64 time=0.562 ms
+80 bytes from 10.0.100.1: icmp_seq=5 ttl=64 time=0.806 ms
 
 --- 10.0.100.1 ping statistics ---
-5 packets transmitted, 5 received, 0% packet loss, time 15ms
-rtt min/avg/max/mdev = 0.645/1.674/3.945/1.213 ms, ipg/ewma 3.779/2.798 ms
+5 packets transmitted, 5 received, 0% packet loss, time 5ms
+rtt min/avg/max/mdev = 0.562/0.713/1.064/0.198 ms, ipg/ewma 1.223/0.887 ms
 R1#
 R1#exit

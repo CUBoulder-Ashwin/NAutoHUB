@@ -72,12 +72,34 @@
                 <input type="text" name="ospf_process_id[]" placeholder="Process ID"><br>
                 <label for="ospf_network">Network:</label>
                 <input type="text" name="ospf_network[]" placeholder="Network"><br>
+                <label for="ospf_wildcard">Wildcard Mask:</label>
+                <input type="text" name="ospf_wildcard[]" placeholder="Wildcard Mask"><br>
                 <label for="ospf_area">Area:</label>
                 <input type="text" name="ospf_area[]" placeholder="Area"><br>
                 <input type="checkbox" name="ospf_redistribute_connected[]" value="yes"> Redistribute Connected
                 <input type="checkbox" name="ospf_redistribute_bgp[]" value="yes"> Redistribute BGP<br>
             </div>
             <button type="button" onclick="addOspf()">+ Add OSPF Process</button>
+
+            <h3>RIP</h3>
+            <div id="rip" class="inline-group">
+                <label for="rip_version">RIP Version:</label>
+                <input type="text" name="rip_version[]" placeholder="RIP Version (e.g., 2)"><br>
+
+                <label for="rip_network">Network:</label>
+                <input type="text" name="rip_network[]" placeholder="Network (e.g., 192.168.1.0)"><br>
+
+                <input type="checkbox" id="rip_redistribute" name="rip_redistribute" value="yes" onchange="toggleRipRedistribution()"> Redistribute BGP<br>
+
+                <div id="rip_redistribute_fields" style="display: none;">
+                    <label for="rip_bgp_as">BGP AS for Redistribution:</label>
+                    <input type="text" name="rip_bgp_as[]" placeholder="BGP AS"><br>
+
+                    <label for="rip_bgp_metric">Redistribution Metric:</label>
+                    <input type="text" name="rip_bgp_metric[]" placeholder="Metric (e.g., 1)"><br>
+                </div>
+            </div>
+            <button type="button" onclick="addRip()">+ Add RIP Network</button>
 
             <h3>VLANs</h3>
             <div id="vlans" class="inline-group">
@@ -129,7 +151,9 @@
                 <label for="ospf_process_id">OSPF Process ID:</label>
                 <input type="text" name="ospf_process_id[]" placeholder="Process ID"><br>
                 <label for="ospf_network">Network:</label>
-                <input type="text" name="ospf_network[]" placeholder="Network with subnet mask"><br>
+                <input type="text" name="ospf_network[]" placeholder="Network"><br>
+                <label for="ospf_wildcard">Wildcard Mask:</label>
+                <input type="text" name="ospf_wildcard[]" placeholder="Wildcard Mask"><br>
                 <label for="ospf_area">Area:</label>
                 <input type="text" name="ospf_area[]" placeholder="Area"><br>
                 <input type="checkbox" name="ospf_redistribute_connected[]" value="yes"> Redistribute Connected
@@ -143,7 +167,7 @@
                 <input type="text" name="bgp_asn[]" placeholder="BGP ASN"><br>
                 
                 <label for="bgp_network">BGP Network:</label>
-                <input type="text" name="bgp_network[]" placeholder="BGP Network with subnet mask"><br>
+                <input type="text" name="bgp_network[]" placeholder="BGP Network (e.g., 10.0.0.0/24)"><br>
                 
                 <label for="bgp_neighbor">BGP Neighbor:</label>
                 <input type="text" name="bgp_neighbor[]" placeholder="Neighbor IP"><br>
@@ -207,6 +231,8 @@
             <input type="text" name="ospf_process_id[]" placeholder="Process ID"><br>
             <label for="ospf_network">Network:</label>
             <input type="text" name="ospf_network[]" placeholder="Network"><br>
+            <label for="ospf_wildcard">Wildcard Mask:</label>
+            <input type="text" name="ospf_wildcard[]" placeholder="Wildcard Mask"><br>
             <label for="ospf_area">Area:</label>
             <input type="text" name="ospf_area[]" placeholder="Area"><br>
             <input type="checkbox" name="ospf_redistribute_connected[]" value="yes"> Redistribute Connected
@@ -216,14 +242,61 @@
         document.getElementById("ospf").appendChild(div);
     }
 
+    function toggleRipRedistribution() {
+        const redistributeCheckbox = document.getElementById("rip_redistribute");
+        const redistributeFields = document.getElementById("rip_redistribute_fields");
+        
+        if (redistributeCheckbox.checked) {
+            redistributeFields.style.display = "block";
+        } else {
+            redistributeFields.style.display = "none";
+        }
+    }
+
+    function addRip() {
+        let div = document.createElement("div");
+        div.className = 'inline-group';
+        div.innerHTML = `
+            <label for="rip_version">RIP Version:</label>
+            <input type="text" name="rip_version[]" placeholder="RIP Version"><br>
+            
+            <label for="rip_network">Network:</label>
+            <input type="text" name="rip_network[]" placeholder="Network"><br>
+
+            <input type="checkbox" name="rip_redistribute[]" value="yes" onclick="toggleRipRedistribution(this)"> Redistribute BGP<br>
+
+            <div class="rip_redistribute_fields" style="display: none;">
+                <label for="rip_bgp_as">BGP AS:</label>
+                <input type="text" name="rip_bgp_as[]" placeholder="BGP AS"><br>
+
+                <label for="rip_bgp_metric">Metric:</label>
+                <input type="text" name="rip_bgp_metric[]" placeholder="Metric"><br>
+            </div>
+
+            <button type="button" class="delete-btn" onclick="deleteRow(this)">X</button>
+        `;
+
+        document.getElementById("rip").appendChild(div);
+
+    // Attach event to the checkbox for each dynamically created RIP entry
+    const redistributeCheckbox = div.querySelector("input[name='rip_redistribute[]']");
+    const redistributeFields = div.querySelector(".rip_redistribute_fields");
+
+    redistributeCheckbox.addEventListener("click", function() {
+        if (redistributeCheckbox.checked) {
+            redistributeFields.style.display = "block";
+        } else {
+            redistributeFields.style.display = "none";
+        }
+    });
+}
+
     function addBgp() {
         let div = document.createElement("div");
         div.className = 'inline-group';
         div.innerHTML = `
-            <label for="bgp_asn">BGP ASN:</label>
-            <input type="text" name="bgp_asn[]" placeholder="BGP ASN"><br>
             <label for="bgp_network">BGP Network:</label>
-            <input type="text" name="bgp_network[]" placeholder="BGP Network"><br>
+            <input type="text" name="bgp_network[]" placeholder="BGP Network (e.g., 10.0.0.0/24)"><br>
             <label for="bgp_neighbor">BGP Neighbor:</label>
             <input type="text" name="bgp_neighbor[]" placeholder="Neighbor IP"><br>
             <label for="bgp_remote_as">Remote AS:</label>
