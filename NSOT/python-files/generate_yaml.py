@@ -10,6 +10,7 @@ def clean_empty(data):
     return data
 
 def create_yaml_from_form(device_data, filename="devices_config.yml"):
+    """Creates a YAML file from the provided device data."""
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     yaml_file_path = os.path.join(base_dir, 'templates', filename)
     
@@ -21,15 +22,14 @@ def create_yaml_from_form(device_data, filename="devices_config.yml"):
         yaml.dump(cleaned_data, yaml_file, default_flow_style=False, sort_keys=False)
     print(f"YAML file saved: {yaml_file_path}")
 
-# Function to build device data with only non-empty fields
 def build_device_data(device_id, router_type, interfaces, ospf=None, bgp=None, vlans=None, rip=None, dhcp=None):
+    """Builds device data structure with only non-empty fields."""
     device_data = {
         'hostname': device_id,
         'device_type': router_type,
         'clear_config': 'no'
     }
 
-    # Only add interfaces if there are valid entries
     if interfaces:
         device_data['interfaces'] = [
             {
@@ -40,12 +40,13 @@ def build_device_data(device_id, router_type, interfaces, ospf=None, bgp=None, v
             for iface in interfaces if iface.get('ip') and iface.get('mask')
         ]
 
-    # Add VLANs if there are any valid entries
     if vlans:
-        device_data['vlans'] = [{'id': vlan['id'], 'name': vlan['name']} for vlan in vlans if vlan.get('id') and vlan.get('name')]
+        device_data['vlans'] = [
+            {'id': vlan['id'], 'name': vlan['name']}
+            for vlan in vlans if vlan.get('id') and vlan.get('name')
+        ]
 
-    # Add OSPF details if present and valid
-    if ospf and ospf.get('process_ids') and ospf['process_ids'][0]:  # Check if process_id exists and is non-empty
+    if ospf and ospf.get('process_ids') and ospf['process_ids'][0]:
         device_data['ospf'] = {
             'process_id': ospf['process_ids'][0],
             'networks': [
@@ -62,14 +63,15 @@ def build_device_data(device_id, router_type, interfaces, ospf=None, bgp=None, v
             }
         }
 
-    # Add BGP details if present and valid
-    if bgp and bgp.get('asn'):  # Check if as_number exists and is non-empty
+    if bgp and bgp.get('asn'):
         device_data['bgp'] = {
             'as_number': bgp['asn'],
             'address_families': [
                 {
                     'type': family['type'],
-                    'networks': [{'ip': net['ip']} for net in family.get('networks', []) if net.get('ip')]
+                    'networks': [
+                        {'ip': net['ip']} for net in family.get('networks', []) if net.get('ip')
+                    ]
                 }
                 for family in bgp.get('address_families', []) if family.get('type')
             ],
@@ -79,7 +81,6 @@ def build_device_data(device_id, router_type, interfaces, ospf=None, bgp=None, v
             ]
         }
 
-    # Add RIP configuration if present and valid
     if rip and rip.get('version') and any(rip.get('networks')):
         device_data['rip'] = {
             'version': rip['version'],
@@ -92,7 +93,7 @@ def build_device_data(device_id, router_type, interfaces, ospf=None, bgp=None, v
 
     return device_data
 
-
 def create_yaml_from_form_data(device_id, router_type, interfaces, ospf=None, bgp=None, vlans=None, rip=None, dhcp=None):
+    """Generates YAML configuration file from form data."""
     device_data = build_device_data(device_id, router_type, interfaces, ospf, bgp, vlans, rip, dhcp)
     create_yaml_from_form(device_data)

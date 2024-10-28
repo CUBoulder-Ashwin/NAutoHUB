@@ -4,36 +4,36 @@ import time
 from datetime import datetime
 from easysnmp import Session
 
-# Get the directory of the current script file
+# Define the base directory paths
 script_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Dynamically locate the IPAM directory and CSV files
 ipam_dir = os.path.join(script_dir, '..', 'IPAM')
 hosts_csv = os.path.join(ipam_dir, 'hosts.csv')
 output_csv = os.path.join(ipam_dir, 'ipam_output.csv')
 check_interval = 300  # in seconds (5 minutes)
 
-# SNMP OIDs for interface name and IP
+# SNMP OIDs for interface name, IP, and subnet
 OID_IF_NAME = '1.3.6.1.2.1.2.2.1.2'
 OID_IF_IP = '1.3.6.1.2.1.4.20.1.1'
 OID_IF_SUBNET = '1.3.6.1.2.1.4.20.1.3'
 
 def collect_device_info(device_name, management_ip):
-    community = 'public'  # Change to your SNMP community string
+    """Collects interface information from a device using SNMP."""
+    community = 'public'  # Set the appropriate SNMP community string
     device_info = []
-    
+
     try:
-        # Create an SNMP session
+        # Establish an SNMP session
         session = Session(hostname=management_ip, community=community, version=2)
-        
-        # Fetch interface name, IP address, and subnet mask using SNMP
+
+        # Fetch data using SNMP
         interface_names = session.walk(OID_IF_NAME)
         ip_addresses = session.walk(OID_IF_IP)
         subnet_masks = session.walk(OID_IF_SUBNET)
-        
-        # Add timestamp for each entry
+
+        # Generate timestamp
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        
+
+        # Compile device information
         for i in range(len(interface_names)):
             device_info.append({
                 'Timestamp': timestamp,
@@ -48,6 +48,7 @@ def collect_device_info(device_name, management_ip):
     return device_info
 
 def main():
+    """Main function to repeatedly collect and store device info."""
     while True:
         with open(hosts_csv, mode='r') as infile, open(output_csv, mode='w', newline='') as outfile:
             reader = csv.DictReader(infile)

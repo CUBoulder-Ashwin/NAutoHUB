@@ -32,12 +32,14 @@ def generate_device_configs():
     )
 
     # Load templates
-    bgp_template = env.get_template('bgp_template.j2')
-    ospf_template = env.get_template('ospf_template.j2')
-    rip_template = env.get_template('rip_template.j2')
-    dhcp_template = env.get_template('dhcp_template.j2')
-    interfaces_template = env.get_template('interfaces_template.j2')
-    vlan_template = env.get_template('vlan_template.j2')
+    templates = {
+        "bgp": env.get_template('bgp_template.j2'),
+        "ospf": env.get_template('ospf_template.j2'),
+        "rip": env.get_template('rip_template.j2'),
+        "dhcp": env.get_template('dhcp_template.j2'),
+        "interfaces": env.get_template('interfaces_template.j2'),
+        "vlan": env.get_template('vlan_template.j2')
+    }
 
     for device in devices:
         config = ""
@@ -49,7 +51,7 @@ def generate_device_configs():
                 for iface in device['interfaces']:
                     config += f"no interface {iface['name']}\n"
             else:
-                config += interfaces_template.render(interfaces=device['interfaces'])
+                config += templates["interfaces"].render(interfaces=device['interfaces'])
 
         # Generate VLAN configuration
         if 'vlans' in device:
@@ -57,7 +59,7 @@ def generate_device_configs():
                 for vlan in device['vlans']:
                     config += f"no vlan {vlan['id']}\n"
             else:
-                config += vlan_template.render(vlans=device['vlans'])
+                config += templates["vlan"].render(vlans=device['vlans'])
 
         # Generate OSPF config
         if 'ospf' in device:
@@ -65,7 +67,7 @@ def generate_device_configs():
             if clear_config == 'yes':
                 config += f"no router ospf {ospf_data['process_id']}\n"
             else:
-                config += ospf_template.render(
+                config += templates["ospf"].render(
                     ospf_process=ospf_data['process_id'],
                     ospf_networks=ospf_data.get('networks', [])
                 )
@@ -76,15 +78,15 @@ def generate_device_configs():
             if clear_config == 'yes':
                 config += f"no router bgp {bgp_data['as_number']}\n"
             else:
-                config += bgp_template.render(
+                bgp_networks = [
+                    {'ip': net['ip']} for family in bgp_data.get('address_families', [])
+                    for net in family.get('networks', [])
+                ]
+                config += templates["bgp"].render(
                     bgp_as=bgp_data['as_number'],
-                    bgp_networks=[
-                        {'ip': net['ip']} for family in bgp_data.get('address_families', [])
-                        for net in family.get('networks', [])
-                    ],
+                    bgp_networks=bgp_networks,
                     bgp_neighbors=bgp_data.get('neighbors', [])
                 )
-
 
         # Generate RIP configuration if present
         if 'rip' in device:
@@ -92,9 +94,9 @@ def generate_device_configs():
             if clear_config == 'yes':
                 config += "no router rip\n"
             else:
-                config += rip_template.render(
+                config += templates["rip"].render(
                     rip_version=rip_data.get('version'),
-                    rip_networks=[net for net in rip_data.get('networks', [])],
+                    rip_networks=rip_data.get('networks', []),
                     bgp_redistribute=rip_data['redistribute'].get('bgp', False),
                     bgp_as=device.get('bgp', {}).get('as_number', ''),
                     bgp_metric=rip_data['redistribute'].get('metric', 1)
@@ -106,7 +108,7 @@ def generate_device_configs():
             if clear_config == 'yes':
                 config += "no service dhcp\n"
             else:
-                config += dhcp_template.render(dhcp=dhcp_data)
+                config += templates["dhcp"].render(dhcp=dhcp_data)
 
         # Write the config
         filename = os.path.join(config_dir, f"{device['hostname']}.cfg")
