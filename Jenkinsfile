@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        VIRTUAL_ENV = "/NSOT/GUI/flask_app/venv"
-        PIP_CACHE_DIR = "${HOME}/.cache/pip"  // Optional: to reuse pip cache for faster installs
+        VIRTUAL_ENV = "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/venv"
+        PIP_CACHE_DIR = "${HOME}/.cache/pip" // Optional: reuse pip cache
     }
 
     stages {
@@ -16,9 +16,9 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Activate the existing virtual environment and install dependencies
+                    // Use '.' instead of 'source' to activate the virtual environment
                     sh """
-                    source ${VIRTUAL_ENV}/bin/activate
+                    . ${VIRTUAL_ENV}/bin/activate
                     pip install -r requirements.txt
                     """
                 }
@@ -30,7 +30,7 @@ pipeline {
                 script {
                     // Validate YAML files
                     sh '''
-                    source ${VIRTUAL_ENV}/bin/activate
+                    . ${VIRTUAL_ENV}/bin/activate
                     for file in $(find NSOT/templates -name "*.yml" -o -name "*.yaml"); do
                         echo "Validating $file"
                         python3 -c "import yaml, sys; yaml.safe_load(open('$file'))" || exit 1
@@ -44,7 +44,7 @@ pipeline {
             steps {
                 sh '''
                 echo "Linting Python files in NSOT/python-files"
-                source ${VIRTUAL_ENV}/bin/activate
+                . ${VIRTUAL_ENV}/bin/activate
                 flake8 NSOT/python-files/ || exit 1
                 '''
             }
