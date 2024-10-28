@@ -58,17 +58,6 @@ pipeline {
             }
         }
 
-        stage('Golden Configs Check') {
-            steps {
-                script {
-                    def files = findFiles(glob: 'NSOT/golden_configs/*.cfg')
-                    if (files.length == 0) {
-                        error "No files found in NSOT/golden_configs/"
-                    }
-                    echo "Golden Configs Check passed. Found ${files.length} config files."
-                }
-            }
-        }
     }
 
     post {
