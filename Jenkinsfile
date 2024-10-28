@@ -13,18 +13,6 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                script {
-                    // Install dependencies using the requirements.txt in the root directory
-                    sh """
-                    . ${VIRTUAL_ENV}/bin/activate
-                    pip install -r requirements.txt
-                    """
-                }
-            }
-        }
-
         stage('YAML Validation') {
             steps {
                 script {
