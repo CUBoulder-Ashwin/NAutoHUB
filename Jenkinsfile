@@ -13,6 +13,18 @@ pipeline {
             }
         }
 
+        stage('Auto-fix PEP8') {
+            steps {
+                script {
+                    // Run autopep8 to fix PEP8 issues automatically
+                    sh """
+                    . ${VIRTUAL_ENV}/bin/activate
+                    autopep8 --in-place --aggressive --aggressive NSOT/python-files/*.py
+                    """
+                }
+            }
+        }
+
         stage('YAML Validation') {
             steps {
                 script {
@@ -41,6 +53,7 @@ pipeline {
         stage('Configuration Checks') {
             steps {
                 script {
+                    // Check for required configuration file
                     if (!fileExists('NSOT/configs/config.cfg')) {
                         error "Configuration file missing: NSOT/configs/config.cfg"
                     }
@@ -51,6 +64,7 @@ pipeline {
         stage('Golden Configs Check') {
             steps {
                 script {
+                    // Verify presence of files in golden_configs
                     def files = findFiles(glob: 'NSOT/golden_configs/*.cfg')
                     if (files.length == 0) {
                         error "No files found in NSOT/golden_configs/"
