@@ -16,7 +16,7 @@ pipeline {
                     sh '''
                     for file in $(find NSOT/templates -name "*.yml" -o -name "*.yaml"); do
                         echo "Validating $file"
-                        python -c "import yaml, sys; yaml.safe_load(open('$file'))" || exit 1
+                        python3 -c "import yaml, sys; yaml.safe_load(open('$file'))" || exit 1
                     done
                     '''
                 }
