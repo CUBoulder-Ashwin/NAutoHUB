@@ -6,6 +6,7 @@ pipeline {
         PIP_CACHE_DIR = "${HOME}/.cache/pip" // Optional: reuse pip cache
     }
 
+    stages {
         stage('Python Linting') {
             steps {
                 script {
@@ -23,7 +24,7 @@ pipeline {
                 }
             }
         }
-    }  
+    }
 
     post {
         always {
@@ -37,3 +38,4 @@ pipeline {
             echo 'Pipeline failed. Check the console output for details.'
         }
     }
+}
