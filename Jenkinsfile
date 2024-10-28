@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        // Define any environment variables here if needed
-    }
-
     stages {
         stage('Checkout Code') {
             steps {
