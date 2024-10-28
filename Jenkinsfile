@@ -16,6 +16,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
+                    // Install dependencies using the requirements.txt in the root directory
                     sh """
                     . ${VIRTUAL_ENV}/bin/activate
                     pip install -r requirements.txt
@@ -27,6 +28,7 @@ pipeline {
         stage('YAML Validation') {
             steps {
                 script {
+                    // Validate YAML files
                     sh '''
                     . ${VIRTUAL_ENV}/bin/activate
                     for file in $(find NSOT/templates -name "*.yml" -o -name "*.yaml"); do
@@ -41,8 +43,8 @@ pipeline {
         stage('Python Linting') {
             steps {
                 sh '''
-                . ${VIRTUAL_ENV}/bin/activate
                 echo "Linting Python files in NSOT/python-files"
+                . ${VIRTUAL_ENV}/bin/activate
                 flake8 NSOT/python-files/ || exit 1
                 '''
             }
@@ -58,6 +60,17 @@ pipeline {
             }
         }
 
+        stage('Golden Configs Check') {
+            steps {
+                script {
+                    def files = findFiles(glob: 'NSOT/golden_configs/*.cfg')
+                    if (files.length == 0) {
+                        error "No files found in NSOT/golden_configs/"
+                    }
+                    echo "Golden Configs Check passed. Found ${files.length} config files."
+                }
+            }
+        }
     }
 
     post {
