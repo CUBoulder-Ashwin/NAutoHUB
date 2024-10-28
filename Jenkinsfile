@@ -16,7 +16,6 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Use '.' instead of 'source' to activate the virtual environment
                     sh """
                     . ${VIRTUAL_ENV}/bin/activate
                     pip install -r requirements.txt
@@ -28,7 +27,6 @@ pipeline {
         stage('YAML Validation') {
             steps {
                 script {
-                    // Validate YAML files
                     sh '''
                     . ${VIRTUAL_ENV}/bin/activate
                     for file in $(find NSOT/templates -name "*.yml" -o -name "*.yaml"); do
@@ -43,8 +41,8 @@ pipeline {
         stage('Python Linting') {
             steps {
                 sh '''
-                echo "Linting Python files in NSOT/python-files"
                 . ${VIRTUAL_ENV}/bin/activate
+                echo "Linting Python files in NSOT/python-files"
                 flake8 NSOT/python-files/ || exit 1
                 '''
             }
