@@ -34,23 +34,30 @@ pipeline {
         stage('YAML Validation') {
             steps {
                 script {
-                    // Validate YAML files
+                    // Validate the devices_config.yml file
                     def result = sh(
                         script: """
                         . ${VIRTUAL_ENV}/bin/activate
-                        for file in \$(find NSOT/templates -name "*.yml" -o -name "*.yaml"); do
-                            echo "Validating \$file"
-                            python3 -c "import yaml, sys; yaml.safe_load(open('\$file'))" || exit 1
-                        done
+                        yaml_file="NSOT/templates/devices_config.yml"
+                        if [ -f "$yaml_file" ]; then
+                            echo "Validating $yaml_file"
+                            python3 -c "import yaml, sys; yaml.safe_load(open('$yaml_file'))" || exit 1
+                        else
+                            echo "YAML file $yaml_file not found."
+                            exit 1
+                        fi
                         """,
                         returnStatus: true
                     )
                     if (result != 0) {
-                        echo "YAML Validation failed, but proceeding to next stage."
+                        echo "YAML Validation failed for devices_config.yml, but proceeding to next stage."
+                    } else {
+                        echo "YAML Validation for devices_config.yml passed."
                     }
                 }
             }
         }
+
 
         stage('Python Linting') {
             steps {
@@ -73,28 +80,30 @@ pipeline {
         stage('Configuration Checks') {
             steps {
                 script {
-                    if (!fileExists('NSOT/configs/config.cfg')) {
-                        echo "Configuration file missing: NSOT/configs/config.cfg"
-                    } else {
-                        echo "Configuration file check passed."
-                    }
-                }
-            }
-        }
+                    // List of required configuration files
+                    def requiredFiles = ['R1.cfg', 'R2.cfg', 'R3.cfg', 'R4.cfg', 'S1.cfg', 'S2.cfg', 'S3.cfg', 'S4.cfg']
+                    def missingFiles = []
 
-        stage('Golden Configs Check') {
-            steps {
-                script {
-                    // Verify presence of files in golden_configs
-                    def files = findFiles(glob: 'NSOT/golden_configs/*.cfg')
-                    if (files.length == 0) {
-                        echo "No files found in NSOT/golden_configs/"
+                    // Check if each required file exists
+                    requiredFiles.each { file ->
+                        def filePath = "NSOT/configs/${file}"
+                        if (!fileExists(filePath)) {
+                            echo "Configuration file missing: ${filePath}"
+                            missingFiles << file
+                        } else {
+                            echo "Found configuration file: ${filePath}"
+                        }
+                    }
+
+                    // Log error if any files are missing
+                    if (missingFiles) {
+                        echo "The following configuration files are missing: ${missingFiles.join(', ')}"
                     } else {
-                        echo "Golden Configs Check passed. Found ${files.length} config files."
+                        echo "All required configuration files are present."
                     }
                 }
             }
-        }
+        }  
     }
 
     post {
