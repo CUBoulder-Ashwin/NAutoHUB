@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         VIRTUAL_ENV = "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/venv"
-        PIP_CACHE_DIR = "${HOME}/.cache/pip" // Optional: reuse pip cache
+        PIP_CACHE_DIR = "${HOME}/.cache/pip"
     }
 
     stages {
