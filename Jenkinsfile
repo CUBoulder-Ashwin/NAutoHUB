@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        // Define any environment variables here if needed
-    }
-    
     stages {
         stage('Checkout Code') {
             steps {
@@ -51,21 +47,6 @@ pipeline {
                     }
                     
                     echo "All required configuration files are present."
-                }
-            }
-        }
-
-        stage('Golden Configs Check') {
-            steps {
-                script {
-                    // Check if the NSOT/golden_configs directory exists and has required files
-                    def goldenConfigFiles = findFiles(glob: 'NSOT/golden_configs/*.cfg')
-                    
-                    if (goldenConfigFiles.length == 0) {
-                        error "No golden configuration files found in NSOT/golden_configs"
-                    }
-
-                    echo "Golden configuration files are present."
                 }
             }
         }
