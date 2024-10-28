@@ -1,19 +1,36 @@
 pipeline {
     agent any
-    
+
+    environment {
+        VIRTUAL_ENV = "/NSOT/GUI/flask_app/venv"
+        PIP_CACHE_DIR = "${HOME}/.cache/pip"  // Optional: to reuse pip cache for faster installs
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
-                // Checkout code from the repository
                 checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    // Activate the existing virtual environment and install dependencies
+                    sh """
+                    source ${VIRTUAL_ENV}/bin/activate
+                    pip install -r requirements.txt
+                    """
+                }
             }
         }
 
         stage('YAML Validation') {
             steps {
                 script {
-                    // Validate YAML files specifically in the NSOT/templates directory
+                    // Validate YAML files
                     sh '''
+                    source ${VIRTUAL_ENV}/bin/activate
                     for file in $(find NSOT/templates -name "*.yml" -o -name "*.yaml"); do
                         echo "Validating $file"
                         python3 -c "import yaml, sys; yaml.safe_load(open('$file'))" || exit 1
@@ -25,9 +42,9 @@ pipeline {
 
         stage('Python Linting') {
             steps {
-                // Lint Python files specifically in the NSOT/python-files directory
                 sh '''
                 echo "Linting Python files in NSOT/python-files"
+                source ${VIRTUAL_ENV}/bin/activate
                 flake8 NSOT/python-files/ || exit 1
                 '''
             }
@@ -36,17 +53,9 @@ pipeline {
         stage('Configuration Checks') {
             steps {
                 script {
-                    // Check for specific configuration files in the NSOT/configs directory
-                    def configFiles = ['config.cfg'] // Add any other specific filenames if needed
-                    
-                    for (configFile in configFiles) {
-                        def filePath = "NSOT/configs/${configFile}"
-                        if (!fileExists(filePath)) {
-                            error "Configuration file missing: ${filePath}"
-                        }
+                    if (!fileExists('NSOT/configs/config.cfg')) {
+                        error "Configuration file missing: NSOT/configs/config.cfg"
                     }
-                    
-                    echo "All required configuration files are present."
                 }
             }
         }
@@ -54,14 +63,11 @@ pipeline {
         stage('Golden Configs Check') {
             steps {
                 script {
-                    // Check if the NSOT/golden_configs directory exists and has required files
-                    def goldenConfigFiles = findFiles(glob: 'NSOT/golden_configs/*.cfg')
-                    
-                    if (goldenConfigFiles.length == 0) {
-                        error "No golden configuration files found in NSOT/golden_configs"
+                    def files = findFiles(glob: 'NSOT/golden_configs/*.cfg')
+                    if (files.length == 0) {
+                        error "No files found in NSOT/golden_configs/"
                     }
-
-                    echo "Golden configuration files are present."
+                    echo "Golden Configs Check passed. Found ${files.length} config files."
                 }
             }
         }
@@ -70,7 +76,7 @@ pipeline {
     post {
         always {
             echo 'Cleaning up workspace'
-            deleteDir() // Clean up workspace
+            deleteDir()
         }
         success {
             echo 'Pipeline completed successfully.'
