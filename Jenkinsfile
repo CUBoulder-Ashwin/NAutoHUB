@@ -10,7 +10,7 @@ pipeline {
         stage('Python Linting') {
             steps {
                 script {
-                    def result = sh(
+                    def lintResult = sh(
                         script: """
                         echo "Linting Python files in NSOT/python-files"
                         . ${VIRTUAL_ENV}/bin/activate
@@ -18,8 +18,27 @@ pipeline {
                         """,
                         returnStatus: true
                     )
-                    if (result != 0) {
+                    if (lintResult != 0) {
                         echo "Python Linting encountered issues, but proceeding to next stage."
+                    }
+                }
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                script {
+                    echo "Running Unit Tests"
+                    def testResult = sh(
+                        script: """
+                        . ${VIRTUAL_ENV}/bin/activate
+                        python3 -m unittest discover -s NSOT/python-files -p "test_suite.py"
+                        """,
+                        returnStatus: true
+                    )
+                    if (testResult != 0) {
+                        echo "Unit tests encountered issues. Please check the logs."
+                        currentBuild.result = 'UNSTABLE'
                     }
                 }
             }
