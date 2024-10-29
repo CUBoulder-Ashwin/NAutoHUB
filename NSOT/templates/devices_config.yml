@@ -2,6 +2,28 @@ devices:
 - hostname: R100
   device_type: core
   clear_config: 'no'
+  interfaces:
+  - name: Et2/1
+    ip_address: 10.0.0.1
+    subnet_mask: '24'
   vlans:
   - id: '10'
-    name: Ashwin
+    name: V10
+  ospf:
+    process_id: '1'
+    networks:
+    - ip: 10.0.0.0
+      wildcard: 0.0.0.255
+      area: '0'
+    redistribute:
+      connected: false
+      bgp: false
+  bgp:
+    as_number: '65001'
+    address_families:
+    - type: ipv4
+      networks:
+      - ip: 10.0.0.0/24
+    neighbors:
+    - ip: 10.0.0.2
+      remote_as: '65002'
