@@ -2,6 +2,8 @@ import os
 import sys
 from flask import Flask, render_template, request, redirect, url_for
 from jinja2 import Environment, FileSystemLoader
+import subprocess
+import threading
 
 # Get the current directory of this script
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -20,6 +22,7 @@ from ping import ping_local, ping_remote
 from goldenConfig import generate_configs
 from generate_yaml import create_yaml_from_form_data
 from config_Gen import conf_gen  # Updated import for config generation
+from update_topo import update_topology
 
 app = Flask(__name__)
 
@@ -35,14 +38,39 @@ def dashboard():
     # Embed your Grafana dashboard in the dashboard template
     return render_template("dashboard.html")
 
-@app.route("/add-device", methods=['GET', 'POST'])
+def run_deployment(deploy_command):
+    subprocess.run(deploy_command, shell=True)
+
+@app.route('/add-device', methods=['GET', 'POST'])
 def add_device():
     if request.method == 'POST':
         device_name = request.form['device_name']
-        ip_address = request.form['ip_address']
-        # Add logic to handle the device configuration or database insert
+        device_type = request.form['device_type']
+        device_interface = request.form['device_interface']
+        connected_device = request.form['connected_device']
+        connected_interface = request.form['connected_interface']
+        mac_address = request.form['mac_address']
+        sudo_password = request.form['sudo_password']
+
+        # Define the path to topo.yml dynamically
+        topo_path = os.path.join(
+            os.path.dirname(__file__), 
+            '../../../pilot-config/topo.yml'
+        )
+
+        # Update topology with MAC address
+        update_topology(topo_path, device_name, device_type, device_interface, connected_device, connected_interface)
+
+        # Prepare the deploy command
+        deploy_command = f"echo {sudo_password} | sudo -S containerlab deploy --reconfigure -t {topo_path}"
+
+        # Start the deployment in a new thread
+        thread = threading.Thread(target=run_deployment, args=(deploy_command,))
+        thread.start()
+
         return redirect(url_for('homepage'))
-    return render_template("add_device.html")
+
+    return render_template('add_device.html')
 
 @app.route("/configure-device", methods=['GET', 'POST'])
 def configure_device():

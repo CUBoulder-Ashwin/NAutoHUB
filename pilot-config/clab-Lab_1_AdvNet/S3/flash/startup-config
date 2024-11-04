@@ -1,4 +1,4 @@
-! Startup-config last modified at Mon Oct 28 05:54:23 2024 by root
+! Startup-config last modified at Mon Nov  4 17:32:12 2024 by root
 ! device: S3 (cEOSLab, EOS-4.32.2F-38195967.4322F (engineering build))
 !
 no aaa root
@@ -59,8 +59,8 @@ interface Ethernet4
    switchport mode trunk
 !
 interface Management0
-   ip address 172.20.20.6/24
-   ipv6 address 2001:172:20:20::6/64
+   ip address 172.20.20.10/24
+   ipv6 address 2001:172:20:20::a/64
 !
 interface Vlan100
    ip address 10.0.101.5/24

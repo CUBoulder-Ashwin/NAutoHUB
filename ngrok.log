@@ -43,3 +43,47 @@ t=2024-10-28T21:00:43-0600 lvl=info msg="join connections" obj=join id=f8631c837
 t=2024-10-28T21:00:58-0600 lvl=info msg="join connections" obj=join id=f1ed06e9707e l=127.0.0.1:8080 r=128.138.64.27:39735
 t=2024-10-28T21:06:43-0600 lvl=info msg="join connections" obj=join id=d42fa9978a9b l=127.0.0.1:8080 r=128.138.64.27:37550
 t=2024-10-28T21:21:28-0600 lvl=info msg="join connections" obj=join id=57d2d42a5834 l=127.0.0.1:8080 r=128.138.64.27:36918
+t=2024-10-28T21:27:07-0600 lvl=info msg="join connections" obj=join id=a603f316c151 l=127.0.0.1:8080 r=140.82.115.89:61748
+t=2024-10-28T21:27:10-0600 lvl=info msg="join connections" obj=join id=a77411aaa5e7 l=127.0.0.1:8080 r=128.138.64.27:51064
+t=2024-10-28T21:27:24-0600 lvl=info msg="join connections" obj=join id=09e1f624f49f l=127.0.0.1:8080 r=128.138.64.27:51064
+t=2024-10-28T21:28:06-0600 lvl=info msg="join connections" obj=join id=302ed6f18424 l=127.0.0.1:8080 r=128.138.64.27:51064
+t=2024-10-29T05:56:18-0600 lvl=info msg="join connections" obj=join id=052e842c657b l=127.0.0.1:8080 r=128.138.64.27:36884
+t=2024-10-29T15:56:20-0600 lvl=info msg="join connections" obj=join id=adbac9af1698 l=127.0.0.1:8080 r=128.138.64.27:35049
+t=2024-10-31T13:30:22-0600 lvl=info msg="update available" obj=updater
+t=2024-10-31T19:30:23-0600 lvl=info msg="update available" obj=updater
+t=2024-11-01T01:30:23-0600 lvl=info msg="update available" obj=updater
+t=2024-11-01T07:30:23-0600 lvl=info msg="update available" obj=updater
+t=2024-11-01T13:30:24-0600 lvl=info msg="update available" obj=updater
+t=2024-11-01T19:30:24-0600 lvl=info msg="update available" obj=updater
+t=2024-11-02T01:30:24-0600 lvl=info msg="update available" obj=updater
+t=2024-11-02T07:30:25-0600 lvl=info msg="update available" obj=updater
+t=2024-11-02T13:30:25-0600 lvl=info msg="update available" obj=updater
+t=2024-11-02T19:30:25-0600 lvl=info msg="update available" obj=updater
+t=2024-11-03T01:30:26-0600 lvl=info msg="update available" obj=updater
+t=2024-11-03T06:30:26-0700 lvl=info msg="update available" obj=updater
+t=2024-11-03T12:30:26-0700 lvl=info msg="update available" obj=updater
+t=2024-11-03T13:01:06-0700 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2024-11-03T13:01:06-0700 lvl=info msg="session closing" obj=tunnels.session err=nil
+t=2024-11-03T13:01:06-0700 lvl=info msg="accept failed" obj=tunnels.session obj=csess id=60e55fcc3672 err="reconnecting session closed"
+t=2024-11-03T13:01:06-0700 lvl=info msg="failed to accept connection: Listener closed" obj=tunnels.session clientid=3d6d77990638e8a1f4e4504605eb795e
+t=2024-11-03T13:01:06-0700 lvl=warn msg="Stopping forwarder" name=jenkins acceptErr="failed to accept connection: Listener closed"
+t=2024-11-03T13:01:06-0700 lvl=warn msg="Error restarting forwarder" name=jenkins err="failed to start tunnel: session closed"
+t=2024-11-03T13:01:06-0700 lvl=info msg="no more state changes" obj=tunnels.session
+t=2024-11-03T13:01:43-0700 lvl=info msg="open config file" path=/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/ngrok_config.yml err=nil
+t=2024-11-03T13:01:44-0700 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2024-11-03T13:01:44-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2024-11-03T13:01:44-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2024-11-03T13:01:44-0700 lvl=info msg="started tunnel" obj=tunnels name=jenkins addr=http://localhost:8080 url=https://2bdd-128-138-64-27.ngrok-free.app
+t=2024-11-03T13:01:44-0700 lvl=info msg="update available" obj=updater
+t=2024-11-03T15:30:20-0700 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2024-11-03T15:30:20-0700 lvl=info msg="session closing" obj=tunnels.session err=nil
+t=2024-11-03T15:30:20-0700 lvl=info msg="accept failed" obj=tunnels.session obj=csess id=6a146d95349b err="reconnecting session closed"
+t=2024-11-03T15:30:51-0700 lvl=info msg="open config file" path=/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/ngrok_config.yml err=nil
+t=2024-11-03T15:30:51-0700 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2024-11-03T15:30:52-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2024-11-03T15:30:52-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2024-11-03T15:30:52-0700 lvl=info msg="started tunnel" obj=tunnels name=jenkins addr=http://localhost:8080 url=https://dde5-128-138-64-27.ngrok-free.app
+t=2024-11-03T15:30:52-0700 lvl=info msg="update available" obj=updater
+t=2024-11-03T21:30:52-0700 lvl=info msg="update available" obj=updater
+t=2024-11-04T03:30:52-0700 lvl=info msg="update available" obj=updater
+t=2024-11-04T09:30:52-0700 lvl=info msg="update available" obj=updater

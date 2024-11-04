@@ -1,11 +1,67 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Add Device</h2>
-<form method="POST">
-    <label for="device_name">Device Name:</label>
-    <input type="text" name="device_name" required>
-    <label for="ip_address">IP Address:</label>
-    <input type="text" name="ip_address" required>
-    <button type="submit">Add Device</button>
+<form method="POST" style="max-width: 400px; margin: 0 auto;">
+    <div style="margin-bottom: 15px;">
+        <label for="device_name" style="display: block;">Device Name:</label>
+        <input type="text" name="device_name" required style="width: 100%; padding: 8px;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="device_type" style="display: block;">Device Type:</label>
+        <select name="device_type" required style="width: 100%; padding: 8px;">
+            <option value="router">Router</option>
+            <option value="switch">Switch</option>
+            <option value="server">Server</option>
+        </select>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="device_interface" style="display: block;">Device Interface:</label>
+        <input type="text" name="device_interface" required style="width: 100%; padding: 8px;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="connected_device" style="display: block;">Connected To (Device Name):</label>
+        <input type="text" name="connected_device" required style="width: 100%; padding: 8px;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="connected_interface" style="display: block;">Connected To (Interface):</label>
+        <input type="text" name="connected_interface" required style="width: 100%; padding: 8px;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="location" style="display: block;">Location:</label>
+        <select name="location" required style="width: 100%; padding: 8px;">
+            <option value="edge">Edge</option>
+            <option value="core">Core</option>
+            <option value="access">Access</option>
+        </select>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="mac_address" style="display: block;">MAC Address:</label>
+        <input type="text" name="mac_address" pattern="^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$" required style="width: 100%; padding: 8px;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="sudo_password" style="display: block;">Sudo Password:</label>
+        <input type="password" name="sudo_password" id="sudo_password" required style="width: 100%; padding: 8px;">
+        <div style="margin-top: 5px;">
+            <input type="checkbox" id="togglePassword"> Show Password
+        </div>
+    </div>
+
+    <div style="text-align: center;">
+        <button type="submit" style="padding: 10px 20px; font-size: 16px;">Add Device</button>
+    </div>
 </form>
+
+<script>
+    document.getElementById('togglePassword').addEventListener('change', function() {
+        var passwordField = document.getElementById('sudo_password');
+        passwordField.type = this.checked ? 'text' : 'password';
+    });
+</script>
 {% endblock %}

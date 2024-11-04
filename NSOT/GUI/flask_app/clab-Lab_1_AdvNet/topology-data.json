@@ -1,0 +1,761 @@
+{
+  "name": "Lab_1_AdvNet",
+  "type": "clab",
+  "clab": {
+    "config": {
+      "prefix": "clab",
+      "mgmt": {
+        "network": "clab",
+        "bridge": "br-0cf8537c5600",
+        "ipv4-subnet": "172.20.20.0/24",
+        "ipv4-gw": "172.20.20.1",
+        "ipv6-subnet": "3fff:172:20:20::/64",
+        "ipv6-gw": "2001:172:20:20::1",
+        "mtu": 1500,
+        "external-access": true
+      }
+    }
+  },
+  "nodes": {
+    "H1": {
+      "index": "0",
+      "shortname": "H1",
+      "longname": "clab-Lab_1_AdvNet-H1",
+      "fqdn": "H1.Lab_1_AdvNet.io",
+      "group": "",
+      "labdir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/H1",
+      "kind": "linux",
+      "image": "ubu_hosts:latest",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.6",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::6",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-0cf8537c5600",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/H1",
+        "clab-node-name": "H1",
+        "clab-node-type": "",
+        "clab-owner": "student",
+        "clab-topo-file": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/pilot-config/topo.yml",
+        "containerlab": "Lab_1_AdvNet"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 22,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "H2": {
+      "index": "1",
+      "shortname": "H2",
+      "longname": "clab-Lab_1_AdvNet-H2",
+      "fqdn": "H2.Lab_1_AdvNet.io",
+      "group": "",
+      "labdir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/H2",
+      "kind": "linux",
+      "image": "ubu_hosts:latest",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.2",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::2",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-0cf8537c5600",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/H2",
+        "clab-node-name": "H2",
+        "clab-node-type": "",
+        "clab-owner": "student",
+        "clab-topo-file": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/pilot-config/topo.yml",
+        "containerlab": "Lab_1_AdvNet"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 22,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "H3": {
+      "index": "2",
+      "shortname": "H3",
+      "longname": "clab-Lab_1_AdvNet-H3",
+      "fqdn": "H3.Lab_1_AdvNet.io",
+      "group": "",
+      "labdir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/H3",
+      "kind": "linux",
+      "image": "ubu_hosts:latest",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.14",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::e",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-0cf8537c5600",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/H3",
+        "clab-node-name": "H3",
+        "clab-node-type": "",
+        "clab-owner": "student",
+        "clab-topo-file": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/pilot-config/topo.yml",
+        "containerlab": "Lab_1_AdvNet"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 22,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "H4": {
+      "index": "3",
+      "shortname": "H4",
+      "longname": "clab-Lab_1_AdvNet-H4",
+      "fqdn": "H4.Lab_1_AdvNet.io",
+      "group": "",
+      "labdir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/H4",
+      "kind": "linux",
+      "image": "ubu_hosts:latest",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.3",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::3",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-0cf8537c5600",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/H4",
+        "clab-node-name": "H4",
+        "clab-node-type": "",
+        "clab-owner": "student",
+        "clab-topo-file": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/pilot-config/topo.yml",
+        "containerlab": "Lab_1_AdvNet"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 22,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "R1": {
+      "index": "4",
+      "shortname": "R1",
+      "longname": "clab-Lab_1_AdvNet-R1",
+      "fqdn": "R1.Lab_1_AdvNet.io",
+      "group": "",
+      "labdir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/R1",
+      "kind": "ceos",
+      "image": "ceos:4.32.2F",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.16",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::10",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:6c:08:4f",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-0cf8537c5600",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/R1",
+        "clab-node-name": "R1",
+        "clab-node-type": "",
+        "clab-owner": "student",
+        "clab-topo-file": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/pilot-config/topo.yml",
+        "containerlab": "Lab_1_AdvNet"
+      },
+      "port-bindings": [
+      ]
+    },
+    "R2": {
+      "index": "5",
+      "shortname": "R2",
+      "longname": "clab-Lab_1_AdvNet-R2",
+      "fqdn": "R2.Lab_1_AdvNet.io",
+      "group": "",
+      "labdir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/R2",
+      "kind": "ceos",
+      "image": "ceos:4.32.2F",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.15",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::f",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:a3:52:58",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-0cf8537c5600",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/R2",
+        "clab-node-name": "R2",
+        "clab-node-type": "",
+        "clab-owner": "student",
+        "clab-topo-file": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/pilot-config/topo.yml",
+        "containerlab": "Lab_1_AdvNet"
+      },
+      "port-bindings": [
+      ]
+    },
+    "R3": {
+      "index": "6",
+      "shortname": "R3",
+      "longname": "clab-Lab_1_AdvNet-R3",
+      "fqdn": "R3.Lab_1_AdvNet.io",
+      "group": "",
+      "labdir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/R3",
+      "kind": "ceos",
+      "image": "ceos:4.32.2F",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.9",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::9",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:5f:44:02",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-0cf8537c5600",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/R3",
+        "clab-node-name": "R3",
+        "clab-node-type": "",
+        "clab-owner": "student",
+        "clab-topo-file": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/pilot-config/topo.yml",
+        "containerlab": "Lab_1_AdvNet"
+      },
+      "port-bindings": [
+      ]
+    },
+    "R4": {
+      "index": "7",
+      "shortname": "R4",
+      "longname": "clab-Lab_1_AdvNet-R4",
+      "fqdn": "R4.Lab_1_AdvNet.io",
+      "group": "",
+      "labdir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/R4",
+      "kind": "ceos",
+      "image": "ceos:4.32.2F",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.13",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::d",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:16:df:1f",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-0cf8537c5600",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/R4",
+        "clab-node-name": "R4",
+        "clab-node-type": "",
+        "clab-owner": "student",
+        "clab-topo-file": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/pilot-config/topo.yml",
+        "containerlab": "Lab_1_AdvNet"
+      },
+      "port-bindings": [
+      ]
+    },
+    "R5": {
+      "index": "8",
+      "shortname": "R5",
+      "longname": "clab-Lab_1_AdvNet-R5",
+      "fqdn": "R5.Lab_1_AdvNet.io",
+      "group": "",
+      "labdir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/R5",
+      "kind": "ceos",
+      "image": "ceos:4.32.2F",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.5",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::5",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:7e:b6:ce",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-0cf8537c5600",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/R5",
+        "clab-node-name": "R5",
+        "clab-node-type": "",
+        "clab-owner": "student",
+        "clab-topo-file": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/pilot-config/topo.yml",
+        "containerlab": "Lab_1_AdvNet"
+      },
+      "port-bindings": [
+      ]
+    },
+    "R6": {
+      "index": "9",
+      "shortname": "R6",
+      "longname": "clab-Lab_1_AdvNet-R6",
+      "fqdn": "R6.Lab_1_AdvNet.io",
+      "group": "",
+      "labdir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/R6",
+      "kind": "ceos",
+      "image": "ceos:4.32.2F",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.12",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::c",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:71:22:3a",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-0cf8537c5600",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/R6",
+        "clab-node-name": "R6",
+        "clab-node-type": "",
+        "clab-owner": "student",
+        "clab-topo-file": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/pilot-config/topo.yml",
+        "containerlab": "Lab_1_AdvNet"
+      },
+      "port-bindings": [
+      ]
+    },
+    "S1": {
+      "index": "10",
+      "shortname": "S1",
+      "longname": "clab-Lab_1_AdvNet-S1",
+      "fqdn": "S1.Lab_1_AdvNet.io",
+      "group": "",
+      "labdir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/S1",
+      "kind": "ceos",
+      "image": "ceos:4.32.2F",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.7",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::7",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:d0:8c:40",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-0cf8537c5600",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/S1",
+        "clab-node-name": "S1",
+        "clab-node-type": "",
+        "clab-owner": "student",
+        "clab-topo-file": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/pilot-config/topo.yml",
+        "containerlab": "Lab_1_AdvNet"
+      },
+      "port-bindings": [
+      ]
+    },
+    "S2": {
+      "index": "11",
+      "shortname": "S2",
+      "longname": "clab-Lab_1_AdvNet-S2",
+      "fqdn": "S2.Lab_1_AdvNet.io",
+      "group": "",
+      "labdir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/S2",
+      "kind": "ceos",
+      "image": "ceos:4.32.2F",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.4",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::4",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:15:3f:ab",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-0cf8537c5600",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/S2",
+        "clab-node-name": "S2",
+        "clab-node-type": "",
+        "clab-owner": "student",
+        "clab-topo-file": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/pilot-config/topo.yml",
+        "containerlab": "Lab_1_AdvNet"
+      },
+      "port-bindings": [
+      ]
+    },
+    "S3": {
+      "index": "12",
+      "shortname": "S3",
+      "longname": "clab-Lab_1_AdvNet-S3",
+      "fqdn": "S3.Lab_1_AdvNet.io",
+      "group": "",
+      "labdir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/S3",
+      "kind": "ceos",
+      "image": "ceos:4.32.2F",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.11",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::b",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:32:5b:16",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-0cf8537c5600",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/S3",
+        "clab-node-name": "S3",
+        "clab-node-type": "",
+        "clab-owner": "student",
+        "clab-topo-file": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/pilot-config/topo.yml",
+        "containerlab": "Lab_1_AdvNet"
+      },
+      "port-bindings": [
+      ]
+    },
+    "S4": {
+      "index": "13",
+      "shortname": "S4",
+      "longname": "clab-Lab_1_AdvNet-S4",
+      "fqdn": "S4.Lab_1_AdvNet.io",
+      "group": "",
+      "labdir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/S4",
+      "kind": "ceos",
+      "image": "ceos:4.32.2F",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.10",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::a",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:1a:d2:aa",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-0cf8537c5600",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/S4",
+        "clab-node-name": "S4",
+        "clab-node-type": "",
+        "clab-owner": "student",
+        "clab-topo-file": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/pilot-config/topo.yml",
+        "containerlab": "Lab_1_AdvNet"
+      },
+      "port-bindings": [
+      ]
+    },
+    "Web_Server": {
+      "index": "14",
+      "shortname": "Web_Server",
+      "longname": "clab-Lab_1_AdvNet-Web_Server",
+      "fqdn": "Web_Server.Lab_1_AdvNet.io",
+      "group": "",
+      "labdir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/Web_Server",
+      "kind": "linux",
+      "image": "ubu_webserver:latest",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.8",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::8",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-0cf8537c5600",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/GUI/flask_app/clab-Lab_1_AdvNet/Web_Server",
+        "clab-node-name": "Web_Server",
+        "clab-node-type": "",
+        "clab-owner": "student",
+        "clab-topo-file": "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/pilot-config/topo.yml",
+        "containerlab": "Lab_1_AdvNet"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 22,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 80,
+          "protocol": "tcp"
+        }
+      ]
+    }
+  },
+  "links": [
+    {
+      "a": {
+        "node": "R6",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:4d:7b:a7",
+        "peer": "z"
+      },
+      "z": {
+        "node": "R4",
+        "interface": "eth4",
+        "mac": "aa:c1:ab:7c:23:78",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "S1",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:4c:4b:d8",
+        "peer": "z"
+      },
+      "z": {
+        "node": "R1",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:65:5f:3f",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "S1",
+        "interface": "eth4",
+        "mac": "aa:c1:ab:ec:60:88",
+        "peer": "z"
+      },
+      "z": {
+        "node": "S2",
+        "interface": "eth4",
+        "mac": "aa:c1:ab:2a:73:99",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "S2",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:63:43:d1",
+        "peer": "z"
+      },
+      "z": {
+        "node": "R2",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:1f:d2:e8",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "R1",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:84:91:5d",
+        "peer": "z"
+      },
+      "z": {
+        "node": "S3",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:67:b8:42",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "R2",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:3f:5d:a8",
+        "peer": "z"
+      },
+      "z": {
+        "node": "S4",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:00:65:13",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "S3",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:2a:38:25",
+        "peer": "z"
+      },
+      "z": {
+        "node": "R3",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:f7:8e:3d",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "S3",
+        "interface": "eth3",
+        "mac": "aa:c1:ab:16:81:7d",
+        "peer": "z"
+      },
+      "z": {
+        "node": "S4",
+        "interface": "eth3",
+        "mac": "aa:c1:ab:ab:66:0f",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "S4",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:cc:e6:1c",
+        "peer": "z"
+      },
+      "z": {
+        "node": "R4",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:70:10:36",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "R3",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:bf:ab:0c",
+        "peer": "z"
+      },
+      "z": {
+        "node": "R4",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:e2:86:90",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "R3",
+        "interface": "eth3",
+        "mac": "aa:c1:ab:b6:d4:a0",
+        "peer": "z"
+      },
+      "z": {
+        "node": "R5",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:fa:8d:16",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "R4",
+        "interface": "eth3",
+        "mac": "aa:c1:ab:fe:c7:c3",
+        "peer": "z"
+      },
+      "z": {
+        "node": "R5",
+        "interface": "eth3",
+        "mac": "aa:c1:ab:5c:6d:f7",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "S1",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:b8:cc:c5",
+        "peer": "z"
+      },
+      "z": {
+        "node": "H1",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:57:f6:bf",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "S1",
+        "interface": "eth3",
+        "mac": "aa:c1:ab:15:6a:3c",
+        "peer": "z"
+      },
+      "z": {
+        "node": "H2",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:c2:49:b6",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "S2",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:65:7a:48",
+        "peer": "z"
+      },
+      "z": {
+        "node": "H3",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:9e:7f:d6",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "S2",
+        "interface": "eth3",
+        "mac": "aa:c1:ab:f0:89:e0",
+        "peer": "z"
+      },
+      "z": {
+        "node": "H4",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:28:f8:5e",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "R5",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:0b:6e:ea",
+        "peer": "z"
+      },
+      "z": {
+        "node": "Web_Server",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:1f:03:7d",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "S3",
+        "interface": "eth4",
+        "mac": "aa:c1:ab:8f:fd:93",
+        "peer": "z"
+      },
+      "z": {
+        "node": "host",
+        "interface": "eth0",
+        "mac": "aa:c1:ab:31:56:03",
+        "peer": "a"
+      }
+    }
+  ]
+}
