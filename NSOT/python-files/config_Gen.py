@@ -29,7 +29,9 @@ def generate_device_configs():
         sys.exit(1)
 
     env = Environment(
-        loader=FileSystemLoader(template_dir), trim_blocks=True, lstrip_blocks=True
+        loader=FileSystemLoader(template_dir),
+        trim_blocks=True,
+        lstrip_blocks=True,
     )
 
     # Load templates
@@ -101,7 +103,9 @@ def generate_device_configs():
                 config += templates["rip"].render(
                     rip_version=rip_data.get("version"),
                     rip_networks=rip_data.get("networks", []),
-                    bgp_redistribute=rip_data["redistribute"].get("bgp", False),
+                    bgp_redistribute=rip_data["redistribute"].get(
+                        "bgp", False
+                    ),
                     bgp_as=device.get("bgp", {}).get("as_number", ""),
                     bgp_metric=rip_data["redistribute"].get("metric", 1),
                 )
