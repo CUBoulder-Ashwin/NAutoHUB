@@ -88,7 +88,7 @@ def configure_dhcp_server(
         "configure terminal",
         "int et2.100",
         "dhcp server ipv4",
-        f"ip dhcp relay information option",
+        "ip dhcp relay information option",
         "dhcp server",
         f"subnet {new_subnet}",
         "reservation",

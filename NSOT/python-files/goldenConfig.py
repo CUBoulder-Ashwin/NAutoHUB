@@ -1,6 +1,5 @@
 import csv
 import os
-import time
 from concurrent.futures import ThreadPoolExecutor
 from netmiko import (
     ConnectHandler,
