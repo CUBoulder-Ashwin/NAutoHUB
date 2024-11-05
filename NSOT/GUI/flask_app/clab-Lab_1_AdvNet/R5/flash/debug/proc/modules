@@ -1,3 +1,4 @@
+xt_recent 24576 0 - Live 0xffffffffc0cfd000
 xt_HL 12288 27 - Live 0xffffffffc0cf7000
 macvlan 32768 0 - Live 0xffffffffc0cec000
 nfnetlink_log 24576 0 - Live 0xffffffffc0cdc000
@@ -18,7 +19,7 @@ garp 20480 1 8021q, Live 0xffffffffc0c79000
 mrp 20480 1 8021q, Live 0xffffffffc0c6e000
 veth 45056 0 - Live 0xffffffffc0c5f000
 ip6_tables 36864 0 - Live 0xffffffffc0c52000
-xt_comment 12288 4 - Live 0xffffffffc0c3c000
+xt_comment 12288 5 - Live 0xffffffffc0c3c000
 nf_conntrack_netlink 57344 0 - Live 0xffffffffc0c43000
 xfrm_user 61440 1 - Live 0xffffffffc0c2a000
 xfrm_algo 16384 1 xfrm_user, Live 0xffffffffc0c20000
@@ -40,13 +41,13 @@ xt_conntrack 12288 22 - Live 0xffffffffc0b5f000
 ipt_REJECT 12288 11 - Live 0xffffffffc0b61000
 nf_reject_ipv4 12288 1 ipt_REJECT, Live 0xffffffffc0b42000
 xt_tcpudp 16384 9 - Live 0xffffffffc0b47000
-nft_compat 20480 483 - Live 0xffffffffc0b00000
+nft_compat 20480 484 - Live 0xffffffffc0b00000
 nft_chain_nat 12288 96 - Live 0xffffffffc0b37000
 nf_nat 61440 3 xt_nat,xt_MASQUERADE,nft_chain_nat, Live 0xffffffffc0b49000
 nf_conntrack 196608 6 xt_CT,xt_nat,nf_conntrack_netlink,xt_MASQUERADE,xt_conntrack,nf_nat, Live 0xffffffffc0b03000
 nf_defrag_ipv6 24576 1 nf_conntrack, Live 0xffffffffc0af4000
 nf_defrag_ipv4 12288 1 nf_conntrack, Live 0xffffffffc0aea000
-nf_tables 372736 5863 nft_limit,nft_compat,nft_chain_nat, Live 0xffffffffc0a8b000
+nf_tables 372736 5851 nft_limit,nft_compat,nft_chain_nat, Live 0xffffffffc0a8b000
 libcrc32c 12288 3 nf_nat,nf_conntrack,nf_tables, Live 0xffffffffc0a15000
 bridge 421888 1 br_netfilter, Live 0xffffffffc0a20000
 stp 12288 2 garp,bridge, Live 0xffffffffc0a18000
@@ -74,7 +75,7 @@ joydev 32768 0 - Live 0xffffffffc078d000
 input_leds 12288 0 - Live 0xffffffffc0711000
 mac_hid 12288 0 - Live 0xffffffffc0785000
 serio_raw 20480 0 - Live 0xffffffffc0705000
-vmwgfx 442368 16 - Live 0xffffffffc0713000
+vmwgfx 442368 11 - Live 0xffffffffc0713000
 drm_ttm_helper 12288 1 vmwgfx, Live 0xffffffffc06d8000
 ttm 110592 2 vmwgfx,drm_ttm_helper, Live 0xffffffffc06ed000
 msr 12288 0 - Live 0xffffffffc06c7000
@@ -91,7 +92,7 @@ vsock 61440 7 vsock_loopback,vmw_vsock_virtio_transport_common,vmw_vsock_vmci_tr
 vmw_vmci 106496 2 vmw_balloon,vmw_vsock_vmci_transport, Live 0xffffffffc0637000
 dmi_sysfs 24576 0 - Live 0xffffffffc05fd000
 ip_tables 32768 0 - Live 0xffffffffc062c000
-x_tables 65536 20 xt_HL,ip6t_REJECT,ip6t_ipv6header,xt_hl,xt_multiport,xt_limit,xt_LOG,xt_CT,xt_mark,xt_nat,ip6_tables,xt_comment,xt_addrtype,xt_CHECKSUM,xt_MASQUERADE,xt_conntrack,ipt_REJECT,xt_tcpudp,nft_compat,ip_tables, Live 0xffffffffc05e7000
+x_tables 65536 21 xt_recent,xt_HL,ip6t_REJECT,ip6t_ipv6header,xt_hl,xt_multiport,xt_limit,xt_LOG,xt_CT,xt_mark,xt_nat,ip6_tables,xt_comment,xt_addrtype,xt_CHECKSUM,xt_MASQUERADE,xt_conntrack,ipt_REJECT,xt_tcpudp,nft_compat,ip_tables, Live 0xffffffffc05e7000
 autofs4 57344 2 - Live 0xffffffffc0597000
 mptspi 24576 3 - Live 0xffffffffc05bf000
 psmouse 217088 0 - Live 0xffffffffc053b000

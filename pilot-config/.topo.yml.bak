@@ -5,39 +5,39 @@ topology:
     S1:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Downloads/Advanced_Netman/Lab_1/configs/S1.cfg
+      startup-config: /home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs/S1.cfg
     S2:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Downloads/Advanced_Netman/Lab_1/configs/S2.cfg
+      startup-config: /home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs/S2.cfg
     S3:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Downloads/Advanced_Netman/Lab_1/configs/S3.cfg
+      startup-config: /home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs/S3.cfg
     S4:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Downloads/Advanced_Netman/Lab_1/configs/S4.cfg
+      startup-config: /home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs/S4.cfg
     R1:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Downloads/Advanced_Netman/Lab_1/configs/R1.cfg
+      startup-config: /home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs/R1.cfg
     R2:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Downloads/Advanced_Netman/Lab_1/configs/R2.cfg
+      startup-config: /home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs/R2.cfg
     R3:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Downloads/Advanced_Netman/Lab_1/configs/R3.cfg
+      startup-config: /home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs/R3.cfg
     R4:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Downloads/Advanced_Netman/Lab_1/configs/R4.cfg
+      startup-config: /home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs/R4.cfg
     R5:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Downloads/Advanced_Netman/Lab_1/configs/R5.cfg
+      startup-config: /home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs/R5.cfg
     H1:
       kind: linux
       image: ubu_hosts:latest
@@ -75,6 +75,10 @@ topology:
     R6:
       kind: ceos
       image: ceos:4.32.2F
+      startup-config: /home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs/R6.cfg
+      exec:
+        - dhclient eth1
+
 
   links:
     - endpoints: ["R6:eth1", "R4:eth4"]

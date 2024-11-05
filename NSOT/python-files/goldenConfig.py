@@ -13,7 +13,7 @@ def fetch_and_save_config(device_info):
     print(f"Starting to process device: {device_info['hostname']}")
 
     device = {
-        'device_type': 'cisco_ios',
+        'device_type': 'arista_eos',
         'ip': device_info['management_ip'],
         'username': device_info['username'],
         'password': device_info['password'],
@@ -31,8 +31,7 @@ def fetch_and_save_config(device_info):
         running_config = ssh_conn.send_command("show running-config")
         ssh_conn.disconnect()
 
-        timestamp = time.strftime("%Y%m%d_%H%M%S")
-        filename = f"goldenconfigs_{device_info['hostname']}_{timestamp}.cfg"
+        filename = f"goldenconfigs_{device_info['hostname']}.cfg"
         output_path = os.path.join(OUTPUT_DIR, filename)
 
         with open(output_path, 'w') as file:
@@ -44,6 +43,7 @@ def fetch_and_save_config(device_info):
     except Exception as e:
         print(f"An error occurred with {device_info['hostname']}: {e}")
     return None
+
 
 def fetch_configs_from_csv():
     """Fetch configs from all devices listed in the CSV."""

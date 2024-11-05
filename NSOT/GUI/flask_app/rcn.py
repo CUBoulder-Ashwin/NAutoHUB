@@ -23,6 +23,7 @@ from goldenConfig import generate_configs
 from generate_yaml import create_yaml_from_form_data
 from config_Gen import conf_gen  # Updated import for config generation
 from update_topo import update_topology
+from dhcp_updates import configure_dhcp_relay, configure_dhcp_server
 
 app = Flask(__name__)
 
@@ -38,8 +39,14 @@ def dashboard():
     # Embed your Grafana dashboard in the dashboard template
     return render_template("dashboard.html")
 
-def run_deployment(deploy_command):
-    subprocess.run(deploy_command, shell=True)
+def run_deployment_and_relay_config(deploy_command, relay_toggle, connected_device, connected_interface, connected_ip, helper_ip, mac_address, dhcp_server, new_subnet, range_lower, range_upper, default_gateway, ip_address):
+    # Run deployment synchronously in the thread
+    deploy_result = subprocess.run(deploy_command, shell=True)
+    
+    # Only proceed with DHCP configuration if the deployment was successful
+    if deploy_result.returncode == 0 and relay_toggle:
+        configure_dhcp_relay(connected_device, connected_interface, connected_ip, helper_ip)
+        configure_dhcp_server(mac_address, dhcp_server, new_subnet, range_lower, range_upper, default_gateway, ip_address)
 
 @app.route('/add-device', methods=['GET', 'POST'])
 def add_device():
@@ -52,20 +59,34 @@ def add_device():
         mac_address = request.form['mac_address']
         sudo_password = request.form['sudo_password']
 
+        # DHCP Relay related information
+        relay_toggle = request.form.get('relay_toggle')
+        connected_ip = request.form.get('connected_ip')
+        helper_ip = request.form.get('helper_ip')
+        dhcp_server = request.form.get('dhcp_server')
+        new_subnet = request.form.get('new_subnet')
+        ip_address = request.form.get('ip_address')
+        range_lower = request.form.get('range_lower')
+        range_upper = request.form.get('range_upper')
+        default_gateway = request.form.get('default_gateway')
+
         # Define the path to topo.yml dynamically
         topo_path = os.path.join(
             os.path.dirname(__file__), 
             '../../../pilot-config/topo.yml'
         )
 
-        # Update topology with MAC address
-        update_topology(topo_path, device_name, device_type, device_interface, connected_device, connected_interface)
+        # Update topology
+        update_topology(topo_path, device_name, device_type, device_interface, connected_device, connected_interface, mac_address)
 
         # Prepare the deploy command
-        deploy_command = f"echo {sudo_password} | sudo -S containerlab deploy --reconfigure -t {topo_path}"
+        deploy_command = (
+            f"echo {sudo_password} | sudo -S containerlab destroy --all || true && "
+            f"echo {sudo_password} | sudo -S containerlab deploy -t {topo_path}"
+        )
 
-        # Start the deployment in a new thread
-        thread = threading.Thread(target=run_deployment, args=(deploy_command,))
+        # Start the deployment and relay config in a new thread
+        thread = threading.Thread(target=run_deployment_and_relay_config, args=(deploy_command, relay_toggle, connected_device, connected_interface, connected_ip, helper_ip, mac_address, dhcp_server, new_subnet, range_lower, range_upper, default_gateway, ip_address))
         thread.start()
 
         return redirect(url_for('homepage'))
