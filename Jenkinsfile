@@ -36,7 +36,7 @@ pipeline {
                         python3 -m unittest discover -s NSOT/python-files -p "test_suite.py"
                         """,
                     )
-                    if (testResult != 0) {
+                    if (testResult != null) {
                         echo "Unit tests encountered issues. Please check the logs."
                         currentBuild.result = 'UNSTABLE'
                     }
