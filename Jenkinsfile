@@ -17,8 +17,7 @@ pipeline {
                         flake8 NSOT/python-files/
                         """,
                     )
-                    echo "Look hereeeeeeee ${lintResult}"
-                    if (lintResult != 0) {
+                    if (lintResult != null) {
                         echo "Python Linting encountered issues, but proceeding to next stage."
                     } else {
                         echo "Python Linting passed successfully."
