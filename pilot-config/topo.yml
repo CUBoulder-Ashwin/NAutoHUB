@@ -72,9 +72,16 @@ topology:
         - ip route del default via 172.20.20.1 dev eth0
         - ip route add default via 200.200.200.1 dev eth1
         - ip -6 route add default via 2001:db8:200::1 dev eth1
+    R6:
+      kind: ceos
+      image: ceos:4.32.2F
+      startup-config: /home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs/R6.cfg
+      exec:
+        - sudo dhclient eth1
 
 
   links:
+    - endpoints: ["R6:eth1", "R4:eth4"]
     - endpoints: ["S1:eth1", "R1:eth1"]
     - endpoints: ["S1:eth4", "S2:eth4"]
     - endpoints: ["S2:eth1", "R2:eth1"]

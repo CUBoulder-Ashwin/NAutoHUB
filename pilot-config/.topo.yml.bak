@@ -77,7 +77,7 @@ topology:
       image: ceos:4.32.2F
       startup-config: /home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs/R6.cfg
       exec:
-        - dhclient eth1
+        - sudo dhclient eth1
 
 
   links:

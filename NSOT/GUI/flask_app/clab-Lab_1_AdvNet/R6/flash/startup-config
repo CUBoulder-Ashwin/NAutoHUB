@@ -1,9 +1,9 @@
-! Startup-config last modified at Tue Nov  5 05:30:04 2024 by root
+! Startup-config last modified at Tue Nov  5 20:07:48 2024 by root
 ! device: R6 (cEOSLab, EOS-4.32.2F-38195967.4322F (engineering build))
 !
 no aaa root
 !
-username admin privilege 15 role network-admin secret sha512 $6$Qu8yOwelKdjXo/sm$r12mu0gDKAbbH4UaAYmFhvNQ.irzWZoxZczVI8sPm5.MGP1eQzqxFtS5PLGSyKayLZ5Ap9y4RxRjBqpz8niIf/
+username admin privilege 15 role network-admin secret sha512 $6$brMAwwCPRvbS74G6$kK0nrJIRrB.BilRKn5eRvhk4bnbNJNB.Y8svvdhuxR8eRaGnyS0yv/FrXuEy.6rNWg2Veh6iha6WIw.BF0cBE.
 !
 no service interface inactive port-id allocation disabled
 !
@@ -24,8 +24,8 @@ interface Ethernet1
    ip address dhcp
 !
 interface Management0
-   ip address 172.20.20.7/24
-   ipv6 address 3fff:172:20:20::7/64
+   ip address 172.20.20.14/24
+   ipv6 address 3fff:172:20:20::e/64
 !
 no ip routing
 !

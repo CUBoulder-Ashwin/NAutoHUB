@@ -24,6 +24,7 @@ from generate_yaml import create_yaml_from_form_data
 from config_Gen import conf_gen  # Updated import for config generation
 from update_topo import update_topology
 from dhcp_updates import configure_dhcp_relay, configure_dhcp_server
+from update_hosts import update_hosts_csv
 
 app = Flask(__name__)
 
@@ -75,6 +76,8 @@ def add_device():
             os.path.dirname(__file__), 
             '../../../pilot-config/topo.yml'
         )
+
+        update_hosts_csv(device_name, ip_address)
 
         # Update topology
         update_topology(topo_path, device_name, device_type, device_interface, connected_device, connected_interface, mac_address)

@@ -59,6 +59,8 @@ def configure_dhcp_server(mac_address, dhcp_server, new_subnet, range_lower, ran
         return
     commands = [
         "configure terminal",
+        "int et2.100",
+        "dhcp server ipv4",
         f"ip dhcp relay information option",
         "dhcp server",
         f"subnet {new_subnet}",
