@@ -6,7 +6,7 @@ pipeline {
         PIP_CACHE_DIR = "${HOME}/.cache/pip"
     }
 
-     stages {
+    stages {
         stage('Python Linting') {
             steps {
                 script {
@@ -17,7 +17,7 @@ pipeline {
                         flake8 NSOT/python-files/
                         """,
                     )
-                    echo "Look hereeeeeeee ${lintResult}"  // Properly placed outside the sh block
+                    echo "Look hereeeeeeee ${lintResult}"
                     if (lintResult != 0) {
                         echo "Python Linting encountered issues, but proceeding to next stage."
                     } else {
@@ -26,9 +26,6 @@ pipeline {
                 }
             }
         }
-    }
-
-
 
         stage('Run Unit Tests') {
             steps {
