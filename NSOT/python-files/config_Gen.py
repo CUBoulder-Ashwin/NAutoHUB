@@ -21,7 +21,7 @@ def generate_device_configs():
 
     while not os.path.exists(yaml_file):
         print(
-            f"No devices_config.yml found in {yaml_file}. Waiting for it to be created..."
+            f"No devices_config.yml found in {yaml_file}."
         )
         time.sleep(2)
 

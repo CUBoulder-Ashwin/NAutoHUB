@@ -16,7 +16,6 @@ pipeline {
                         . ${VIRTUAL_ENV}/bin/activate
                         flake8 NSOT/python-files/
                         """,
-                        returnStatus: true
                     )
                     if (lintResult != 0) {
                         echo "Python Linting encountered issues, but proceeding to next stage."
@@ -34,7 +33,6 @@ pipeline {
                         . ${VIRTUAL_ENV}/bin/activate
                         python3 -m unittest discover -s NSOT/python-files -p "test_suite.py"
                         """,
-                        returnStatus: true
                     )
                     if (testResult != 0) {
                         echo "Unit tests encountered issues. Please check the logs."
