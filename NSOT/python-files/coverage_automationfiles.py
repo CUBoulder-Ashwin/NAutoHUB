@@ -3,6 +3,7 @@ import unittest
 import os
 import webbrowser
 
+
 def run_tests_with_coverage():
     # Initialize coverage for the current directory
     cov = coverage.Coverage(source=["."])
@@ -22,7 +23,7 @@ def run_tests_with_coverage():
     # Run tests and check for errors/failures
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
-    
+
     # Stop coverage and save report
     cov.stop()
     cov.save()
@@ -44,6 +45,7 @@ def run_tests_with_coverage():
     # Open the HTML report in the default web browser
     html_report_path = os.path.abspath("htmlcov/index.html")
     webbrowser.open(f"file://{html_report_path}")
+
 
 if __name__ == "__main__":
     run_tests_with_coverage()

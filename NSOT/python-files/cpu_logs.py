@@ -64,7 +64,6 @@ def log_cpu_load_to_csv(target_ip):
     # Write to CSV file
     with open("snmp_output.csv", mode="a", newline="") as file:
         writer = csv.writer(file)
-        # Updated column order: Device Name, Management IP, CPU Utilization Average, Timestamp
         writer.writerow(
             [
                 device_name,
@@ -92,7 +91,6 @@ if __name__ == "__main__":
     try:
         with open("snmp_output.csv", mode="x", newline="") as file:
             writer = csv.writer(file)
-            # Updated header order: Device Name, Management IP, CPU Utilization Average, Timestamp
             writer.writerow(
                 [
                     "Device Name",

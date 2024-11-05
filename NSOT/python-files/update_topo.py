@@ -1,13 +1,22 @@
 import os
 
-def update_topology(topo_path, device_name, device_type, device_interface, connected_device, connected_interface, mac_address):
+
+def update_topology(
+    topo_path,
+    device_name,
+    device_type,
+    device_interface,
+    connected_device,
+    connected_interface,
+    mac_address,
+):
     try:
         # Read the existing file content
-        with open(topo_path, 'r') as file:
+        with open(topo_path, "r") as file:
             lines = file.readlines()
 
         # Prepare the new node entry
-        if device_type in ['router', 'switch']:
+        if device_type in ["router", "switch"]:
             new_node_entry = (
                 f"    {device_name}:\n"
                 f"      kind: ceos\n"
@@ -41,22 +50,23 @@ def update_topology(topo_path, device_name, device_type, device_interface, conne
             lines.insert(links_index, new_link_entry)
 
         # Write back the updated content
-        with open(topo_path, 'w') as file:
+        with open(topo_path, "w") as file:
             file.writelines(lines)
 
         print(f"Updated topology with {device_name}, link added.")
 
         # Create the base config file
         create_base_config(device_name, device_interface, mac_address)
-        
+
     except Exception as e:
         print(f"Error updating topology: {e}")
 
+
 def create_base_config(device_name, device_interface, mac_address):
     try:
-        config_dir = '/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs'
+        config_dir = "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs"
         os.makedirs(config_dir, exist_ok=True)
-        config_path = os.path.join(config_dir, f'{device_name}.cfg')
+        config_path = os.path.join(config_dir, f"{device_name}.cfg")
 
         config_content = (
             f"hostname {device_name}\n"
@@ -68,9 +78,11 @@ def create_base_config(device_name, device_interface, mac_address):
             "    ip address dhcp"
         )
 
-        with open(config_path, 'w') as config_file:
+        with open(config_path, "w") as config_file:
             config_file.write(config_content)
 
-        print(f"Base config for {device_name} created at {config_path}.")
+        print(
+            f"Base config for {device_name} created at {config_path}."
+        )
     except Exception as e:
         print(f"Error creating base config for {device_name}: {e}")

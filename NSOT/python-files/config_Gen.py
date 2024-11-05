@@ -7,8 +7,12 @@ import time
 
 def generate_device_configs():
     # Set the base directory paths to NSOT level
-    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    yaml_file = os.path.join(base_dir, "templates", "devices_config.yml")
+    base_dir = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..")
+    )
+    yaml_file = os.path.join(
+        base_dir, "templates", "devices_config.yml"
+    )
     template_dir = os.path.join(base_dir, "templates")
     config_dir = os.path.join(base_dir, "configs")
 
@@ -64,13 +68,17 @@ def generate_device_configs():
                 for vlan in device["vlans"]:
                     config += f"no vlan {vlan['id']}\n"
             else:
-                config += templates["vlan"].render(vlans=device["vlans"])
+                config += templates["vlan"].render(
+                    vlans=device["vlans"]
+                )
 
         # Generate OSPF config
         if "ospf" in device:
             ospf_data = device["ospf"]
             if clear_config == "yes":
-                config += f"no router ospf {ospf_data['process_id']}\n"
+                config += (
+                    f"no router ospf {ospf_data['process_id']}\n"
+                )
             else:
                 config += templates["ospf"].render(
                     ospf_process=ospf_data["process_id"],
@@ -107,7 +115,9 @@ def generate_device_configs():
                         "bgp", False
                     ),
                     bgp_as=device.get("bgp", {}).get("as_number", ""),
-                    bgp_metric=rip_data["redistribute"].get("metric", 1),
+                    bgp_metric=rip_data["redistribute"].get(
+                        "metric", 1
+                    ),
                 )
 
         # Generate DHCP config
@@ -119,7 +129,9 @@ def generate_device_configs():
                 config += templates["dhcp"].render(dhcp=dhcp_data)
 
         # Write the config
-        filename = os.path.join(config_dir, f"{device['hostname']}.cfg")
+        filename = os.path.join(
+            config_dir, f"{device['hostname']}.cfg"
+        )
         with open(filename, "w") as config_file:
             config_file.write(config)
 
