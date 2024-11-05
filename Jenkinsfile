@@ -16,6 +16,9 @@ pipeline {
                         . ${VIRTUAL_ENV}/bin/activate
                         flake8 NSOT/python-files/
                         """,
+
+                        echo "Look hereeeeeeee ${lintResult}"
+
                     )
                     if (lintResult != 0) {
                         echo "Python Linting encountered issues, but proceeding to next stage."
