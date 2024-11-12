@@ -1,7 +1,5 @@
+---
 devices:
 - hostname: R100
   device_type: access
   clear_config: 'no'
-  vlans:
-  - id: '10'
-    name: v10

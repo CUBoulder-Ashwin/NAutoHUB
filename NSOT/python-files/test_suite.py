@@ -39,5 +39,6 @@ class TestNetworkAutomation(unittest.TestCase):
 
         print("Ping tests from CSV completed.\n")
 
+
 if __name__ == "__main__":
     unittest.main()

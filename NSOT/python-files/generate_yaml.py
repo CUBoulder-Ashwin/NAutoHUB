@@ -21,6 +21,7 @@ def create_yaml_from_form(device_data, filename="devices_config.yml"):
 
     # Write cleaned data to YAML
     with open(yaml_file_path, "w") as yaml_file:
+        yaml_file.write("---\n")  # Add document start
         yaml.dump(
             cleaned_data,
             yaml_file,
