@@ -30,6 +30,21 @@
         </button>
     </div>
 </form>
+{% if jenkins_result %}
+    <div id="jenkins-result" class="jenkins-status {% if jenkins_result == 'SUCCESS' %}success{% else %}failure{% endif %}">
+        Jenkins Job Status: {{ jenkins_result }}
+    </div>
+
+    {% if jenkins_result == 'SUCCESS' %}
+        <!-- Show the Push Configuration button only if Jenkins passed -->
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="pushConfiguration()" class="form-button" style="background-color: #00d1b2; color: white; padding: 10px 20px; font-size: 16px; border-radius: 5px;">
+                Push Configuration
+            </button>
+        </div>
+    {% endif %}
+{% endif %}
+
 <!-- Add JavaScript for dynamic form fields -->
 <script>
     function showConfigInputs() {
@@ -359,8 +374,10 @@ function toggleSwitchport(checkbox) {
     }
 }
 
-
-
+function pushConfiguration() {
+    alert("Configuration successfully pushed!");
+    // Optional: You can make an AJAX call here if you want to handle the button's action on the server side
+}
 </script>
 
 
