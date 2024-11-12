@@ -209,6 +209,7 @@ def configure_device():
 
         # Create the YAML file with collected data
         create_yaml_from_form_data(device_id=device_id, router_type=router_type, interfaces=interfaces, ospf=ospf, bgp=bgp, vlans=vlans, rip=rip)
+        conf_gen()
 
         # Run the Git push and Jenkins monitoring
         jenkins_result = push_and_monitor_jenkins()
