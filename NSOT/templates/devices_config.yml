@@ -1,3 +1,4 @@
+---
 devices:
   - hostname: R100
     device_type: access
