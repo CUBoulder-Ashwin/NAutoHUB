@@ -22,7 +22,7 @@ def git_push():
         subprocess.run(["git", "commit", "-m", "Auto-config push"], check=True)
         subprocess.run(["git", "push"], check=True)
         print("Changes pushed to Git successfully.")
-        time.sleep(60)  # Wait longer to give Jenkins time to start the build
+        time.sleep(10)  # Wait longer to give Jenkins time to start the build
         return True
     except subprocess.CalledProcessError as e:
         print(f"Git push failed: {e}")
@@ -54,8 +54,6 @@ def get_latest_build_number(jenkins_base_url, user, token):
         url = f"{jenkins_base_url}/job/robocontrol/api/json?tree=lastBuild%5Bnumber%5D"
         print("Fetching latest build number from URL:", url)
         response = requests.get(url, auth=(user, token))
-        print("Jenkins API response status:", response.status_code)
-        print("Jenkins API response text:", response.text)
         response_data = response.json()
         latest_build_number = response_data.get("lastBuild", {}).get("number")
         if latest_build_number:
@@ -73,8 +71,6 @@ def check_build_result(jenkins_base_url, latest_build_number, user, token):
     build_url = f"{jenkins_base_url}/job/robocontrol/{latest_build_number}/api/json"
     print("Checking build result from URL:", build_url)
     response = requests.get(build_url, auth=(user, token))
-    print("Jenkins build API response status:", response.status_code)
-    print("Jenkins build API response text:", response.text)
     if response.status_code == 200:
         build_info = response.json()
         result = build_info.get("result")
