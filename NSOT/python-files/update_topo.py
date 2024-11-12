@@ -32,7 +32,7 @@ def update_topology(
                 f"      image: ubu_hosts:latest\n"
                 f"      exec:\n"
                 f"        - ip route del default via 172.20.20.1 dev eth0\n"
-                f"        - sudo dhclient {device_interface}\n"               
+                f"        - sudo dhclient {device_interface}\n"
             )
 
         # Prepare the new link entry
@@ -68,7 +68,9 @@ def update_topology(
 def create_base_config(device_name, device_interface, mac_address, device_type):
     try:
         if device_type in ["router", "switch"]:
-            config_dir = "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs"
+            config_dir = (
+                "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs"
+            )
             os.makedirs(config_dir, exist_ok=True)
             config_path = os.path.join(config_dir, f"{device_name}.cfg")
 
@@ -85,8 +87,6 @@ def create_base_config(device_name, device_interface, mac_address, device_type):
             with open(config_path, "w") as config_file:
                 config_file.write(config_content)
 
-            print(
-                f"Base config for {device_name} created at {config_path}."
-            )
+            print(f"Base config for {device_name} created at {config_path}.")
     except Exception as e:
         print(f"Error creating base config for {device_name}: {e}")

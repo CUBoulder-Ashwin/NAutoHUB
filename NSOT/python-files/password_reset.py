@@ -6,9 +6,7 @@ import secrets
 from cryptography.fernet import Fernet
 
 # Load or generate encryption key for password storage (store securely in production)
-key = (
-    Fernet.generate_key()
-)  # Replace this with a securely stored key in production
+key = Fernet.generate_key()  # Replace this with a securely stored key in production
 cipher_suite = Fernet(key)
 
 # Define file paths
@@ -20,18 +18,14 @@ check_interval = 1800  # 30 minutes
 
 def generate_random_password(length=12):
     """Generates a secure random password of specified length."""
-    characters = (
-        string.ascii_letters + string.digits + string.punctuation
-    )
+    characters = string.ascii_letters + string.digits + string.punctuation
     return "".join(secrets.choice(characters) for _ in range(length))
 
 
 def generate_password():
     """Generates a new random password and encrypts it."""
     new_password = generate_random_password()
-    encrypted_password = cipher_suite.encrypt(
-        new_password.encode()
-    ).decode()
+    encrypted_password = cipher_suite.encrypt(new_password.encode()).decode()
     return new_password, encrypted_password
 
 
@@ -46,8 +40,7 @@ def main():
             fieldnames = (
                 reader.fieldnames
                 if "old_password" in reader.fieldnames
-                else reader.fieldnames
-                + ["old_password", "new_password"]
+                else reader.fieldnames + ["old_password", "new_password"]
             )
 
             for row in reader:
@@ -61,9 +54,7 @@ def main():
                     encrypted_password  # Update with the encrypted new password
                 )
 
-                updated_rows.append(
-                    row
-                )  # Store updated row for writing
+                updated_rows.append(row)  # Store updated row for writing
 
         # Write updated data back to the CSV file
         with open(hosts_csv, mode="w", newline="") as outfile:

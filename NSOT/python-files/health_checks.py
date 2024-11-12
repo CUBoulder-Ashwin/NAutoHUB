@@ -13,9 +13,7 @@ from netmiko import (
 script_dir = os.path.dirname(os.path.abspath(__file__))
 ipam_dir = os.path.join(script_dir, "..", "IPAM")
 hosts_csv = os.path.join(ipam_dir, "hosts.csv")
-log_file_path = os.path.join(
-    script_dir, "..", "device_health_check.log"
-)
+log_file_path = os.path.join(script_dir, "..", "device_health_check.log")
 
 # SNMP OIDs for interface and CPU
 OID_IF_NAME = "1.3.6.1.2.1.2.2.1.2"
@@ -36,15 +34,11 @@ def fetch_health_data(device_info):
     device_name = device_info["hostname"]
     community = "public"  # Adjust based on your environment
 
-    log_to_file(
-        f"\nStarting health check for {device_name} ({device_ip})..."
-    )
+    log_to_file(f"\nStarting health check for {device_name} ({device_ip})...")
 
     # SNMP session
     try:
-        session = Session(
-            hostname=device_ip, community=community, version=2
-        )
+        session = Session(hostname=device_ip, community=community, version=2)
         cpu_usage = session.get(OID_CPU_LOAD).value
         interfaces = session.walk(OID_IF_NAME)
         interface_statuses = session.walk(OID_IF_STATUS)
@@ -54,9 +48,7 @@ def fetch_health_data(device_info):
 
         log_to_file("Neighbors (Interfaces):")
         for i, interface in enumerate(interfaces):
-            status = (
-                "Up" if interface_statuses[i].value == "1" else "Down"
-            )
+            status = "Up" if interface_statuses[i].value == "1" else "Down"
             log_to_file(f"  - {interface.value}: {status}")
 
     except Exception as e:

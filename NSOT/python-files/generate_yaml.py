@@ -5,23 +5,15 @@ import yaml
 def clean_empty(data):
     """Recursively remove empty lists, dictionaries, and None values from the data."""
     if isinstance(data, dict):
-        return {
-            k: clean_empty(v)
-            for k, v in data.items()
-            if v not in [None, {}, []]
-        }
+        return {k: clean_empty(v) for k, v in data.items() if v not in [None, {}, []]}
     elif isinstance(data, list):
-        return [
-            clean_empty(v) for v in data if v not in [None, {}, []]
-        ]
+        return [clean_empty(v) for v in data if v not in [None, {}, []]]
     return data
 
 
 def create_yaml_from_form(device_data, filename="devices_config.yml"):
     """Creates a YAML file from the provided device data."""
-    base_dir = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..")
-    )
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     yaml_file_path = os.path.join(base_dir, "templates", filename)
 
     # Clean up device_data by removing empty values
@@ -83,14 +75,10 @@ def build_device_data(
                     "area": net["area"],
                 }
                 for net in ospf["networks"]
-                if net.get("ip")
-                and net.get("wildcard")
-                and net.get("area")
+                if net.get("ip") and net.get("wildcard") and net.get("area")
             ],
             "redistribute": {
-                "connected": ospf.get(
-                    "redistribute_connected", False
-                ),
+                "connected": ospf.get("redistribute_connected", False),
                 "bgp": ospf.get("redistribute_bgp", False),
             },
         }
@@ -123,14 +111,10 @@ def build_device_data(
     if rip and rip.get("version") and any(rip.get("networks")):
         device_data["rip"] = {
             "version": rip["version"],
-            "networks": [
-                net["ip"] for net in rip["networks"] if net.get("ip")
-            ],
+            "networks": [net["ip"] for net in rip["networks"] if net.get("ip")],
             "redistribute": {
                 "bgp": rip.get("redistribute", {}).get("bgp", False),
-                "metric": rip.get("redistribute", {}).get(
-                    "metric", 1
-                ),
+                "metric": rip.get("redistribute", {}).get("metric", 1),
             },
         }
 

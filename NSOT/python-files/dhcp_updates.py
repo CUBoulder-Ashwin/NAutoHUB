@@ -9,9 +9,7 @@ current_dir = os.path.dirname(
 csv_relative_path = os.path.join(
     current_dir, "..", "IPAM", "hosts.csv"
 )  # Relative path to the CSV file
-CSV_FILE_PATH = os.path.abspath(
-    csv_relative_path
-)  # Get absolute path
+CSV_FILE_PATH = os.path.abspath(csv_relative_path)  # Get absolute path
 
 
 def get_device_credentials(hostname):
@@ -32,9 +30,7 @@ def get_device_credentials(hostname):
     return None
 
 
-def configure_dhcp_relay(
-    connected_device, interface, connected_ip, helper_ip
-):
+def configure_dhcp_relay(connected_device, interface, connected_ip, helper_ip):
     print(f"Configuring DHCP relay on {connected_device}")
     device_info = get_device_credentials(connected_device)
     if not device_info:
@@ -50,24 +46,16 @@ def configure_dhcp_relay(
         f"ip helper-address {helper_ip}",
         "exit",
     ]
-    print(
-        f"Commands to configure DHCP relay on {connected_device}:\n{commands}"
-    )
+    print(f"Commands to configure DHCP relay on {connected_device}:\n{commands}")
     try:
         ssh_conn = ConnectHandler(**device_info)
         ssh_conn.enable()
-        print(
-            f"Connected to {connected_device}. Sending configuration commands..."
-        )
+        print(f"Connected to {connected_device}. Sending configuration commands...")
         ssh_conn.send_config_set(commands)
-        print(
-            f"Successfully configured DHCP relay on {connected_device}"
-        )
+        print(f"Successfully configured DHCP relay on {connected_device}")
         ssh_conn.disconnect()
     except Exception as e:
-        print(
-            f"Error configuring DHCP relay on {connected_device}: {e}"
-        )
+        print(f"Error configuring DHCP relay on {connected_device}: {e}")
 
 
 def configure_dhcp_server(
@@ -98,9 +86,7 @@ def configure_dhcp_server(
         f"default-gateway {default_gateway}",
         "exit",
     ]
-    print(
-        f"Commands to configure DHCP server on {dhcp_server}:\n{commands}"
-    )
+    print(f"Commands to configure DHCP server on {dhcp_server}:\n{commands}")
     try:
         ssh_conn = ConnectHandler(**device_info)
         ssh_conn.enable()

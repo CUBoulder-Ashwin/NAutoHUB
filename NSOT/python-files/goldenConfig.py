@@ -25,19 +25,13 @@ def fetch_and_save_config(device_info):
     }
 
     try:
-        print(
-            f"Connecting to {device_info['hostname']} at {device['ip']}..."
-        )
+        print(f"Connecting to {device_info['hostname']} at {device['ip']}...")
         ssh_conn = ConnectHandler(**device)
         print(f"Successfully connected to {device_info['hostname']}")
 
-        print(
-            f"Entering privileged mode on {device_info['hostname']}..."
-        )
+        print(f"Entering privileged mode on {device_info['hostname']}...")
         ssh_conn.enable()
-        print(
-            f"Fetching running config from {device_info['hostname']}..."
-        )
+        print(f"Fetching running config from {device_info['hostname']}...")
         running_config = ssh_conn.send_command("show running-config")
         ssh_conn.disconnect()
 
@@ -52,13 +46,9 @@ def fetch_and_save_config(device_info):
         NetmikoTimeoutException,
         NetmikoAuthenticationException,
     ) as e:
-        print(
-            f"Failed to fetch config from {device_info['hostname']}: {e}"
-        )
+        print(f"Failed to fetch config from {device_info['hostname']}: {e}")
     except Exception as e:
-        print(
-            f"An error occurred with {device_info['hostname']}: {e}"
-        )
+        print(f"An error occurred with {device_info['hostname']}: {e}")
     return None
 
 
@@ -81,9 +71,7 @@ def fetch_configs_from_csv():
                 "management_ip": row["management_ip"],
             }
             device_list.append(device_info)
-            print(
-                f"Added device {row['hostname']} to the device list."
-            )
+            print(f"Added device {row['hostname']} to the device list.")
 
     print(f"Total devices fetched from CSV: {len(device_list)}")
     return device_list
@@ -118,14 +106,10 @@ def generate_configs(select_all=False, hostname=None):
     """Main function to generate golden configs."""
     filenames = []
     if select_all:
-        print(
-            "Generating configs for all devices (parallel execution)..."
-        )
+        print("Generating configs for all devices (parallel execution)...")
         devices = fetch_configs_from_csv()
         with ThreadPoolExecutor(max_workers=5) as executor:
-            filenames = list(
-                executor.map(fetch_and_save_config, devices)
-            )
+            filenames = list(executor.map(fetch_and_save_config, devices))
     elif hostname:
         print(f"Generating config for device: {hostname}")
         filename = fetch_config_for_device(hostname)

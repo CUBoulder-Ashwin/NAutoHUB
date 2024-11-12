@@ -48,9 +48,7 @@ def get_average_cpu_load(target_ip):
 def get_device_name(target_ip):
     device_name_output = snmp_walk(target_ip, OID_DEVICE_NAME)
     device_name = (
-        device_name_output.split("=")[-1]
-        .strip()
-        .replace("STRING: ", "")
+        device_name_output.split("=")[-1].strip().replace("STRING: ", "")
     )  # Removing 'STRING:'
     return device_name
 

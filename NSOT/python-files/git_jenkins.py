@@ -3,6 +3,7 @@ import subprocess
 import time
 import requests
 
+
 # Function to push to Git
 def git_push():
     try:
@@ -16,10 +17,13 @@ def git_push():
         print(f"Git push failed: {e}")
         return False
 
+
 # Function to trigger Jenkins job and fetch result
 def trigger_jenkins_job():
     jenkins_url = "http://your_jenkins_server/job/your_job_name/buildWithParameters"
-    jenkins_status_url = "http://your_jenkins_server/job/your_job_name/lastBuild/api/json"
+    jenkins_status_url = (
+        "http://your_jenkins_server/job/your_job_name/lastBuild/api/json"
+    )
     jenkins_user = "your_username"
     jenkins_token = "your_api_token"
 
@@ -34,12 +38,15 @@ def trigger_jenkins_job():
     # Poll Jenkins for completion
     while True:
         time.sleep(10)
-        job_response = requests.get(jenkins_status_url, auth=(jenkins_user, jenkins_token)).json()
+        job_response = requests.get(
+            jenkins_status_url, auth=(jenkins_user, jenkins_token)
+        ).json()
         if job_response["building"] is False:
             job_result = job_response.get("result", "UNKNOWN")
             print(f"Jenkins job completed with status: {job_result}")
             return job_result
         print("Waiting for Jenkins job to complete...")
+
 
 # Combined function to push and trigger Jenkins
 def push_and_run_jenkins():

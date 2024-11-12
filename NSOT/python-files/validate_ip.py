@@ -12,9 +12,7 @@ def validate_ip(ip):
 
 
 def doubleCheck(ip):
-    mat = re.match(
-        r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", ip
-    )
+    mat = re.match(r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", ip)
     if not bool(mat):
         print(f"Double checked, IP address {ip} is not valid\n")
         return False

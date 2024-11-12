@@ -10,12 +10,8 @@ class TestNetworkAutomation(unittest.TestCase):
         print("\n" + "-" * 50)
         print("Checking Required File Existence")
         print("-" * 50)
-        csv_path = os.path.join(
-            os.path.dirname(__file__), "..", "IPAM", "hosts.csv"
-        )
-        self.assertTrue(
-            os.path.exists(csv_path), f"File not found: {csv_path}"
-        )
+        csv_path = os.path.join(os.path.dirname(__file__), "..", "IPAM", "hosts.csv")
+        self.assertTrue(os.path.exists(csv_path), f"File not found: {csv_path}")
         print(f"Found CSV file at {csv_path}\n")
 
     def test_ping_ip_from_csv(self):
@@ -24,9 +20,7 @@ class TestNetworkAutomation(unittest.TestCase):
         print("-" * 50)
 
         # Specify the path directly in this function
-        csv_path = os.path.join(
-            os.path.dirname(__file__), "..", "IPAM", "hosts.csv"
-        )
+        csv_path = os.path.join(os.path.dirname(__file__), "..", "IPAM", "hosts.csv")
 
         ips = []
         with open(csv_path, mode="r") as file:
@@ -41,9 +35,7 @@ class TestNetworkAutomation(unittest.TestCase):
             if ip == "management_ip":
                 continue  # Skip header if accidentally included
             result = ping_ip(ip)
-            print(
-                f"Ping test for IP {ip}: {'Success' if result else 'Failure'}"
-            )
+            print(f"Ping test for IP {ip}: {'Success' if result else 'Failure'}")
             self.assertTrue(result, f"Ping failed for IP {ip}")
 
         print("Ping tests from CSV completed.\n")

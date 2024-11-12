@@ -23,9 +23,7 @@ def ping_local(destination):
         return False, e.output
 
 
-def ping_remote(
-    source, destination, username, password, device_type="arista_eos"
-):
+def ping_remote(source, destination, username, password, device_type="arista_eos"):
     """Ping a destination from a remote source via SSH using Netmiko."""
     device = {
         "device_type": device_type,
@@ -36,9 +34,7 @@ def ping_remote(
     }
 
     try:
-        print(
-            f"Attempting SSH connection to {source} with username: {username}"
-        )
+        print(f"Attempting SSH connection to {source} with username: {username}")
         # Establish SSH connection using Netmiko
         ssh_conn = ConnectHandler(**device)
         print(f"SSH login successful to {source}")
@@ -48,9 +44,7 @@ def ping_remote(
         ssh_conn.enable()
 
         # Execute the ping command remotely
-        print(
-            f"Starting remote ping test from {source} to {destination}"
-        )
+        print(f"Starting remote ping test from {source} to {destination}")
         command = f"ping {destination}"
         output = ssh_conn.send_command(command)
 

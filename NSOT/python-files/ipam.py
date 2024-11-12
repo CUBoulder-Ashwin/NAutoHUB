@@ -24,9 +24,7 @@ def collect_device_info(device_name, management_ip):
 
     try:
         # Establish an SNMP session
-        session = Session(
-            hostname=management_ip, community=community, version=2
-        )
+        session = Session(hostname=management_ip, community=community, version=2)
 
         # Fetch data using SNMP
         interface_names = session.walk(OID_IF_NAME)
@@ -44,21 +42,15 @@ def collect_device_info(device_name, management_ip):
                     "Device Name": device_name,
                     "Interface Name": interface_names[i].value,
                     "IP Address": (
-                        ip_addresses[i].value
-                        if i < len(ip_addresses)
-                        else "N/A"
+                        ip_addresses[i].value if i < len(ip_addresses) else "N/A"
                     ),
                     "Subnet Mask": (
-                        subnet_masks[i].value
-                        if i < len(subnet_masks)
-                        else "N/A"
+                        subnet_masks[i].value if i < len(subnet_masks) else "N/A"
                     ),
                 }
             )
     except Exception as e:
-        print(
-            f"Error fetching data for {device_name} ({management_ip}): {e}"
-        )
+        print(f"Error fetching data for {device_name} ({management_ip}): {e}")
 
     return device_info
 
@@ -83,9 +75,7 @@ def main():
             for row in reader:
                 device_name = row["hostname"]
                 management_ip = row["management_ip"]
-                device_data = collect_device_info(
-                    device_name, management_ip
-                )
+                device_data = collect_device_info(device_name, management_ip)
                 if device_data:
                     writer.writerows(device_data)
 

@@ -8,14 +8,10 @@ current_dir = os.path.dirname(
 csv_relative_path = os.path.join(
     current_dir, "..", "IPAM", "hosts.csv"
 )  # Relative path to the CSV file
-CSV_FILE_PATH = os.path.abspath(
-    csv_relative_path
-)  # Get absolute path
+CSV_FILE_PATH = os.path.abspath(csv_relative_path)  # Get absolute path
 
 
-def update_hosts_csv(
-    device_name, ip_address, username="admin", password="admin"
-):
+def update_hosts_csv(device_name, ip_address, username="admin", password="admin"):
     # Read existing CSV contents
     rows = []
     device_found = False

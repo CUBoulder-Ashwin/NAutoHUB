@@ -4,10 +4,11 @@ import subprocess
 import time
 import requests
 
+
 # Function to get the latest ngrok URL from the log file
 def get_latest_ngrok_url(log_file_path):
     try:
-        with open(log_file_path, 'r') as file:
+        with open(log_file_path, "r") as file:
             lines = file.readlines()
 
         # Traverse lines from the end to find the last occurrence of a URL
@@ -28,6 +29,7 @@ def get_latest_ngrok_url(log_file_path):
         print(f"An error occurred: {e}")
         return None
 
+
 # Function to push to Git
 def git_push():
     try:
@@ -41,8 +43,20 @@ def git_push():
         print(f"Git push failed: {e}")
         return False
 
-# Function to trigger Jenkins job and fetch the output once done
+
+def get_jenkins_crumb(jenkins_base_url, user, token):
+    crumb_url = f"{jenkins_base_url}/crumbIssuer/api/json"
+    response = requests.get(crumb_url, auth=(user, token))
+    if response.status_code == 200:
+        crumb_data = response.json()
+        return {crumb_data["crumbRequestField"]: crumb_data["crumb"]}
+    else:
+        print("Failed to fetch Jenkins crumb.")
+        return None
+
+
 def trigger_jenkins_job():
+    # Fetch the latest ngrok URL from the log file
     log_file_path = "/home/student/Desktop/Advanced-Netman/ngrok.log"
     jenkins_base_url = get_latest_ngrok_url(log_file_path)
     if not jenkins_base_url:
@@ -53,74 +67,68 @@ def trigger_jenkins_job():
     jenkins_user = "admin"
     jenkins_token = "admin"
 
-    # Construct URLs for job trigger and job info
+    # Construct URLs
     job_url = f"{jenkins_base_url}/job/{job_name}"
     build_trigger_url = f"{job_url}/buildWithParameters"
 
-    # Trigger Jenkins job
-    response = requests.post(build_trigger_url, auth=(jenkins_user, jenkins_token))
-    print("Trigger response code:", response.status_code)
+    # Fetch CSRF crumb
+    crumb_header = get_jenkins_crumb(jenkins_base_url, jenkins_user, jenkins_token)
+    if not crumb_header:
+        return "Failed to fetch Jenkins crumb"
 
+    # Trigger Jenkins job with the crumb
+    headers = crumb_header
+    response = requests.post(
+        build_trigger_url, auth=(jenkins_user, jenkins_token), headers=headers
+    )
     if response.status_code == 201:
         print("Jenkins job started successfully.")
     else:
-        print("Failed to start Jenkins job. Response:", response.text)
+        print(f"Failed to start Jenkins job. Response: {response.text}")
         return "Failed"
 
     # Get the latest build number dynamically
+    latest_build_number = None
     try:
-        job_info_url = f"{job_url}/api/json"
-        print("Fetching job info from:", job_info_url)
-        job_info_response = requests.get(job_info_url, auth=(jenkins_user, jenkins_token))
-        
+        job_info_response = requests.get(
+            f"{job_url}/api/json", auth=(jenkins_user, jenkins_token), headers=headers
+        )
         if job_info_response.status_code == 200:
             job_info = job_info_response.json()
             latest_build_number = job_info.get("lastBuild", {}).get("number")
-            latest_build_url = f"{job_url}/{latest_build_number}" if latest_build_number else "Not available"
-            print("Latest Build URL:", latest_build_url)
+            latest_build_url = (
+                f"{job_url}/{latest_build_number}"
+                if latest_build_number
+                else "Not available"
+            )
+            print("Latest Build URL:", latest_build_url)  # Debugging output
         else:
-            print("Failed to retrieve job information. Status code:", job_info_response.status_code)
+            print("Failed to retrieve job information.")
             return "Failed"
     except Exception as e:
         print(f"Error retrieving latest build number: {e}")
         return "Failed"
 
-    # Poll Jenkins for the latest build completion and fetch output
-    if latest_build_number:
-        jenkins_build_url = f"{job_url}/{latest_build_number}/api/json"
-        console_output_url = f"{job_url}/{latest_build_number}/consoleText"
-        try:
-            while True:
-                build_response = requests.get(jenkins_build_url, auth=(jenkins_user, jenkins_token))
-                print("Build response code:", build_response.status_code)
-                
-                if build_response.status_code == 200:
-                    build_info = build_response.json()
-                    if not build_info.get("building", True):
-                        last_build_result = build_info.get("result", "UNKNOWN")
-                        print("Jenkins job completed with status:", last_build_result)
-                        
-                        output_response = requests.get(console_output_url, auth=(jenkins_user, jenkins_token))
-                        if output_response.status_code == 200:
-                            print("Jenkins Console Output:\n", output_response.text)
-                        else:
-                            print("Failed to retrieve console output.")
-                        return last_build_result
-                    print("Waiting for Jenkins job to complete...")
-                else:
-                    print("Failed to fetch the last build information.")
-                    return "Failed"
-                time.sleep(10)
-
-        except Exception as e:
-            print(f"An error occurred while fetching Jenkins job status: {e}")
-            return "Failed"
 
 # Combined function to push and trigger Jenkins
 def push_and_run_jenkins():
     if git_push():
         return trigger_jenkins_job()
     return "Git push failed"
+
+
+# Run this function standalone for testing
+if __name__ == "__main__":
+    result = push_and_run_jenkins()
+    print("Final result:", result)
+
+
+# Combined function to push and trigger Jenkins
+def push_and_run_jenkins():
+    if git_push():
+        return trigger_jenkins_job()
+    return "Git push failed"
+
 
 # Run this function standalone for testing
 if __name__ == "__main__":
