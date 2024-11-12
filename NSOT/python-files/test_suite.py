@@ -1,6 +1,5 @@
 import os
 import unittest
-from validate_ip import doubleCheck
 from validate_ping import ping_ip
 
 
