@@ -33,8 +33,11 @@ def get_latest_ngrok_url(log_file_path):
 # Function to push to Git
 def git_push():
     try:
-        subprocess.run(["git", "add", "."], check=True)
+        # Add the modified file specifically
+        subprocess.run(["git", "add", "-A"], check=True)
+        # Commit the changes
         subprocess.run(["git", "commit", "-m", "Auto-config push"], check=True)
+        # Push to the remote repository
         subprocess.run(["git", "push"], check=True)
         print("Changes pushed to Git successfully.")
         time.sleep(5)
