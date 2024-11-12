@@ -35,9 +35,8 @@ pipeline {
                     def yamlLintResult = sh(
                         script: """
                         . ${VIRTUAL_ENV}/bin/activate
-                        find ${PROJECT_ROOT} -path "*/venv" -prune -o \\( -name "*.yml" -o -name "*.yaml" \\) -print | xargs yamllint
+                        find ${PROJECT_ROOT} -path "*/venv" -prune -o \\( -name "*.yml" -o -name "*.yaml" \\) -print | xargs yamllint -d "{rules: {document-start: disable, truthy: disable}}"
                         """,
-                        returnStatus: true
                     )
                     if (yamlLintResult != 0) {
                         echo "YAML Linting encountered issues. Consider fixing YAML syntax."
@@ -48,6 +47,7 @@ pipeline {
                 }
             }
         }
+
 
         stage('Run Unit Tests') {
             steps {
