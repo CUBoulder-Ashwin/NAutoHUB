@@ -23,8 +23,8 @@ targets:
 subscriptions:
   interface-counters:
     paths:
-      - /interfaces/interface/state/oper-status
-      - /components/component/cpu
+    - /interfaces/interface/state/oper-status
+    - /components/component/cpu
     sample-interval: 10s
 
 outputs:
@@ -33,7 +33,8 @@ outputs:
     address: http://localhost:8086
     org: networking
     bucket: lab2-stream
-    token: j1ddEOAQzVuURStmvT_TbWRCl0PL3L581HExsRlWvgOOqQXbIPRl-HkFlYMfb8lO7s8j1aNiKgmRN_-6LF9Cgw==
+    token: 
+      j1ddEOAQzVuURStmvT_TbWRCl0PL3L581HExsRlWvgOOqQXbIPRl-HkFlYMfb8lO7s8j1aNiKgmRN_-6LF9Cgw==
     override-timestamps: false
     timestamp-precision: s
     health-check-period: 30s

@@ -42,59 +42,59 @@ topology:
       kind: linux
       image: ubu_hosts:latest
       exec:
-        - ip route del default via 172.20.20.1 dev eth0
-        - dhclient eth1
+      - ip route del default via 172.20.20.1 dev eth0
+      - dhclient eth1
     H2:
       kind: linux
       image: ubu_hosts:latest
       exec:
-        - ip route del default via 172.20.20.1 dev eth0
-        - dhclient eth1
+      - ip route del default via 172.20.20.1 dev eth0
+      - dhclient eth1
     H3:
       kind: linux
       image: ubu_hosts:latest
       exec:
-        - ip route del default via 172.20.20.1 dev eth0
-        - dhclient eth1
+      - ip route del default via 172.20.20.1 dev eth0
+      - dhclient eth1
     H4:
       kind: linux
       image: ubu_hosts:latest
       exec:
-        - ip route del default via 172.20.20.1 dev eth0
-        - dhclient eth1
+      - ip route del default via 172.20.20.1 dev eth0
+      - dhclient eth1
     Web_Server:
       kind: linux
       image: ubu_webserver:latest
       exec:
-        - ip addr add 200.200.200.2/24 dev eth1
-        - ip -6 addr add 2001:db8:200::2/64 dev eth0
-        - ip link set eth1 up
-        - ip route del default via 172.20.20.1 dev eth0
-        - ip route add default via 200.200.200.1 dev eth1
-        - ip -6 route add default via 2001:db8:200::1 dev eth1
+      - ip addr add 200.200.200.2/24 dev eth1
+      - ip -6 addr add 2001:db8:200::2/64 dev eth0
+      - ip link set eth1 up
+      - ip route del default via 172.20.20.1 dev eth0
+      - ip route add default via 200.200.200.1 dev eth1
+      - ip -6 route add default via 2001:db8:200::1 dev eth1
     R6:
       kind: ceos
       image: ceos:4.32.2F
       startup-config: /home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs/R6.cfg
       exec:
-        - sudo dhclient eth1
+      - sudo dhclient eth1
 
   links:
-    - endpoints: ["R6:eth1", "R4:eth4"]
-    - endpoints: ["S1:eth1", "R1:eth1"]
-    - endpoints: ["S1:eth4", "S2:eth4"]
-    - endpoints: ["S2:eth1", "R2:eth1"]
-    - endpoints: ["R1:eth2", "S3:eth2"]
-    - endpoints: ["R2:eth2", "S4:eth2"]
-    - endpoints: ["S3:eth1", "R3:eth1"]
-    - endpoints: ["S3:eth3", "S4:eth3"]
-    - endpoints: ["S4:eth1", "R4:eth1"]
-    - endpoints: ["R3:eth2", "R4:eth2"]
-    - endpoints: ["R3:eth3", "R5:eth2"]
-    - endpoints: ["R4:eth3", "R5:eth3"]
-    - endpoints: ["S1:eth2", "H1:eth1"]
-    - endpoints: ["S1:eth3", "H2:eth1"]
-    - endpoints: ["S2:eth2", "H3:eth1"]
-    - endpoints: ["S2:eth3", "H4:eth1"]
-    - endpoints: ["R5:eth1", "Web_Server:eth1"]
-    - endpoints: ["S3:eth4", "host:eth0"]
+  - endpoints: [R6:eth1, R4:eth4]
+  - endpoints: [S1:eth1, R1:eth1]
+  - endpoints: [S1:eth4, S2:eth4]
+  - endpoints: [S2:eth1, R2:eth1]
+  - endpoints: [R1:eth2, S3:eth2]
+  - endpoints: [R2:eth2, S4:eth2]
+  - endpoints: [S3:eth1, R3:eth1]
+  - endpoints: [S3:eth3, S4:eth3]
+  - endpoints: [S4:eth1, R4:eth1]
+  - endpoints: [R3:eth2, R4:eth2]
+  - endpoints: [R3:eth3, R5:eth2]
+  - endpoints: [R4:eth3, R5:eth3]
+  - endpoints: [S1:eth2, H1:eth1]
+  - endpoints: [S1:eth3, H2:eth1]
+  - endpoints: [S2:eth2, H3:eth1]
+  - endpoints: [S2:eth3, H4:eth1]
+  - endpoints: [R5:eth1, Web_Server:eth1]
+  - endpoints: [S3:eth4, host:eth0]
