@@ -1,29 +1,141 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Network Dashboard</h2>
 
-<!-- Container for the iframe -->
-<iframe
-  id="grafanaFrame"
-  src="https://snapshots.raintank.io/dashboard/snapshot/rZRM9lHwdzy9dP6hLvH5QSOv7ahnN10k"
-  width="100%"
-  height="800px"
-  frameborder="0"
-></iframe>
+<h2 class="dashboard-title">Network Dashboard</h2>
 
-<!-- Bookmark-style navigation for the dashboards -->
-<div id="dashboardBookmarks" style="margin-top: 20px; display: flex; justify-content: center;">
-  <button onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/rZRM9lHwdzy9dP6hLvH5QSOv7ahnN10k')">CPU Utilization</button>
-  <button onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/AERfDDEPwfADL5p0AZwbyh9f22tkjkeX')">Interface Status</button>
-  <button onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/pqrstuvwxyz')">MTU</button>
-  <button onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/pqrstuvwxyz')">CPU Temperature</button>
-
+<!-- Container for the iframe with shadow and border styling -->
+<div class="iframe-container">
+    <iframe
+      id="grafanaFrame"
+      src="https://snapshots.raintank.io/dashboard/snapshot/rZRM9lHwdzy9dP6hLvH5QSOv7ahnN10k"
+      frameborder="0"
+    ></iframe>
 </div>
 
-<!-- JavaScript to change the iframe src -->
+<!-- Bookmark-style navigation for the dashboards -->
+<div id="dashboardBookmarks" class="bookmark-container">
+  <button class="bookmark-button" id="btn-cpu" onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/rZRM9lHwdzy9dP6hLvH5QSOv7ahnN10k', 0)">CPU Utilization</button>
+  <button class="bookmark-button" id="btn-interface" onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/AERfDDEPwfADL5p0AZwbyh9f22tkjkeX', 1)">Interface Status</button>
+  <button class="bookmark-button" id="btn-mtu" onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/pqrstuvwxyz', 2)">MTU</button>
+  <button class="bookmark-button" id="btn-temp" onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/pqrstuvwxyz', 3)">CPU Temperature</button>
+</div>
+
+<!-- JavaScript to change the iframe src and cycle through dashboards -->
 <script>
-  function changeDashboard(url) {
+  const dashboardUrls = [
+    'https://snapshots.raintank.io/dashboard/snapshot/rZRM9lHwdzy9dP6hLvH5QSOv7ahnN10k',
+    'https://snapshots.raintank.io/dashboard/snapshot/AERfDDEPwfADL5p0AZwbyh9f22tkjkeX',
+    'https://snapshots.raintank.io/dashboard/snapshot/pqrstuvwxyz',
+    'https://snapshots.raintank.io/dashboard/snapshot/pqrstuvwxyz'
+  ];
+
+  const buttons = document.querySelectorAll('.bookmark-button');
+  let currentDashboard = 0;
+  const cycleInterval = 5000; // 5 seconds
+
+  function changeDashboard(url, index) {
     document.getElementById('grafanaFrame').src = url;
+    highlightButton(index);
   }
+
+  function highlightButton(index) {
+    // Remove the active class from all buttons
+    buttons.forEach((button, i) => {
+      if (i === index) {
+        button.classList.add('active-tab');
+      } else {
+        button.classList.remove('active-tab');
+      }
+    });
+  }
+
+  function cycleDashboards() {
+    changeDashboard(dashboardUrls[currentDashboard], currentDashboard);
+    currentDashboard = (currentDashboard + 1) % dashboardUrls.length;
+  }
+
+  // Start the cycle immediately and set interval for subsequent cycles
+  cycleDashboards();
+  setInterval(cycleDashboards, cycleInterval);
 </script>
+
+
+<style>
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a2e;
+    color: #ffffff;
+}
+
+.dashboard-title {
+    text-align: center;
+    color: #00d1b2;
+    font-size: 2.5em;
+    margin-top: 20px;
+    font-family: 'Arial Black', sans-serif;
+}
+
+/* Iframe Container Styling */
+.iframe-container {
+    max-width: 90%;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #0d0d15;
+    border: 2px solid #00d1b2;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 209, 178, 0.4);
+    overflow: hidden;
+}
+
+iframe {
+    width: 100%;
+    height: 800px;
+    border: none;
+}
+
+/* Bookmark Button Styling */
+.bookmark-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px auto;
+}
+
+.bookmark-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #ffffff;
+    background-color: #0d0d15;
+    border: 1px solid #00d1b2;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.bookmark-button:hover {
+    background-color: #00d1b2;
+    color: #1a1a2e;
+    transform: scale(1.05);
+}
+
+/* Animation for Active Tab */
+.active-tab {
+    animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+    from {
+        background-color: #00d1b2;
+        color: #1a1a2e;
+        transform: scale(1.05);
+    }
+    to {
+        background-color: #00ffcc;
+        color: #0d0d15;
+        transform: scale(1.1);
+    }
+}
+</style>
+
 {% endblock %}

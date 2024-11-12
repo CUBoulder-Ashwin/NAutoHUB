@@ -79,7 +79,6 @@ topology:
       exec:
         - sudo dhclient eth1
 
-
   links:
     - endpoints: ["R6:eth1", "R4:eth4"]
     - endpoints: ["S1:eth1", "R1:eth1"]

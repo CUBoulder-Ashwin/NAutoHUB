@@ -7,6 +7,18 @@ pipeline {
     }
 
     stages {
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    echo "Installing yamllint in virtual environment"
+                    sh """
+                    . ${VIRTUAL_ENV}/bin/activate
+                    pip install yamllint
+                    """
+                }
+            }
+        }
+
         stage('Python Linting') {
             steps {
                 script {
@@ -21,6 +33,27 @@ pipeline {
                         echo "Python Linting encountered issues, but proceeding to next stage."
                     } else {
                         echo "Python Linting passed successfully."
+                    }
+                }
+            }
+        }
+
+        stage('YAML Linting') {
+            steps {
+                script {
+                    echo "Linting YAML files in NSOT directory, excluding /venv"
+                    def yamlLintResult = sh(
+                        script: """
+                        . ${VIRTUAL_ENV}/bin/activate
+                        find . -path "*/venv" -prune -o \\( -name "*.yml" -o -name "*.yaml" \\) -print | xargs yamllint
+                        """,
+                        returnStatus: true
+                    )
+                    if (yamlLintResult != 0) {
+                        echo "YAML Linting encountered issues. Consider fixing YAML syntax."
+                        currentBuild.result = 'UNSTABLE'  // Optional: Mark as unstable if linting fails
+                    } else {
+                        echo "YAML Linting passed successfully."
                     }
                 }
             }

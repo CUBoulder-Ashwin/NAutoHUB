@@ -1,4 +1,4 @@
-! Startup-config last modified at Tue Nov  5 20:06:15 2024 by root
+! Startup-config last modified at Tue Nov  5 23:38:23 2024 by root
 ! device: R4 (cEOSLab, EOS-4.32.2F-38195967.4322F (engineering build))
 !
 no aaa root
@@ -77,8 +77,8 @@ interface Ethernet3
 interface Ethernet4
 !
 interface Management0
-   ip address 172.20.20.7/24
-   ipv6 address 3fff:172:20:20::7/64
+   ip address 172.20.20.2/24
+   ipv6 address 3fff:172:20:20::2/64
 !
 ip routing
 !
@@ -117,6 +117,7 @@ router multicast
 !
 router ospf 1
    redistribute bgp
+   redistribute connected
    network 10.0.101.0/24 area 0.0.0.0
    network 192.168.0.0/24 area 0.0.0.0
    max-lsa 12000

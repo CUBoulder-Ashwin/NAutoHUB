@@ -1,4 +1,4 @@
-! Startup-config last modified at Tue Nov  5 20:06:02 2024 by root
+! Startup-config last modified at Tue Nov  5 23:40:21 2024 by root
 ! device: R5 (cEOSLab, EOS-4.32.2F-38195967.4322F (engineering build))
 !
 no aaa root
@@ -47,8 +47,8 @@ interface Ethernet3
    ipv6 address 2001:db8:4::2/64
 !
 interface Management0
-   ip address 172.20.20.5/24
-   ipv6 address 3fff:172:20:20::5/64
+   ip address 172.20.20.12/24
+   ipv6 address 3fff:172:20:20::c/64
 !
 ip routing
 !

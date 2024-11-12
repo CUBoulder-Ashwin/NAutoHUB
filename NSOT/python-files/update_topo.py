@@ -30,6 +30,9 @@ def update_topology(
                 f"    {device_name}:\n"
                 f"      kind: linux\n"
                 f"      image: ubu_hosts:latest\n"
+                f"      exec:\n"
+                f"        - ip route del default via 172.20.20.1 dev eth0\n"
+                f"        - sudo dhclient {device_interface}\n"               
             )
 
         # Prepare the new link entry
@@ -56,33 +59,34 @@ def update_topology(
         print(f"Updated topology with {device_name}, link added.")
 
         # Create the base config file
-        create_base_config(device_name, device_interface, mac_address)
+        create_base_config(device_name, device_interface, mac_address, device_type)
 
     except Exception as e:
         print(f"Error updating topology: {e}")
 
 
-def create_base_config(device_name, device_interface, mac_address):
+def create_base_config(device_name, device_interface, mac_address, device_type):
     try:
-        config_dir = "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs"
-        os.makedirs(config_dir, exist_ok=True)
-        config_path = os.path.join(config_dir, f"{device_name}.cfg")
+        if device_type in ["router", "switch"]:
+            config_dir = "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs"
+            os.makedirs(config_dir, exist_ok=True)
+            config_path = os.path.join(config_dir, f"{device_name}.cfg")
 
-        config_content = (
-            f"hostname {device_name}\n"
-            "!\n"
-            "username admin privilege 15 role network-admin secret 0 admin\n"
-            "!\n"
-            f"interface {device_interface}\n"
-            f"   mac-address {mac_address}\n"
-            "    ip address dhcp"
-        )
+            config_content = (
+                f"hostname {device_name}\n"
+                "!\n"
+                "username admin privilege 15 role network-admin secret 0 admin\n"
+                "!\n"
+                f"interface {device_interface}\n"
+                f"   mac-address {mac_address}\n"
+                "    ip address dhcp"
+            )
 
-        with open(config_path, "w") as config_file:
-            config_file.write(config_content)
+            with open(config_path, "w") as config_file:
+                config_file.write(config_content)
 
-        print(
-            f"Base config for {device_name} created at {config_path}."
-        )
+            print(
+                f"Base config for {device_name} created at {config_path}."
+            )
     except Exception as e:
         print(f"Error creating base config for {device_name}: {e}")

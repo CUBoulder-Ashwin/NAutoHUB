@@ -1,20 +1,140 @@
 {% extends "base.html" %}
 {% block content %}
+
 <div class="homepage-header">
     <h1>RCN Network Management</h1>
 </div>
-<div class="tile-container">
-    <div class="tile">
-        <a href="{{ url_for('dashboard') }}">Dashboard</a>
-    </div>
-    <div class="tile">
-        <a href="{{ url_for('add_device') }}">Add Device</a>
-    </div>
-    <div class="tile">
-        <a href="{{ url_for('configure_device') }}">Configure Device</a>
-    </div>
-    <div class="tile">
-        <a href="{{ url_for('tools') }}">Tools</a>
+
+<div class="category-container">
+    <h3 class="category-title">Main Features</h3>
+    <div class="tile-container">
+        <div class="tile">
+            <a href="{{ url_for('dashboard') }}">
+                <div class="tile-content">
+                    <h2>Dashboard</h2>
+                    <p>View the main dashboard for network overview</p>
+                </div>
+            </a>
+        </div>
+        <div class="tile">
+            <a href="{{ url_for('add_device') }}">
+                <div class="tile-content">
+                    <h2>Add Device</h2>
+                    <p>Add a new device to the network</p>
+                </div>
+            </a>
+        </div>
+        <div class="tile">
+            <a href="{{ url_for('configure_device') }}">
+                <div class="tile-content">
+                    <h2>Configure Device</h2>
+                    <p>Set up and configure existing devices</p>
+                </div>
+            </a>
+        </div>
     </div>
 </div>
+
+<div class="category-container">
+    <h3 class="category-title">Tools</h3>
+    <div class="tile-container">
+        <div class="tile">
+            <a href="{{ url_for('tools') }}">
+                <div class="tile-content">
+                    <h2>Tools</h2>
+                    <p>Access network management tools</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a2e;
+    color: #ffffff;
+}
+
+.homepage-header h1 {
+    text-align: center;
+    color: #00d1b2;
+    font-size: 2.5em;
+    margin-top: 20px;
+    font-family: 'Arial Black', sans-serif;
+}
+
+/* Category Styling */
+.category-container {
+    border: 2px solid #00d1b2;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 30px auto;
+    max-width: 950px;
+    box-shadow: 0 0 20px rgba(0, 209, 178, 0.2);
+}
+
+.category-title {
+    color: #00ffcc;
+    font-size: 1.8em;
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Arial Black', sans-serif;
+}
+
+/* Tile Container Styling */
+.tile-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Individual Tile Styling */
+.tile {
+    width: 250px;
+    background-color: #0d0d15;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 209, 178, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+}
+
+.tile a {
+    color: #ffffff;
+    text-decoration: none;
+    display: block;
+}
+
+.tile-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.tile-content h2 {
+    color: #00d1b2;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.tile-content p {
+    color: #a0a0a0;
+    font-size: 1em;
+}
+
+.tile:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(0, 209, 178, 0.5);
+}
+
+.tile:hover h2 {
+    color: #00ffcc;
+}
+
+.tile:hover p {
+    color: #b3f0e6;
+}
+</style>
+
 {% endblock %}

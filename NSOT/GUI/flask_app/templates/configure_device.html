@@ -1,33 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Configure Device</h2>
-<form method="POST">
+
+<h2 style="text-align: center; color: #00d1b2; font-family: 'Arial Black', sans-serif;">Configure Device</h2>
+<form method="POST" style="max-width: 500px; margin: 0 auto; background-color: #1a1a2e; padding: 20px; border-radius: 10px; box-shadow: 0 0 20px rgba(0, 209, 178, 0.4);">
     <!-- Device Name -->
-    <div class="form-group">
-        <label for="device_id">Device Name:</label>
-        <input type="text" name="device_id" required><br>
+    <div class="form-group" style="margin-bottom: 15px;">
+        <label for="device_id" style="display: block; color: #00d1b2; font-size: 1.1em;">Device Name:</label>
+        <input type="text" name="device_id" required class="form-input" style="width: 95%; padding: 8px; border: 1px solid #00d1b2; border-radius: 5px; background-color: #0d0d15; color: #ffffff; outline: none;">
     </div>
 
     <!-- Router Type Dropdown -->
-    <div class="form-group">
-        <label for="router_type">Select Router Type:</label>
-        <select name="router_type" id="router_type" required onchange="showConfigInputs()">
+    <div class="form-group" style="margin-bottom: 15px;">
+        <label for="router_type" style="display: block; color: #00d1b2; font-size: 1.1em;">Select Router Type:</label>
+        <select name="router_type" id="router_type" required class="form-input" onchange="showConfigInputs()">
             <option value="">Select Type</option>
             <option value="access">Access Router</option>
             <option value="core">Core Router</option>
             <option value="edge">Edge Router</option>
-        </select><br>
+        </select>
     </div>
 
     <!-- Configuration inputs will be shown based on router type -->
     <div id="config_inputs"></div>
     
     <!-- Button to generate configuration -->
-    <div class="form-group" style="margin-top: 20px;">
-        <button type="submit">Generate Configuration</button>
+    <div class="form-group" style="text-align: center; margin-top: 20px;">
+        <button type="submit" class="form-button" style="background-color: #00d1b2; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s;">
+            Generate Configuration
+        </button>
     </div>
 </form>
-
 <!-- Add JavaScript for dynamic form fields -->
 <script>
     function showConfigInputs() {
@@ -44,241 +46,247 @@
     }
 
     // Function to generate Access Router Fields
-    function generateAccessRouterFields() {
-        return `
-            <h3>Interfaces</h3>
-            <div id="interfaces" class="inline-group">
-                <label for="interface">Interface:</label>
-                <input type="text" name="interface_type[]" placeholder="Type (e.g., Ethernet)">
-                <input type="text" name="interface_number[]" placeholder="Number (e.g., 1)">
-                <input type="text" name="interface_ip[]" class="interface_ip" placeholder="IP Address">
-                <input type="text" name="interface_mask[]" class="interface_mask" placeholder="Subnet Mask">
-                <input type="checkbox" name="switchport[]" class="switchport" value="yes" onchange="toggleSwitchport(this)"> Switchport<br>
+function generateAccessRouterFields() {
+    return `
+        <h3 style="color: #00d1b2; font-size: 1.2em; margin-top: 20px;">Interfaces</h3>
+        <div id="interfaces" class="inline-group" style="margin-bottom: 15px;">
+            <label for="interface" style="display: block; color: #00d1b2;">Interface:</label>
+            <input type="text" name="interface_type[]" placeholder="Type (e.g., Ethernet)" class="form-input-small">
+            <input type="text" name="interface_number[]" placeholder="Number (e.g., 1)" class="form-input-small">
+            <input type="text" name="interface_ip[]" class="interface_ip form-input-small" placeholder="IP Address">
+            <input type="text" name="interface_mask[]" class="interface_mask form-input-small" placeholder="Subnet Mask">
+            <label style="color: #00d1b2;">
+                <input type="checkbox" name="switchport[]" class="switchport" value="yes" style="accent-color: #00d1b2; margin-right: 5px;" onchange="toggleSwitchport(this)"> Switchport
+            </label>
+        </div>
+        <button type="button" onclick="addInterface()" class="form-button">+ Add Interface</button>
+
+        <h3 style="color: #00d1b2; font-size: 1.2em; margin-top: 20px;">Subinterfaces</h3>
+        <div id="subinterfaces" class="inline-group" style="margin-bottom: 15px;">
+            <label for="subinterface_number" style="display: block; color: #00d1b2;">Subinterface Number:</label>
+            <input type="text" name="subinterface_number[]" placeholder="Subinterface Number" class="form-input-small">
+            <label for="vlan_number" style="display: block; color: #00d1b2; margin-top: 10px;">VLAN Number:</label>
+            <input type="text" name="vlan_number[]" placeholder="VLAN Number" class="form-input-small">
+        </div>
+        <button type="button" onclick="addSubinterface()" class="form-button">+ Add Subinterface</button>
+
+        <h3 style="color: #00d1b2; font-size: 1.2em; margin-top: 20px;">OSPF</h3>
+        <div id="ospf" class="inline-group" style="margin-bottom: 15px;">
+            <label for="ospf_process_id" style="display: block; color: #00d1b2;">OSPF Process ID:</label>
+            <input type="text" name="ospf_process_id[]" placeholder="Process ID" class="form-input-small">
+            <label for="ospf_network" style="display: block; color: #00d1b2; margin-top: 10px;">Network:</label>
+            <input type="text" name="ospf_network[]" placeholder="Network" class="form-input-small">
+            <label for="ospf_wildcard" style="display: block; color: #00d1b2; margin-top: 10px;">Wildcard Mask:</label>
+            <input type="text" name="ospf_wildcard[]" placeholder="Wildcard Mask" class="form-input-small">
+            <label for="ospf_area" style="display: block; color: #00d1b2; margin-top: 10px;">Area:</label>
+            <input type="text" name="ospf_area[]" placeholder="Area" class="form-input-small">
+            <label style="color: #00d1b2; margin-top: 10px;">
+                <input type="checkbox" name="ospf_redistribute_connected[]" value="yes" style="accent-color: #00d1b2; margin-right: 5px;"> Redistribute Connected
+            </label>
+            <label style="color: #00d1b2;">
+                <input type="checkbox" name="ospf_redistribute_bgp[]" value="yes" style="accent-color: #00d1b2; margin-right: 5px;"> Redistribute BGP
+            </label>
+        </div>
+        <button type="button" onclick="addOspf()" class="form-button">+ Add OSPF Process</button>
+
+        <h3 style="color: #00d1b2; font-size: 1.2em; margin-top: 20px;">RIP</h3>
+        <div id="rip" class="inline-group" style="margin-bottom: 15px;">
+            <label for="rip_version" style="display: block; color: #00d1b2;">RIP Version:</label>
+            <input type="text" name="rip_version[]" placeholder="RIP Version (e.g., 2)" class="form-input-small">
+            <label for="rip_network" style="display: block; color: #00d1b2; margin-top: 10px;">Network:</label>
+            <input type="text" name="rip_network[]" placeholder="Network (e.g., 192.168.1.0)" class="form-input-small">
+            <label style="color: #00d1b2; margin-top: 10px;">
+                <input type="checkbox" id="rip_redistribute" name="rip_redistribute" value="yes" style="accent-color: #00d1b2; margin-right: 5px;" onchange="toggleRipRedistribution()"> Redistribute BGP
+            </label>
+            <div id="rip_redistribute_fields" style="display: none; margin-top: 10px;">
+                <label for="rip_bgp_as" style="display: block; color: #00d1b2;">BGP AS for Redistribution:</label>
+                <input type="text" name="rip_bgp_as[]" placeholder="BGP AS" class="form-input-small">
+                <label for="rip_bgp_metric" style="display: block; color: #00d1b2; margin-top: 10px;">Redistribution Metric:</label>
+                <input type="text" name="rip_bgp_metric[]" placeholder="Metric (e.g., 1)" class="form-input-small">
             </div>
-            <button type="button" onclick="addInterface()">+ Add Interface</button>
+        </div>
+        <button type="button" onclick="addRip()" class="form-button">+ Add RIP Network</button>
 
-            <h3>Subinterfaces</h3>
-            <div id="subinterfaces" class="inline-group">
-                <label for="subinterface_number">Subinterface Number:</label>
-                <input type="text" name="subinterface_number[]" placeholder="Subinterface Number"><br>
-                <label for="vlan_number">VLAN Number:</label>
-                <input type="text" name="vlan_number[]" placeholder="VLAN Number"><br>
-            </div>
-            <button type="button" onclick="addSubinterface()">+ Add Subinterface</button>
+        <h3 style="color: #00d1b2; font-size: 1.2em; margin-top: 20px;">VLANs</h3>
+        <div id="vlans" class="inline-group" style="margin-bottom: 15px;">
+            <label for="vlan_id" style="display: block; color: #00d1b2;">VLAN ID:</label>
+            <input type="text" name="vlan_id[]" placeholder="VLAN ID" class="form-input-small">
+            <label for="vlan_name" style="display: block; color: #00d1b2; margin-top: 10px;">VLAN Name:</label>
+            <input type="text" name="vlan_name[]" placeholder="VLAN Name" class="form-input-small">
+        </div>
+        <button type="button" onclick="addVlan()" class="form-button">+ Add VLAN</button>
 
-            <h3>OSPF</h3>
-            <div id="ospf" class="inline-group">
-                <label for="ospf_process_id">OSPF Process ID:</label>
-                <input type="text" name="ospf_process_id[]" placeholder="Process ID"><br>
-                <label for="ospf_network">Network:</label>
-                <input type="text" name="ospf_network[]" placeholder="Network"><br>
-                <label for="ospf_wildcard">Wildcard Mask:</label>
-                <input type="text" name="ospf_wildcard[]" placeholder="Wildcard Mask"><br>
-                <label for="ospf_area">Area:</label>
-                <input type="text" name="ospf_area[]" placeholder="Area"><br>
-                <input type="checkbox" name="ospf_redistribute_connected[]" value="yes"> Redistribute Connected
-                <input type="checkbox" name="ospf_redistribute_bgp[]" value="yes"> Redistribute BGP<br>
-            </div>
-            <button type="button" onclick="addOspf()">+ Add OSPF Process</button>
+        <h3 style="color: #00d1b2; font-size: 1.2em; margin-top: 20px;">DHCP</h3>
+        <div id="dhcp" class="inline-group" style="margin-bottom: 15px;">
+            <label for="dhcp_subnet" style="display: block; color: #00d1b2;">Subnet:</label>
+            <input type="text" name="dhcp_subnet[]" placeholder="Subnet" class="form-input-small">
+            <label for="dhcp_range" style="display: block; color: #00d1b2; margin-top: 10px;">Range:</label>
+            <input type="text" name="dhcp_range[]" placeholder="Range" class="form-input-small">
+            <label for="dhcp_gateway" style="display: block; color: #00d1b2; margin-top: 10px;">Default Gateway:</label>
+            <input type="text" name="dhcp_gateway[]" placeholder="Default Gateway" class="form-input-small">
+        </div>
+        <button type="button" onclick="addDhcp()" class="form-button">+ Add DHCP Scope</button>
+    `;
+}
 
-            <h3>RIP</h3>
-            <div id="rip" class="inline-group">
-                <label for="rip_version">RIP Version:</label>
-                <input type="text" name="rip_version[]" placeholder="RIP Version (e.g., 2)"><br>
+// Function to generate Core Router Fields
+function generateCoreRouterFields() {
+    return `
+        <h3 style="color: #00d1b2;">Interfaces</h3>
+        <div id="interfaces" class="inline-group">
+            <label for="interface" class="form-label">Interface:</label>
+            <input type="text" name="interface_type[]" placeholder="Type (e.g., Ethernet)" class="form-input-small">
+            <input type="text" name="interface_number[]" placeholder="Number (e.g., 1)" class="form-input-small">
+            <input type="text" name="interface_ip[]" class="form-input-small interface_ip" placeholder="IP Address">
+            <input type="text" name="interface_mask[]" class="form-input-small interface_mask" placeholder="Subnet Mask">
+            <label class="checkbox-label">
+                <input type="checkbox" name="switchport[]" class="switchport" value="yes" onchange="toggleSwitchport(this)" style="accent-color: #00d1b2;"> Switchport
+            </label>
+        </div>
+        <button type="button" onclick="addInterface()" class="form-button">+ Add Interface</button>
 
-                <label for="rip_network">Network:</label>
-                <input type="text" name="rip_network[]" placeholder="Network (e.g., 192.168.1.0)"><br>
+        <h3 style="color: #00d1b2;">Subinterfaces</h3>
+        <div id="subinterfaces" class="inline-group">
+            <label for="subinterface_number" class="form-label">Subinterface Number:</label>
+            <input type="text" name="subinterface_number[]" placeholder="Subinterface Number" class="form-input-small">
+            <label for="vlan_number" class="form-label">VLAN Number:</label>
+            <input type="text" name="vlan_number[]" placeholder="VLAN Number" class="form-input-small">
+        </div>
+        <button type="button" onclick="addSubinterface()" class="form-button">+ Add Subinterface</button>
 
-                <input type="checkbox" id="rip_redistribute" name="rip_redistribute" value="yes" onchange="toggleRipRedistribution()"> Redistribute BGP<br>
+        <h3 style="color: #00d1b2;">OSPF</h3>
+        <div id="ospf" class="inline-group">
+            <label for="ospf_process_id" class="form-label">OSPF Process ID:</label>
+            <input type="text" name="ospf_process_id[]" placeholder="Process ID" class="form-input-small">
+            <label for="ospf_network" class="form-label">Network:</label>
+            <input type="text" name="ospf_network[]" placeholder="Network" class="form-input-small">
+            <label for="ospf_wildcard" class="form-label">Wildcard Mask:</label>
+            <input type="text" name="ospf_wildcard[]" placeholder="Wildcard Mask" class="form-input-small">
+            <label for="ospf_area" class="form-label">Area:</label>
+            <input type="text" name="ospf_area[]" placeholder="Area" class="form-input-small">
+            <label class="checkbox-label">
+                <input type="checkbox" name="ospf_redistribute_connected[]" value="yes" style="accent-color: #00d1b2;"> Redistribute Connected
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" name="ospf_redistribute_bgp[]" value="yes" style="accent-color: #00d1b2;"> Redistribute BGP
+            </label>
+        </div>
+        <button type="button" onclick="addOspf()" class="form-button">+ Add OSPF Process</button>
 
-                <div id="rip_redistribute_fields" style="display: none;">
-                    <label for="rip_bgp_as">BGP AS for Redistribution:</label>
-                    <input type="text" name="rip_bgp_as[]" placeholder="BGP AS"><br>
+        <h3 style="color: #00d1b2;">BGP</h3>
+        <div id="bgp" class="inline-group">
+            <label for="bgp_asn" class="form-label">BGP ASN:</label>
+            <input type="text" name="bgp_asn[]" placeholder="BGP ASN" class="form-input-small">
+            <label for="bgp_network" class="form-label">BGP Network:</label>
+            <input type="text" name="bgp_network[]" placeholder="BGP Network (e.g., 10.0.0.0/24)" class="form-input-small">
+            <label for="bgp_neighbor" class="form-label">BGP Neighbor:</label>
+            <input type="text" name="bgp_neighbor[]" placeholder="Neighbor IP" class="form-input-small">
+            <label for="bgp_remote_as" class="form-label">Remote AS:</label>
+            <input type="text" name="bgp_remote_as[]" placeholder="Remote AS" class="form-input-small">
+            <label for="bgp_address_family" class="form-label">Address Family:</label>
+            <select name="bgp_address_family[]" class="form-input-small">
+                <option value="ipv4">IPv4</option>
+                <option value="ipv6">IPv6</option>
+            </select>
+        </div>
+        <button type="button" onclick="addBgp()" class="form-button">+ Add BGP Configuration</button>
 
-                    <label for="rip_bgp_metric">Redistribution Metric:</label>
-                    <input type="text" name="rip_bgp_metric[]" placeholder="Metric (e.g., 1)"><br>
-                </div>
-            </div>
-            <button type="button" onclick="addRip()">+ Add RIP Network</button>
+        <h3 style="color: #00d1b2;">VLANs</h3>
+        <div id="vlans" class="inline-group">
+            <label for="vlan_id" class="form-label">VLAN ID:</label>
+            <input type="text" name="vlan_id[]" placeholder="VLAN ID" class="form-input-small">
+            <label for="vlan_name" class="form-label">VLAN Name:</label>
+            <input type="text" name="vlan_name[]" placeholder="VLAN Name" class="form-input-small">
+        </div>
+        <button type="button" onclick="addVlan()" class="form-button">+ Add VLAN</button>
+    `;
+}
+// Dynamic form add/remove functionality
+function addInterface() {
+    let div = document.createElement("div");
+    div.className = 'inline-group';
+    div.innerHTML = `
+        <label for="interface" class="form-label">Interface:</label>
+        <input type="text" name="interface_type[]" placeholder="Type (e.g., Ethernet)" class="form-input-small">
+        <input type="text" name="interface_number[]" placeholder="Number (e.g., 1)" class="form-input-small">
+        <input type="text" name="interface_ip[]" placeholder="IP Address" class="form-input-small interface_ip">
+        <input type="text" name="interface_mask[]" placeholder="Subnet Mask" class="form-input-small interface_mask">
+        <label class="checkbox-label">
+            <input type="checkbox" name="switchport[]" value="yes" class="switchport" onchange="toggleSwitchport(this)"> Switchport
+        </label>
+        <button type="button" class="delete-btn" onclick="deleteRow(this)">X</button>
+    `;
+    document.getElementById("interfaces").appendChild(div);
+}
 
-            <h3>VLANs</h3>
-            <div id="vlans" class="inline-group">
-                <label for="vlan_id">VLAN ID:</label>
-                <input type="text" name="vlan_id[]" placeholder="VLAN ID"><br>
-                <label for="vlan_name">VLAN Name:</label>
-                <input type="text" name="vlan_name[]" placeholder="VLAN Name"><br>
-            </div>
-            <button type="button" onclick="addVlan()">+ Add VLAN</button>
+function addSubinterface() {
+    let div = document.createElement("div");
+    div.className = 'inline-group';
+    div.innerHTML = `
+        <label for="subinterface_number" class="form-label">Subinterface Number:</label>
+        <input type="text" name="subinterface_number[]" placeholder="Subinterface Number" class="form-input"><br>
+        <label for="vlan_number" class="form-label">VLAN Number:</label>
+        <input type="text" name="vlan_number[]" placeholder="VLAN Number" class="form-input"><br>
+        <button type="button" class="delete-btn" onclick="deleteRow(this)">X</button>
+    `;
+    document.getElementById("subinterfaces").appendChild(div);
+}
 
-            <h3>DHCP</h3>
-            <div id="dhcp" class="inline-group">
-                <label for="dhcp_subnet">Subnet:</label>
-                <input type="text" name="dhcp_subnet[]" placeholder="Subnet"><br>
-                <label for="dhcp_range">Range:</label>
-                <input type="text" name="dhcp_range[]" placeholder="Range"><br>
-                <label for="dhcp_gateway">Default Gateway:</label>
-                <input type="text" name="dhcp_gateway[]" placeholder="Default Gateway"><br>
-            </div>
-            <button type="button" onclick="addDhcp()">+ Add DHCP Scope</button>
-        `;
+function addOspf() {
+    let div = document.createElement("div");
+    div.className = 'inline-group';
+    div.innerHTML = `
+        <label for="ospf_process_id" class="form-label">OSPF Process ID:</label>
+        <input type="text" name="ospf_process_id[]" placeholder="Process ID" class="form-input"><br>
+        <label for="ospf_network" class="form-label">Network:</label>
+        <input type="text" name="ospf_network[]" placeholder="Network" class="form-input"><br>
+        <label for="ospf_wildcard" class="form-label">Wildcard Mask:</label>
+        <input type="text" name="ospf_wildcard[]" placeholder="Wildcard Mask" class="form-input"><br>
+        <label for="ospf_area" class="form-label">Area:</label>
+        <input type="text" name="ospf_area[]" placeholder="Area" class="form-input"><br>
+        <label class="checkbox-label">
+            <input type="checkbox" name="ospf_redistribute_connected[]" value="yes" class="switchport"> Redistribute Connected
+        </label>
+        <label class="checkbox-label">
+            <input type="checkbox" name="ospf_redistribute_bgp[]" value="yes" class="switchport"> Redistribute BGP
+        </label><br>
+        <button type="button" class="delete-btn" onclick="deleteRow(this)">X</button>
+    `;
+    document.getElementById("ospf").appendChild(div);
+}
+
+function toggleRipRedistribution() {
+    const redistributeCheckbox = document.getElementById("rip_redistribute");
+    const redistributeFields = document.getElementById("rip_redistribute_fields");
+
+    if (redistributeCheckbox.checked) {
+        redistributeFields.style.display = "block";
+    } else {
+        redistributeFields.style.display = "none";
     }
+}
 
-    // Function to generate Core Router Fields
-    function generateCoreRouterFields() {
-        return `
-            <h3>Interfaces</h3>
-            <div id="interfaces" class="inline-group">
-                <label for="interface">Interface:</label>
-                <input type="text" name="interface_type[]" placeholder="Type (e.g., Ethernet)">
-                <input type="text" name="interface_number[]" placeholder="Number (e.g., 1)">
-                <input type="text" name="interface_ip[]" class="interface_ip" placeholder="IP Address">
-                <input type="text" name="interface_mask[]" class="interface_mask" placeholder="Subnet Mask">
-                <input type="checkbox" name="switchport[]" class="switchport" value="yes" onchange="toggleSwitchport(this)"> Switchport<br>
-            </div>
-            <button type="button" onclick="addInterface()">+ Add Interface</button>
+function addRip() {
+    let div = document.createElement("div");
+    div.className = 'inline-group';
+    div.innerHTML = `
+        <label for="rip_version" class="form-label">RIP Version:</label>
+        <input type="text" name="rip_version[]" placeholder="RIP Version" class="form-input"><br>
+        <label for="rip_network" class="form-label">Network:</label>
+        <input type="text" name="rip_network[]" placeholder="Network" class="form-input"><br>
+        <label class="checkbox-label">
+            <input type="checkbox" name="rip_redistribute[]" value="yes" onclick="toggleRipRedistribution(this)" class="switchport"> Redistribute BGP
+        </label><br>
+        <div class="rip_redistribute_fields" style="display: none;">
+            <label for="rip_bgp_as" class="form-label">BGP AS:</label>
+            <input type="text" name="rip_bgp_as[]" placeholder="BGP AS" class="form-input"><br>
+            <label for="rip_bgp_metric" class="form-label">Metric:</label>
+            <input type="text" name="rip_bgp_metric[]" placeholder="Metric" class="form-input"><br>
+        </div>
+        <button type="button" class="delete-btn" onclick="deleteRow(this)">X</button>
+    `;
+    document.getElementById("rip").appendChild(div);
 
-            <h3>Subinterfaces</h3>
-            <div id="subinterfaces" class="inline-group">
-                <label for="subinterface_number">Subinterface Number:</label>
-                <input type="text" name="subinterface_number[]" placeholder="Subinterface Number"><br>
-                <label for="vlan_number">VLAN Number:</label>
-                <input type="text" name="vlan_number[]" placeholder="VLAN Number"><br>
-            </div>
-            <button type="button" onclick="addSubinterface()">+ Add Subinterface</button>
-
-            <h3>OSPF</h3>
-            <div id="ospf" class="inline-group">
-                <label for="ospf_process_id">OSPF Process ID:</label>
-                <input type="text" name="ospf_process_id[]" placeholder="Process ID"><br>
-                <label for="ospf_network">Network:</label>
-                <input type="text" name="ospf_network[]" placeholder="Network"><br>
-                <label for="ospf_wildcard">Wildcard Mask:</label>
-                <input type="text" name="ospf_wildcard[]" placeholder="Wildcard Mask"><br>
-                <label for="ospf_area">Area:</label>
-                <input type="text" name="ospf_area[]" placeholder="Area"><br>
-                <input type="checkbox" name="ospf_redistribute_connected[]" value="yes"> Redistribute Connected
-                <input type="checkbox" name="ospf_redistribute_bgp[]" value="yes"> Redistribute BGP<br>
-            </div>
-            <button type="button" onclick="addOspf()">+ Add OSPF Process</button>
-
-            <h3>BGP</h3>
-            <div id="bgp" class="inline-group">
-                <label for="bgp_asn">BGP ASN:</label>
-                <input type="text" name="bgp_asn[]" placeholder="BGP ASN"><br>
-                
-                <label for="bgp_network">BGP Network:</label>
-                <input type="text" name="bgp_network[]" placeholder="BGP Network (e.g., 10.0.0.0/24)"><br>
-                
-                <label for="bgp_neighbor">BGP Neighbor:</label>
-                <input type="text" name="bgp_neighbor[]" placeholder="Neighbor IP"><br>
-                
-                <label for="bgp_remote_as">Remote AS:</label>
-                <input type="text" name="bgp_remote_as[]" placeholder="Remote AS"><br>
-
-                <label for="bgp_address_family">Address Family:</label>
-                <select name="bgp_address_family[]">
-                    <option value="ipv4">IPv4</option>
-                    <option value="ipv6">IPv6</option>
-                </select><br>
-            </div>
-            <button type="button" onclick="addBgp()">+ Add BGP Configuration</button>
-
-            <h3>VLANs</h3>
-            <div id="vlans" class="inline-group">
-                <label for="vlan_id">VLAN ID:</label>
-                <input type="text" name="vlan_id[]" placeholder="VLAN ID"><br>
-                <label for="vlan_name">VLAN Name:</label>
-                <input type="text" name="vlan_name[]" placeholder="VLAN Name"><br>
-            </div>
-            <button type="button" onclick="addVlan()">+ Add VLAN</button>
-        `;
-    }
-
-    // Dynamic form add/remove functionality
-    function addInterface() {
-        let div = document.createElement("div");
-        div.className = 'inline-group';
-        div.innerHTML = `
-            <label for="interface">Interface:</label>
-            <input type="text" name="interface_type[]" placeholder="Type">
-            <input type="text" name="interface_number[]" placeholder="Number">
-            <input type="text" name="interface_ip[]" placeholder="IP">
-            <input type="text" name="interface_mask[]" placeholder="Mask">
-            <input type="checkbox" name="switchport[]" value="yes" onchange="toggleSwitchport(this)"> Switchport<br>
-            <button type="button" class="delete-btn" onclick="deleteRow(this)">X</button>
-        `;
-        document.getElementById("interfaces").appendChild(div);
-    }
-
-    function addSubinterface() {
-        let div = document.createElement("div");
-        div.className = 'inline-group';
-        div.innerHTML = `
-            <label for="subinterface_number">Subinterface Number:</label>
-            <input type="text" name="subinterface_number[]" placeholder="Subinterface Number"><br>
-            <label for="vlan_number">VLAN Number:</label>
-            <input type="text" name="vlan_number[]" placeholder="VLAN Number"><br>
-            <button type="button" class="delete-btn" onclick="deleteRow(this)">X</button>
-        `;
-        document.getElementById("subinterfaces").appendChild(div);
-    }
-
-    function addOspf() {
-        let div = document.createElement("div");
-        div.className = 'inline-group';
-        div.innerHTML = `
-            <label for="ospf_process_id">OSPF Process ID:</label>
-            <input type="text" name="ospf_process_id[]" placeholder="Process ID"><br>
-            <label for="ospf_network">Network:</label>
-            <input type="text" name="ospf_network[]" placeholder="Network"><br>
-            <label for="ospf_wildcard">Wildcard Mask:</label>
-            <input type="text" name="ospf_wildcard[]" placeholder="Wildcard Mask"><br>
-            <label for="ospf_area">Area:</label>
-            <input type="text" name="ospf_area[]" placeholder="Area"><br>
-            <input type="checkbox" name="ospf_redistribute_connected[]" value="yes"> Redistribute Connected
-            <input type="checkbox" name="ospf_redistribute_bgp[]" value="yes"> Redistribute BGP<br>
-            <button type="button" class="delete-btn" onclick="deleteRow(this)">X</button>
-        `;
-        document.getElementById("ospf").appendChild(div);
-    }
-
-    function toggleRipRedistribution() {
-        const redistributeCheckbox = document.getElementById("rip_redistribute");
-        const redistributeFields = document.getElementById("rip_redistribute_fields");
-        
-        if (redistributeCheckbox.checked) {
-            redistributeFields.style.display = "block";
-        } else {
-            redistributeFields.style.display = "none";
-        }
-    }
-
-    function addRip() {
-        let div = document.createElement("div");
-        div.className = 'inline-group';
-        div.innerHTML = `
-            <label for="rip_version">RIP Version:</label>
-            <input type="text" name="rip_version[]" placeholder="RIP Version"><br>
-            
-            <label for="rip_network">Network:</label>
-            <input type="text" name="rip_network[]" placeholder="Network"><br>
-
-            <input type="checkbox" name="rip_redistribute[]" value="yes" onclick="toggleRipRedistribution(this)"> Redistribute BGP<br>
-
-            <div class="rip_redistribute_fields" style="display: none;">
-                <label for="rip_bgp_as">BGP AS:</label>
-                <input type="text" name="rip_bgp_as[]" placeholder="BGP AS"><br>
-
-                <label for="rip_bgp_metric">Metric:</label>
-                <input type="text" name="rip_bgp_metric[]" placeholder="Metric"><br>
-            </div>
-
-            <button type="button" class="delete-btn" onclick="deleteRow(this)">X</button>
-        `;
-
-        document.getElementById("rip").appendChild(div);
-
-    // Attach event to the checkbox for each dynamically created RIP entry
     const redistributeCheckbox = div.querySelector("input[name='rip_redistribute[]']");
     const redistributeFields = div.querySelector(".rip_redistribute_fields");
 
@@ -291,84 +299,210 @@
     });
 }
 
-    function addBgp() {
-        let div = document.createElement("div");
-        div.className = 'inline-group';
-        div.innerHTML = `
-            <label for="bgp_network">BGP Network:</label>
-            <input type="text" name="bgp_network[]" placeholder="BGP Network (e.g., 10.0.0.0/24)"><br>
-            <label for="bgp_neighbor">BGP Neighbor:</label>
-            <input type="text" name="bgp_neighbor[]" placeholder="Neighbor IP"><br>
-            <label for="bgp_remote_as">Remote AS:</label>
-            <input type="text" name="bgp_remote_as[]" placeholder="Remote AS"><br>
-            <button type="button" class="delete-btn" onclick="deleteRow(this)">X</button>
-        `;
-        document.getElementById("bgp").appendChild(div);
-    }
+function addBgp() {
+    let div = document.createElement("div");
+    div.className = 'inline-group';
+    div.innerHTML = `
+        <label for="bgp_network" class="form-label">BGP Network:</label>
+        <input type="text" name="bgp_network[]" placeholder="BGP Network (e.g., 10.0.0.0/24)" class="form-input"><br>
+        <label for="bgp_neighbor" class="form-label">BGP Neighbor:</label>
+        <input type="text" name="bgp_neighbor[]" placeholder="Neighbor IP" class="form-input"><br>
+        <label for="bgp_remote_as" class="form-label">Remote AS:</label>
+        <input type="text" name="bgp_remote_as[]" placeholder="Remote AS" class="form-input"><br>
+        <button type="button" class="delete-btn" onclick="deleteRow(this)">X</button>
+    `;
+    document.getElementById("bgp").appendChild(div);
+}
 
-    function addVlan() {
-        let div = document.createElement("div");
-        div.className = 'inline-group';
-        div.innerHTML = `
-            <label for="vlan_id">VLAN ID:</label>
-            <input type="text" name="vlan_id[]" placeholder="VLAN ID"><br>
-            <label for="vlan_name">VLAN Name:</label>
-            <input type="text" name="vlan_name[]" placeholder="VLAN Name"><br>
-            <button type="button" class="delete-btn" onclick="deleteRow(this)">X</button>
-        `;
-        document.getElementById("vlans").appendChild(div);
-    }
+function addVlan() {
+    let div = document.createElement("div");
+    div.className = 'inline-group';
+    div.innerHTML = `
+        <label for="vlan_id" class="form-label">VLAN ID:</label>
+        <input type="text" name="vlan_id[]" placeholder="VLAN ID" class="form-input"><br>
+        <label for="vlan_name" class="form-label">VLAN Name:</label>
+        <input type="text" name="vlan_name[]" placeholder="VLAN Name" class="form-input"><br>
+        <button type="button" class="delete-btn" onclick="deleteRow(this)">X</button>
+    `;
+    document.getElementById("vlans").appendChild(div);
+}
 
-    function addDhcp() {
-        let div = document.createElement("div");
-        div.className = 'inline-group';
-        div.innerHTML = `
-            <label for="dhcp_subnet">Subnet:</label>
-            <input type="text" name="dhcp_subnet[]" placeholder="Subnet"><br>
-            <label for="dhcp_range">Range:</label>
-            <input type="text" name="dhcp_range[]" placeholder="Range"><br>
-            <label for="dhcp_gateway">Default Gateway:</label>
-            <input type="text" name="dhcp_gateway[]" placeholder="Default Gateway"><br>
-            <button type="button" class="delete-btn" onclick="deleteRow(this)">X</button>
-        `;
-        document.getElementById("dhcp").appendChild(div);
-    }
+function addDhcp() {
+    let div = document.createElement("div");
+    div.className = 'inline-group';
+    div.innerHTML = `
+        <label for="dhcp_subnet" class="form-label">Subnet:</label>
+        <input type="text" name="dhcp_subnet[]" placeholder="Subnet" class="form-input"><br>
+        <label for="dhcp_range" class="form-label">Range:</label>
+        <input type="text" name="dhcp_range[]" placeholder="Range" class="form-input"><br>
+        <label for="dhcp_gateway" class="form-label">Default Gateway:</label>
+        <input type="text" name="dhcp_gateway[]" placeholder="Default Gateway" class="form-input"><br>
+        <button type="button" class="delete-btn" onclick="deleteRow(this)">X</button>
+    `;
+    document.getElementById("dhcp").appendChild(div);
+}
 
-    function deleteRow(button) {
-        button.parentElement.remove();
-    }
+function deleteRow(button) {
+    button.parentElement.remove();
+}
 
-    function toggleSwitchport(checkbox) {
-        const parent = checkbox.parentElement;
-        const ipInput = parent.querySelector('.interface_ip');
-        const maskInput = parent.querySelector('.interface_mask');
-        if (checkbox.checked) {
-            ipInput.disabled = true;
-            maskInput.disabled = true;
-        } else {
-            ipInput.disabled = false;
-            maskInput.disabled = false;
-        }
+function toggleSwitchport(checkbox) {
+    const parent = checkbox.parentElement;
+    const ipInput = parent.querySelector('.interface_ip');
+    const maskInput = parent.querySelector('.interface_mask');
+    if (checkbox.checked) {
+        ipInput.disabled = true;
+        maskInput.disabled = true;
+    } else {
+        ipInput.disabled = false;
+        maskInput.disabled = false;
     }
+}
+
+
+
 </script>
 
+
 <style>
-    .inline-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        align-items: center;
-    }
-    .inline-group input,
-    .inline-group label,
-    .delete-btn {
-        margin: 5px;
-    }
-    h3 {
-        margin-top: 20px;
-    }
-    .form-group {
-        margin-bottom: 20px;
-    }
+/* General Form Styling */
+/* General Form Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a2e;
+    color: #ffffff;
+}
+
+h2, h3 {
+    text-align: center;
+    color: #00d1b2;
+    font-family: 'Arial Black', sans-serif;
+}
+
+.form-group, .inline-group {
+    margin-bottom: 20px;
+}
+
+.form-label, .inline-group label {
+    display: block;
+    color: #00d1b2;
+    font-size: 1em;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-input, .form-input-small, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #00d1b2;
+    border-radius: 5px;
+    background-color: #0d0d15;
+    color: #ffffff;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.form-input:focus, .form-input-small:focus, select:focus {
+    border-color: #00d1b2;
+    box-shadow: 0 0 5px rgba(0, 209, 178, 0.3);
+}
+
+.form-input-small {
+    width: 48%; /* to align two inputs side-by-side */
+    display: inline-block;
+}
+
+.form-button {
+    background-color: #00d1b2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-top: 10px;
+}
+
+.form-button:hover {
+    background-color: #00a793;
+    transform: scale(1.05);
+}
+
+.inline-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #2a2a3e; /* Standardized background color for all sections */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 209, 178, 0.2);
+    border: 1px solid #00d1b2; /* Border color for sections */
+}
+
+.inline-group label {
+    width: 100%;
+}
+
+.inline-group .form-input-small {
+    width: calc(50% - 10px);
+    display: inline-block;
+}
+
+.switchport, .checkbox-label {
+    color: #00d1b2;
+    margin-left: 5px;
+    font-size: 1em;
+}
+
+.delete-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.delete-btn:hover {
+    background-color: #e63939;
+}
+
+/* Removed background-color from specific section IDs to avoid conflicts */
+#interfaces, #subinterfaces, #ospf, #rip, #vlans, #dhcp {
+    padding: 10px;
+    border-radius: 5px;
+}
+
+h3 {
+    color: #00d1b2;
+    font-size: 1.2em;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.inline-group input[type="checkbox"] {
+    accent-color: #00d1b2;
+}
+
+select.form-input, select.form-input option {
+    background-color: #0d0d15; /* Background color of the dropdown */
+    color: #ffffff; /* Text color of dropdown options */
+    border: 1px solid #00d1b2;
+    padding: 8px;
+    border-radius: 5px;
+    outline: none;
+}
+
+select.form-input option {
+    background-color: #0d0d15;
+    color: #ffffff;
+}
+
+
+
 </style>
 {% endblock %}

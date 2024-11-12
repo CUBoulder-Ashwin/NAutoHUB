@@ -160,3 +160,78 @@ t=2024-11-05T14:59:23-0700 lvl=info msg="join connections" obj=join id=3c25d1283
 t=2024-11-05T15:00:09-0700 lvl=info msg="join connections" obj=join id=6441f96d18fb l=127.0.0.1:8080 r=140.82.115.248:41686
 t=2024-11-05T15:00:09-0700 lvl=info msg="join connections" obj=join id=fe99fa227202 l=127.0.0.1:8080 r=128.138.64.27:58162
 t=2024-11-05T15:00:26-0700 lvl=info msg="join connections" obj=join id=5cabd63e6bec l=127.0.0.1:8080 r=128.138.64.27:58162
+t=2024-11-05T15:01:49-0700 lvl=info msg="join connections" obj=join id=03d859a653be l=127.0.0.1:8080 r=140.82.115.55:38546
+t=2024-11-05T15:01:53-0700 lvl=info msg="join connections" obj=join id=a431dfcfe200 l=127.0.0.1:8080 r=128.138.64.27:58162
+t=2024-11-05T15:02:02-0700 lvl=info msg="join connections" obj=join id=4f6ed5674e1a l=127.0.0.1:8080 r=128.138.64.27:58162
+t=2024-11-05T15:20:35-0700 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2024-11-05T15:20:35-0700 lvl=info msg="session closing" obj=tunnels.session err=nil
+t=2024-11-05T15:21:12-0700 lvl=info msg="open config file" path=/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/ngrok_config.yml err=nil
+t=2024-11-05T15:21:13-0700 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2024-11-05T15:21:13-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2024-11-05T15:21:13-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2024-11-05T15:21:13-0700 lvl=info msg="started tunnel" obj=tunnels name=jenkins addr=http://localhost:8080 url=https://ca1d-128-138-64-27.ngrok-free.app
+t=2024-11-05T15:21:13-0700 lvl=info msg="update available" obj=updater
+t=2024-11-05T16:24:26-0700 lvl=info msg="join connections" obj=join id=35e27f9b204d l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:27-0700 lvl=info msg="join connections" obj=join id=42aac8a71114 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:27-0700 lvl=info msg="join connections" obj=join id=d836ef50dc96 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=a64a3967bfbc l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=58a353bc94fc l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=064402d48970 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=999740997696 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=80daaa3d8f6d l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=f29d9392bbd0 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=2164af8ac09e l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=bd9c6d30324b l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=75ce7f006f8b l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=f752070b6712 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=75985f1c8137 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=88470e8cad1c l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=41dcea6fef55 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=40ac70dac081 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=5f84bcd0ecdc l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=4a6c2e746a77 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=4f3b0672c96d l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=2ed313ac3f91 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=f3890e2d9fba l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=ac313cfc106e l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=5f6374ecb733 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=af77e4e7dd3f l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=a6befc6ef991 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=e0d3a2033e89 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=cac5483bb184 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:36-0700 lvl=info msg="join connections" obj=join id=9e10b9c58b66 l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:24:41-0700 lvl=info msg="join connections" obj=join id=66439a460abd l=127.0.0.1:8080 r=128.138.64.27:61491
+t=2024-11-05T16:42:39-0700 lvl=info msg="join connections" obj=join id=307f980a3a0d l=127.0.0.1:8080 r=128.138.64.27:56025
+t=2024-11-05T16:42:41-0700 lvl=info msg="join connections" obj=join id=45466e52b730 l=127.0.0.1:8080 r=128.138.64.27:56025
+t=2024-11-05T21:21:13-0700 lvl=info msg="update available" obj=updater
+t=2024-11-06T03:21:14-0700 lvl=info msg="update available" obj=updater
+t=2024-11-06T09:21:14-0700 lvl=info msg="update available" obj=updater
+t=2024-11-06T15:21:14-0700 lvl=info msg="update available" obj=updater
+t=2024-11-06T21:21:15-0700 lvl=info msg="update available" obj=updater
+t=2024-11-07T03:21:15-0700 lvl=info msg="update available" obj=updater
+t=2024-11-07T09:21:15-0700 lvl=info msg="update available" obj=updater
+t=2024-11-07T15:21:16-0700 lvl=info msg="update available" obj=updater
+t=2024-11-07T21:21:16-0700 lvl=info msg="update available" obj=updater
+t=2024-11-08T03:21:16-0700 lvl=info msg="update available" obj=updater
+t=2024-11-08T09:21:17-0700 lvl=info msg="update available" obj=updater
+t=2024-11-08T15:21:17-0700 lvl=info msg="update available" obj=updater
+t=2024-11-08T21:21:17-0700 lvl=info msg="update available" obj=updater
+t=2024-11-09T03:21:18-0700 lvl=info msg="update available" obj=updater
+t=2024-11-09T09:21:18-0700 lvl=info msg="update available" obj=updater
+t=2024-11-09T15:21:18-0700 lvl=info msg="update available" obj=updater
+t=2024-11-09T21:21:19-0700 lvl=info msg="update available" obj=updater
+t=2024-11-10T03:21:19-0700 lvl=info msg="update available" obj=updater
+t=2024-11-10T09:21:19-0700 lvl=info msg="update available" obj=updater
+t=2024-11-10T15:21:20-0700 lvl=info msg="update available" obj=updater
+t=2024-11-10T21:21:20-0700 lvl=info msg="update available" obj=updater
+t=2024-11-11T03:21:20-0700 lvl=info msg="update available" obj=updater
+t=2024-11-11T09:21:21-0700 lvl=info msg="update available" obj=updater
+t=2024-11-11T10:40:20-0700 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2024-11-11T10:40:20-0700 lvl=info msg="session closing" obj=tunnels.session err=nil
+t=2024-11-11T10:40:57-0700 lvl=info msg="open config file" path=/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/ngrok_config.yml err=nil
+t=2024-11-11T10:40:57-0700 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2024-11-11T10:40:57-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2024-11-11T10:40:57-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2024-11-11T10:40:57-0700 lvl=info msg="started tunnel" obj=tunnels name=jenkins addr=http://localhost:8080 url=https://1e6a-128-138-64-27.ngrok-free.app
+t=2024-11-11T10:40:57-0700 lvl=info msg="update available" obj=updater
+t=2024-11-11T16:40:57-0700 lvl=info msg="update available" obj=updater

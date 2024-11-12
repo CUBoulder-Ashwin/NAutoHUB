@@ -4,39 +4,161 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Network Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Base Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dark-mode {
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+        }
+        .light-mode {
+            background-color: #ffffff;
+            color: #333333;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background-color: #00d1b2;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-logo a {
+            font-size: 1.5em;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .navbar-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+        .navbar-links li {
+            display: inline;
+        }
+        .navbar-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 12px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .navbar-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        /* Search Bar */
+        .search-container input[type="text"] {
+            padding: 6px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            transition: box-shadow 0.3s;
+        }
+        .search-container input[type="text"]:focus {
+            box-shadow: 0 0 8px rgba(0, 209, 178, 0.6);
+        }
+
+        /* Dark Mode Toggle */
+        #darkModeToggle {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #ffffff;
+            margin-right: 20px;
+            transition: color 0.3s;
+        }
+        #darkModeToggle:hover {
+            color: #ffeb3b;
+        }
+
+        /* Profile Dropdown */
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .profile-button {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #ffffff;
+        }
+        .profile-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #333333;
+            min-width: 150px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 5px;
+        }
+        .profile-content a {
+            color: #ffffff;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+        .profile-content a:hover {
+            background-color: #00d1b2;
+        }
+        .profile-dropdown:hover .profile-content {
+            display: block;
+        }
+
+        /* Container */
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dark-mode .container {
+            background-color: #1e1e2f;
+            color: #e0e0e0;
+        }
+    </style>
     <script>
-        // Function to toggle dark mode and store preference in localStorage
         function toggleDarkMode() {
             const body = document.body;
             const currentMode = body.classList.contains('dark-mode') ? 'dark-mode' : 'light-mode';
             body.classList.toggle('dark-mode');
             body.classList.toggle('light-mode');
 
-            // Swap emoji
             const toggleButton = document.getElementById('darkModeToggle');
             if (currentMode === 'light-mode') {
-                toggleButton.textContent = '🌞'; // Switch to Sun in dark mode
+                toggleButton.textContent = '🌞';
                 localStorage.setItem('theme', 'dark-mode');
             } else {
-                toggleButton.textContent = '🌜'; // Switch to Moon in light mode
+                toggleButton.textContent = '🌜';
                 localStorage.setItem('theme', 'light-mode');
             }
         }
 
-        // Function to apply saved theme on page load
         window.onload = function() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) {
                 document.body.classList.add(savedTheme);
                 const toggleButton = document.getElementById('darkModeToggle');
-                if (savedTheme === 'dark-mode') {
-                    toggleButton.textContent = '🌞'; // Set to Sun if dark mode is active
-                } else {
-                    toggleButton.textContent = '🌜'; // Set to Moon if light mode is active
-                }
+                toggleButton.textContent = savedTheme === 'dark-mode' ? '🌞' : '🌜';
             } else {
-                document.body.classList.add('light-mode'); // Default to light mode
+                document.body.classList.add('light-mode');
             }
         };
     </script>

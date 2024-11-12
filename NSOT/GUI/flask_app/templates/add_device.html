@@ -1,101 +1,100 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Add Device</h2>
-<form method="POST" style="max-width: 400px; margin: 0 auto;">
-    <div style="margin-bottom: 15px;">
-        <label for="device_name" style="display: block;">Device Name:</label>
-        <input type="text" name="device_name" required style="width: 100%; padding: 8px;">
+
+<h2 class="page-title">Add Device</h2>
+<form method="POST" class="form-container">
+    <div class="form-group">
+        <label for="device_name" class="form-label">Device Name:</label>
+        <input type="text" name="device_name" required class="form-input-small">
     </div>
 
-    <div style="margin-bottom: 15px;">
-        <label for="device_type" style="display: block;">Device Type:</label>
-        <select name="device_type" required style="width: 100%; padding: 8px;">
+    <div class="form-group">
+        <label for="device_type" class="form-label">Device Type:</label>
+        <select name="device_type" required class="form-input-small">
             <option value="router">Router</option>
             <option value="switch">Switch</option>
             <option value="server">Server</option>
         </select>
     </div>
 
-    <div style="margin-bottom: 15px;">
-        <label for="device_interface" style="display: block;">Device Interface:</label>
-        <input type="text" name="device_interface" required style="width: 100%; padding: 8px;">
+    <div class="form-group">
+        <label for="device_interface" class="form-label">Device Interface:</label>
+        <input type="text" name="device_interface" required class="form-input-small">
     </div>
 
-    <div style="margin-bottom: 15px;">
-        <label for="connected_device" style="display: block;">Connected To (Device Name):</label>
-        <input type="text" name="connected_device" required style="width: 100%; padding: 8px;">
+    <div class="form-group">
+        <label for="mac_address" class="form-label">MAC Address for the new interface:</label>
+        <input type="text" name="mac_address" required class="form-input-small">
     </div>
 
-    <div style="margin-bottom: 15px;">
-        <label for="relay_toggle" style="display: block;">
-            <input type="checkbox" id="relay_toggle" name="relay_toggle"> Make Connected Device a DHCP Relay
+    <div class="form-group">
+        <label for="ip_address" class="form-label">IPv4 address for the new device:</label>
+        <input type="text" name="ip_address" class="form-input-small">
+    </div>
+
+    <div class="form-group">
+        <label for="connected_device" class="form-label">Connected To (Device Name):</label>
+        <input type="text" name="connected_device" required class="form-input-small">
+    </div>
+
+    <div class="form-group">
+        <label for="connected_interface" class="form-label">Connected Interface:</label>
+        <input type="text" name="connected_interface" required class="form-input-small">
+    </div>
+
+    <div class="form-group">
+        <label for="connected_ip" class="form-label">Connected Interface IP with subnet (Default gateway):</label>
+        <input type="text" name="connected_ip" class="form-input-small">
+    </div>
+
+    <div class="form-group checkbox-group">
+        <label for="relay_toggle" class="checkbox-label">
+            <input type="checkbox" id="relay_toggle" name="relay_toggle" class="switchport"> Make Connected Device a DHCP Relay
         </label>
-    </div>
+    </div> 
 
-    <div style="margin-bottom: 15px;">
-        <label for="connected_interface" style="display: block;">Connected Interface:</label>
-        <input type="text" name="connected_interface" required style="width: 100%; padding: 8px;">
-    </div>
-
-    <div style="margin-bottom: 15px;">
-        <label for="mac_address" style="display: block;">MAC Address of connected interface:</label>
-        <input type="text" name="mac_address" required style="width: 100%; padding: 8px;">
-    </div>
-
-    <div style="margin-bottom: 15px;">
-        <label for="connected_ip" style="display: block;">Connected Interface IP with subnet (Default gateway):</label>
-        <input type="text" name="connected_ip" style="width: 100%; padding: 8px;">
-    </div>
-
-    <div id="dhcp_fields" style="display: none; margin-top: 20px;">
-        
-        <div style="margin-bottom: 15px;">
-            <label for="helper_ip" style="display: block;">Helper Address IP:</label>
-            <input type="text" name="helper_ip" style="width: 100%; padding: 8px;">
+    <div id="dhcp_fields" class="hidden">
+        <div class="form-group">
+            <label for="helper_ip" class="form-label">Helper Address IP:</label>
+            <input type="text" name="helper_ip" class="form-input-small">
         </div>
 
-        <div style="margin-bottom: 15px;">
-            <label for="dhcp_server" style="display: block;">DHCP Server device:</label>
-            <input type="text" name="dhcp_server" style="width: 100%; padding: 8px;">
+        <div class="form-group">
+            <label for="dhcp_server" class="form-label">DHCP Server Device:</label>
+            <input type="text" name="dhcp_server" class="form-input-small">
         </div>
 
-        <div style="margin-bottom: 15px;">
-            <label for="new_subnet" style="display: block;">New Subnet:</label>
-            <input type="text" name="new_subnet" style="width: 100%; padding: 8px;">
+        <div class="form-group">
+            <label for="new_subnet" class="form-label">New Subnet:</label>
+            <input type="text" name="new_subnet" class="form-input-small">
         </div>
 
-        <div style="margin-bottom: 15px;">
-            <label for="ip_address" style="display: block;">Ipv4 address for the new device:</label>
-            <input type="text" name="ip_address" style="width: 100%; padding: 8px;">
+        <div class="form-group">
+            <label for="range_lower" class="form-label">Range Lower Limit:</label>
+            <input type="text" name="range_lower" class="form-input-small">
         </div>
 
-        <div style="margin-bottom: 15px;">
-            <label for="range_lower" style="display: block;">Range Lower Limit:</label>
-            <input type="text" name="range_lower" style="width: 100%; padding: 8px;">
+        <div class="form-group">
+            <label for="range_upper" class="form-label">Range Upper Limit:</label>
+            <input type="text" name="range_upper" class="form-input-small">
         </div>
 
-        <div style="margin-bottom: 15px;">
-            <label for="range_upper" style="display: block;">Range Upper Limit:</label>
-            <input type="text" name="range_upper" style="width: 100%; padding: 8px;">
-        </div>
-
-        <div style="margin-bottom: 15px;">
-            <label for="default_gateway" style="display: block;">Default Gateway:</label>
-            <input type="text" name="default_gateway" style="width: 100%; padding: 8px;">
-        </div>
-
-    </div>
-
-    <div style="margin-bottom: 15px;">
-        <label for="sudo_password" style="display: block;">Sudo Password:</label>
-        <input type="password" name="sudo_password" id="sudo_password" required style="width: 100%; padding: 8px;">
-        <div style="margin-top: 5px;">
-            <input type="checkbox" id="togglePassword"> Show Password
+        <div class="form-group">
+            <label for="default_gateway" class="form-label">Default Gateway:</label>
+            <input type="text" name="default_gateway" class="form-input-small">
         </div>
     </div>
 
-    <div style="text-align: center;">
-        <button type="submit" style="padding: 10px 20px; font-size: 16px;">Add Device</button>
+    <div class="form-group">
+        <label for="sudo_password" class="form-label">Sudo Password:</label>
+        <input type="password" name="sudo_password" id="sudo_password" required class="form-input-small">
+        <div class="checkbox-label">
+            <input type="checkbox" id="togglePassword" class="switchport"> Show Password
+        </div>
+    </div>
+
+    <div class="form-group text-center">
+        <button type="submit" class="form-button">Add Device</button>
     </div>
 </form>
 
@@ -109,4 +108,90 @@
         document.getElementById('dhcp_fields').style.display = this.checked ? 'block' : 'none';
     });
 </script>
+
+<style>
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a2e;
+    color: #ffffff;
+}
+
+.page-title {
+    text-align: center;
+    color: #00d1b2;
+    font-family: 'Arial Black', sans-serif;
+    margin-bottom: 20px;
+}
+
+.form-container {
+    max-width: 500px;
+    margin: 20px auto;
+    background-color: #1a1a2e;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 209, 178, 0.4);
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-label {
+    display: block;
+    color: #00d1b2;
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-input-small {
+    width: 95%;
+    padding: 8px;
+    border: 1px solid #00d1b2;
+    border-radius: 5px;
+    background-color: #0d0d15;
+    color: #ffffff;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.form-input-small:focus {
+    border-color: #00d1b2;
+    box-shadow: 0 0 5px rgba(0, 209, 178, 0.3);
+}
+
+.form-button {
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+    background-color: #00d1b2;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-button:hover {
+    background-color: #00a793;
+}
+
+.checkbox-label {
+    color: #00d1b2;
+    font-size: 1em;
+}
+
+.switchport {
+    accent-color: #00d1b2;
+}
+
+.hidden {
+    display: none;
+}
+
+.text-center {
+    text-align: center;
+}
+</style>
+
 {% endblock %}
