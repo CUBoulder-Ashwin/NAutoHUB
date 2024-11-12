@@ -4,14 +4,12 @@ import time
 import requests
 import json
 
-
 # Function to check if there are any changes to commit
 def has_changes_to_commit():
     result = subprocess.run(
         ["git", "status", "--porcelain"], capture_output=True, text=True
     )
     return bool(result.stdout.strip())
-
 
 # Function to push to Git
 def git_push():
@@ -24,19 +22,11 @@ def git_push():
         subprocess.run(["git", "commit", "-m", "Auto-config push"], check=True)
         subprocess.run(["git", "push"], check=True)
         print("Changes pushed to Git successfully.")
-        time.sleep(5)
+        time.sleep(60)  # Wait longer to give Jenkins time to start the build
         return True
     except subprocess.CalledProcessError as e:
         print(f"Git push failed: {e}")
         return False
-
-
-# Combined function to push to Git and run Jenkins job
-def push_and_monitor_jenkins():
-    if git_push():
-        return monitor_jenkins_job()
-    return "Git push failed"
-
 
 # Function to get the latest ngrok URL from the log file
 def get_latest_ngrok_url(log_file_path):
@@ -58,7 +48,7 @@ def get_latest_ngrok_url(log_file_path):
         print(f"An error occurred: {e}")
         return None
 
-
+# Function to get the latest build number using Jenkins API
 def get_latest_build_number(jenkins_base_url, user, token):
     try:
         url = f"{jenkins_base_url}/job/robocontrol/api/json?tree=lastBuild%5Bnumber%5D"
@@ -94,7 +84,7 @@ def check_build_result(jenkins_base_url, latest_build_number, user, token):
         print(f"Failed to retrieve build status for build {latest_build_number}.")
         return None
 
-# Function to continuously poll for the build status until completion
+# Function to monitor the build status until completion
 def monitor_jenkins_job():
     log_file_path = "/home/student/Desktop/Advanced-Netman/ngrok.log"
     jenkins_base_url = get_latest_ngrok_url(log_file_path)
@@ -112,7 +102,7 @@ def monitor_jenkins_job():
     if not latest_build_number:
         return "Failed to retrieve the latest build number"
 
-    # Continuously check build status until it completes
+    # Monitor build status until it completes
     while True:
         build_result = check_build_result(
             jenkins_base_url, latest_build_number, jenkins_user, jenkins_token
@@ -130,6 +120,11 @@ def monitor_jenkins_job():
             print("Jenkins job is still in progress. Checking again in 10 seconds...")
             time.sleep(10)
 
+# Combined function to push to Git and monitor Jenkins job
+def push_and_monitor_jenkins():
+    if git_push():
+        return monitor_jenkins_job()
+    return "Git push failed"
 
 # Run this function standalone for testing
 if __name__ == "__main__":
