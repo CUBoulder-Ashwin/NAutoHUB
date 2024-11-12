@@ -119,8 +119,6 @@ def generate_device_configs():
         with open(filename, "w") as config_file:
             config_file.write("---\n")  # Add document start
             config_file.write(config)
-
-
         print(
             f"Configuration generated for {device['hostname']} and saved as {filename}"
         )
