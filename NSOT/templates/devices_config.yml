@@ -3,5 +3,5 @@ devices:
   device_type: access
   clear_config: 'no'
   vlans:
-  - id: '200'
-    name: V10
+  - id: '10'
+    name: v10
