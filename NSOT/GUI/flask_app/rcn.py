@@ -25,6 +25,7 @@ from config_Gen import conf_gen  # Updated import for config generation
 from update_topo import update_topology
 from dhcp_updates import configure_dhcp_relay, configure_dhcp_server
 from update_hosts import update_hosts_csv
+from git_jenkins import push_and_monitor_jenkins 
 
 app = Flask(__name__)
 
@@ -92,12 +93,12 @@ def add_device():
         thread = threading.Thread(target=run_deployment_and_relay_config, args=(deploy_command, relay_toggle, connected_device, connected_interface, connected_ip, helper_ip, mac_address, dhcp_server, new_subnet, range_lower, range_upper, default_gateway, ip_address))
         thread.start()
 
-        return redirect(url_for('homepage'))
-
-    return render_template('add_device.html')
+    return render_template('configure_device.html')
 
 @app.route("/configure-device", methods=['GET', 'POST'])
 def configure_device():
+    jenkins_result = None  # Default value if no job was run
+
     if request.method == 'POST':
         device_id = request.form['device_id']
         router_type = request.form['router_type']
@@ -158,7 +159,6 @@ def configure_device():
                 'networks': [{'ip': net} for net in rip_networks if net]  # Add networks only if non-empty
             }
 
-            # Only include redistribution settings if the checkbox is selected and values are provided
             if rip_redistribute_selected:
                 redistribute = {}
                 if rip_bgp_as and rip_bgp_as[0]:
@@ -166,10 +166,8 @@ def configure_device():
                 if rip_bgp_metric and rip_bgp_metric[0]:
                     redistribute['metric'] = int(rip_bgp_metric[0])
 
-                # Only add redistribute to RIP if we have at least one value
                 if redistribute:
                     rip['redistribute'] = redistribute
-
 
         # Fetching BGP configurations with network subnet
         bgp = None
@@ -198,10 +196,7 @@ def configure_device():
                 ]
             }
 
-            print("Collected BGP Data:", bgp)
-
         # Fetching VLAN configurations
-        vlans = None
         vlans = []
         vlan_ids = request.form.getlist('vlan_id[]')
         vlan_names = request.form.getlist('vlan_name[]')
@@ -215,15 +210,11 @@ def configure_device():
         # Create the YAML file with collected data
         create_yaml_from_form_data(device_id=device_id, router_type=router_type, interfaces=interfaces, ospf=ospf, bgp=bgp, vlans=vlans, rip=rip)
 
-        # Call the function to generate the device configurations
-        try:
-            conf_gen()
-        except Exception as e:
-            print(f"Error generating configurations: {e}")
+        # Run the Git push and Jenkins monitoring
+        jenkins_result = push_and_monitor_jenkins()
 
-        return redirect(url_for('homepage'))
+    return render_template("configure_device.html", jenkins_result=jenkins_result)
 
-    return render_template("configure_device.html")
 
 @app.route("/tools", methods=["GET", "POST"])
 def tools():
@@ -274,4 +265,4 @@ def contact():
     return render_template("contact.html")
 
 if __name__ == "__main__":
-    app.run(host="localhost", port="8000", debug=True)
+    app.run(host="localhost", port="5000", debug=True)
