@@ -7,17 +7,6 @@ pipeline {
     }
 
     stages {
-        stage('Install Dependencies') {
-            steps {
-                script {
-                    echo "Installing yamllint in virtual environment"
-                    sh """
-                    . ${VIRTUAL_ENV}/bin/activate
-                    pip install yamllint
-                    """
-                }
-            }
-        }
 
         stage('Python Linting') {
             steps {
