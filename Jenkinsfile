@@ -39,8 +39,8 @@ pipeline {
                         """,
                     )
                     if (yamlLintResult != 0) {
-                        echo "YAML Linting encountered issues. Consider fixing YAML syntax."
-                        currentBuild.result = 'UNSTABLE'  // Optional: Mark as unstable if linting fails
+                        echo "YAML Linting encountered warning or issues. If no response seen here this is probably a document-start or truthy warning which is being ignored"
+                        currentBuild.result = 'UNSTABLE'
                     } else {
                         echo "YAML Linting passed successfully."
                     }
