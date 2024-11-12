@@ -110,11 +110,11 @@ def monitor_jenkins_job():
             print("Jenkins job failed.")
             return "FAILURE"
         elif build_result is None:
-            print("Failed to get build status. Exiting.")
-            return "Failed"
-        else:
             print("Jenkins job is still in progress. Checking again in 10 seconds...")
             time.sleep(10)
+        else:
+            print(f"Unexpected result: {build_result}")
+            return build_result
 
 # Combined function to push to Git and monitor Jenkins job
 def push_and_monitor_jenkins():
