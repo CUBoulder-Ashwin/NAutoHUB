@@ -59,30 +59,32 @@ def get_latest_ngrok_url(log_file_path):
         return None
 
 
-# Function to get the latest build number using Jenkins API
 def get_latest_build_number(jenkins_base_url, user, token):
     try:
-        response = requests.get(
-            f"{jenkins_base_url}/job/robocontrol/api/json?tree=lastBuild%5Bnumber%5D",
-            auth=(user, token),
-        )
+        url = f"{jenkins_base_url}/job/robocontrol/api/json?tree=lastBuild%5Bnumber%5D"
+        print("Fetching latest build number from URL:", url)
+        response = requests.get(url, auth=(user, token))
+        print("Jenkins API response status:", response.status_code)
+        print("Jenkins API response text:", response.text)
         response_data = response.json()
         latest_build_number = response_data.get("lastBuild", {}).get("number")
         if latest_build_number:
             print("Latest Build Number:", latest_build_number)
             return latest_build_number
         else:
-            print("Failed to retrieve the latest build number.")
+            print("Failed to retrieve the latest build number from response.")
             return None
     except Exception as e:
         print(f"Error fetching latest build number: {e}")
         return None
 
-
 # Function to check build result for the latest build
 def check_build_result(jenkins_base_url, latest_build_number, user, token):
     build_url = f"{jenkins_base_url}/job/robocontrol/{latest_build_number}/api/json"
+    print("Checking build result from URL:", build_url)
     response = requests.get(build_url, auth=(user, token))
+    print("Jenkins build API response status:", response.status_code)
+    print("Jenkins build API response text:", response.text)
     if response.status_code == 200:
         build_info = response.json()
         result = build_info.get("result")
@@ -91,7 +93,6 @@ def check_build_result(jenkins_base_url, latest_build_number, user, token):
     else:
         print(f"Failed to retrieve build status for build {latest_build_number}.")
         return None
-
 
 # Function to continuously poll for the build status until completion
 def monitor_jenkins_job():
