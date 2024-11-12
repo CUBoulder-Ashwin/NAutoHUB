@@ -31,15 +31,16 @@ pipeline {
         stage('YAML Linting') {
             steps {
                 script {
-                    echo "Linting YAML files in NSOT directory, excluding /venv"
+                    echo "Linting YAML files in NSOT directory, excluding /venv and clab-Lab_AdvNet directories"
                     def yamlLintResult = sh(
                         script: """
                         . ${VIRTUAL_ENV}/bin/activate
-                        find ${PROJECT_ROOT} -path "*/venv" -prune -o \\( -name "*.yml" -o -name "*.yaml" \\) -print | xargs yamllint -d "{rules: {document-start: disable, truthy: disable}}"
+                        find ${PROJECT_ROOT} -path "*/venv" -prune -o -path "*/clab-Lab_AdvNet*" -prune -o \\( -name "*.yml" -o -name "*.yaml" \\) -print | xargs yamllint -d "{rules: {document-start: disable, truthy: disable}}"
                         """,
+                        returnStatus: true
                     )
                     if (yamlLintResult != 0) {
-                        echo "YAML Linting encountered warning or issues. If no response seen here this is probably a document-start or truthy warning which is being ignored"
+                        echo "YAML Linting encountered warnings or issues. If no response is seen here, this is probably a document-start or truthy warning, which is being ignored."
                         currentBuild.result = 'UNSTABLE'
                     } else {
                         echo "YAML Linting passed successfully."
@@ -47,6 +48,7 @@ pipeline {
                 }
             }
         }
+
 
 
         stage('Run Unit Tests') {

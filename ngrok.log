@@ -193,3 +193,10 @@ t=2024-11-12T16:38:53-0700 lvl=info msg="join connections" obj=join id=f9da33323
 t=2024-11-12T16:41:01-0700 lvl=info msg="join connections" obj=join id=c7a45ccf3c45 l=127.0.0.1:8080 r=128.138.64.27:46529
 t=2024-11-12T16:41:02-0700 lvl=info msg="join connections" obj=join id=e8f31777ea7f l=127.0.0.1:8080 r=128.138.64.27:46529
 t=2024-11-12T16:43:00-0700 lvl=info msg="join connections" obj=join id=3f3d8f96ae36 l=127.0.0.1:8080 r=128.138.64.27:46529
+t=2024-11-12T16:44:37-0700 lvl=info msg="join connections" obj=join id=2615e1d51224 l=127.0.0.1:8080 r=140.82.115.42:61620
+t=2024-11-12T16:44:47-0700 lvl=info msg="join connections" obj=join id=3851895d98dd l=127.0.0.1:8080 r=128.138.64.27:48037
+t=2024-11-12T16:44:47-0700 lvl=info msg="join connections" obj=join id=c7149c65fd46 l=127.0.0.1:8080 r=128.138.64.27:46529
+t=2024-11-12T16:44:47-0700 lvl=info msg="join connections" obj=join id=9d8e8901c0b7 l=127.0.0.1:8080 r=128.138.64.27:42043
+t=2024-11-12T16:44:52-0700 lvl=info msg="join connections" obj=join id=832584cf3880 l=127.0.0.1:8080 r=128.138.64.27:46529
+t=2024-11-12T16:44:57-0700 lvl=info msg="join connections" obj=join id=a3082cdcc528 l=127.0.0.1:8080 r=128.138.64.27:53326
+t=2024-11-12T16:45:08-0700 lvl=info msg="join connections" obj=join id=99515aa61dd0 l=127.0.0.1:8080 r=128.138.64.27:32898
