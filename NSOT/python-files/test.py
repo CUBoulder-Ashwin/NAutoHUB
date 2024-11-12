@@ -63,7 +63,10 @@ def trigger_jenkins_job():
     build_trigger_url = f"{job_url}/buildWithParameters"
 
     # Trigger Jenkins job
+    print("Triggering Jenkins job at:", build_trigger_url)
     response = requests.post(build_trigger_url, auth=(jenkins_user, jenkins_token))
+    print("Trigger response code:", response.status_code)
+    
     if response.status_code == 201:
         print("Jenkins job started successfully.")
     else:
@@ -73,14 +76,17 @@ def trigger_jenkins_job():
     # Get the latest build number dynamically
     latest_build_number = None
     try:
-        job_info_response = requests.get(f"{job_url}/api/json", auth=(jenkins_user, jenkins_token))
+        job_info_url = f"{job_url}/api/json"
+        print("Fetching job info from:", job_info_url)
+        job_info_response = requests.get(job_info_url, auth=(jenkins_user, jenkins_token))
+        
         if job_info_response.status_code == 200:
             job_info = job_info_response.json()
             latest_build_number = job_info.get("lastBuild", {}).get("number")
             latest_build_url = f"{job_url}/{latest_build_number}" if latest_build_number else "Not available"
             print("Latest Build URL:", latest_build_url)  # Debugging output
         else:
-            print("Failed to retrieve job information.")
+            print("Failed to retrieve job information. Status code:", job_info_response.status_code)
             return "Failed"
     except Exception as e:
         print(f"Error retrieving latest build number: {e}")
@@ -92,15 +98,22 @@ def trigger_jenkins_job():
         console_output_url = f"{job_url}/{latest_build_number}/consoleText"
         try:
             while True:
+                print("Checking build status at:", jenkins_build_url)
                 build_response = requests.get(jenkins_build_url, auth=(jenkins_user, jenkins_token))
+                print("Build response code:", build_response.status_code)
+                
                 if build_response.status_code == 200:
                     build_info = build_response.json()
+                    print("Build info received:", build_info)  # Debugging print
+                    
                     if not build_info.get("building", True):  # Check if the job is no longer building
                         last_build_result = build_info.get("result", "UNKNOWN")
                         print("Jenkins job completed with status:", last_build_result)
                         
                         # Fetch and print the console output
                         output_response = requests.get(console_output_url, auth=(jenkins_user, jenkins_token))
+                        print("Console output response code:", output_response.status_code)
+                        
                         if output_response.status_code == 200:
                             print("Jenkins Console Output:\n", output_response.text)
                         else:
