@@ -14,8 +14,9 @@ def get_latest_ngrok_url(log_file_path):
         for line in reversed(lines):
             match = re.search(r"url=(https://[a-zA-Z0-9-]+\.ngrok-free\.app)", line)
             if match:
-                print("Ngrok URL found:", match.group(1))  # Debugging print statement
-                return match.group(1)  # Return the captured ngrok URL
+                ngrok_url = match.group(1)
+                print("Ngrok URL found:", ngrok_url)  # Debugging print statement
+                return ngrok_url  # Return the captured ngrok URL
 
         print("No ngrok URL found in the log.")
         return None
@@ -36,15 +37,15 @@ def git_push():
         subprocess.run(["git", "push"], check=True)
         print("Changes pushed to Git successfully.")
         
-        # Wait for 10 seconds after pushing
-        time.sleep(10)
+        # Brief wait after pushing to allow Jenkins job to start
+        time.sleep(5)
         
         return True
     except subprocess.CalledProcessError as e:
         print(f"Git push failed: {e}")
         return False
 
-# Function to trigger Jenkins job
+# Function to trigger Jenkins job and fetch the output once done
 def trigger_jenkins_job():
     # Fetch the latest ngrok URL from the log file
     log_file_path = "/home/student/Desktop/Advanced-Netman/ngrok.log"
@@ -69,15 +70,15 @@ def trigger_jenkins_job():
         print("Failed to start Jenkins job.")
         return "Failed"
 
-    # Wait and get the latest build number dynamically
-    time.sleep(5)  # Initial wait before polling
+    # Get the latest build number dynamically
     latest_build_number = None
     try:
         job_info_response = requests.get(f"{job_url}/api/json", auth=(jenkins_user, jenkins_token))
         if job_info_response.status_code == 200:
             job_info = job_info_response.json()
             latest_build_number = job_info.get("lastBuild", {}).get("number")
-            print("Latest Build Number:", latest_build_number)  # Debugging output
+            latest_build_url = f"{job_url}/{latest_build_number}" if latest_build_number else "Not available"
+            print("Latest Build URL:", latest_build_url)  # Debugging output
         else:
             print("Failed to retrieve job information.")
             return "Failed"
@@ -85,25 +86,31 @@ def trigger_jenkins_job():
         print(f"Error retrieving latest build number: {e}")
         return "Failed"
 
-    # Poll Jenkins for the latest build completion
+    # Poll Jenkins for the latest build completion and fetch output
     if latest_build_number:
         jenkins_build_url = f"{job_url}/{latest_build_number}/api/json"
+        console_output_url = f"{job_url}/{latest_build_number}/consoleText"
         try:
             while True:
-                time.sleep(10)
                 build_response = requests.get(jenkins_build_url, auth=(jenkins_user, jenkins_token))
                 if build_response.status_code == 200:
                     build_info = build_response.json()
                     if not build_info.get("building", True):  # Check if the job is no longer building
                         last_build_result = build_info.get("result", "UNKNOWN")
-                        last_build_url = build_info.get("url", "No URL found")
-                        print("Last Build Result:", last_build_result)
-                        print("Last Build URL:", last_build_url)
+                        print("Jenkins job completed with status:", last_build_result)
+                        
+                        # Fetch and print the console output
+                        output_response = requests.get(console_output_url, auth=(jenkins_user, jenkins_token))
+                        if output_response.status_code == 200:
+                            print("Jenkins Console Output:\n", output_response.text)
+                        else:
+                            print("Failed to retrieve console output.")
                         return last_build_result
                     print("Waiting for Jenkins job to complete...")
                 else:
                     print("Failed to fetch the last build information.")
                     return "Failed"
+                time.sleep(10)  # Wait before polling again
 
         except Exception as e:
             print(f"An error occurred while fetching Jenkins job status: {e}")
