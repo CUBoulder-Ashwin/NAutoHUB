@@ -6,5 +6,3 @@ devices:
   vlans:
   - id: '200'
     name: v200
-  - id: '10'
-    name: v10
