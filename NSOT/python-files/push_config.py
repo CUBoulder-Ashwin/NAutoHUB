@@ -11,7 +11,6 @@ def push_configuration(device_id):
 
     management_ip, username, password = None, None, None
 
-    # Attempt to open and read the CSV file
     try:
         with open(csv_path, mode="r") as csvfile:
             reader = csv.DictReader(csvfile)
@@ -22,24 +21,23 @@ def push_configuration(device_id):
                     password = row["password"]
                     print(
                         f"Found device in CSV with IP: {management_ip}, Username: {username}"
-                    )  # Debug statement
+                    )
                     break
     except FileNotFoundError:
-        print("Host CSV file not found.")  # Debug statement
+        print("Host CSV file not found.")
         return "Host CSV file not found."
-    # Check if credentials and management IP were found
+
     if not management_ip or not username or not password:
-        print("Device credentials or management IP missing.")  # Debug statement
+        print("Device credentials or management IP missing.")
         return "Device credentials or management IP missing."
 
-    # Verify the config file exists
     config_path = os.path.join(
         os.path.dirname(__file__), "..", "configs", f"{device_id}.cfg"
     )
-    print(f"Looking for config file at path: {config_path}")  # Debug statement
+    print(f"Looking for config file at path: {config_path}")
 
     if not os.path.isfile(config_path):
-        print("Config file not found for device.")  # Debug statement
+        print("Config file not found for device.")
         return "Config file not found for device."
 
     device = {
@@ -49,20 +47,25 @@ def push_configuration(device_id):
         "password": password,
     }
 
-    print(f"Attempting to connect to device {management_ip}...")  # Debug statement
+    print(f"Attempting to connect to device {management_ip}...")
 
-    # Attempt to connect and push the configuration
     try:
         net_connect = ConnectHandler(**device)
-        print("Connected successfully.")  # Debug statement
+        print("Connected successfully.")
 
-        output = net_connect.send_config_from_file(config_path)
-        print("Configuration push output:")  # Debug statement
-        print(output)  # Print command output for debugging
+        # Adjust expect_string to match the prompt pattern and increase the read timeout
+        output = net_connect.send_config_from_file(
+            config_path,
+            expect_string=r"\)#",  # Adjust this regex based on the device's prompt in config mode
+            read_timeout=30,  # Increase timeout if needed
+        )
+
+        print("Configuration push output:")
+        print(output)
 
         net_connect.disconnect()
-        print("Disconnected from device.")  # Debug statement
+        print("Disconnected from device.")
         return "Configuration pushed successfully."
     except Exception as e:
-        print(f"Failed to push configuration: {e}")  # Debug statement
+        print(f"Failed to push configuration: {e}")
         return f"Failed to push configuration: {e}"
