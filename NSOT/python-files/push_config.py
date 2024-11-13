@@ -27,10 +27,6 @@ def push_configuration(device_id):
     except FileNotFoundError:
         print("Host CSV file not found.")  # Debug statement
         return "Host CSV file not found."
-    print(device_id)
-    print(management_ip)
-    print(username)
-    print(password)
     # Check if credentials and management IP were found
     if not management_ip or not username or not password:
         print("Device credentials or management IP missing.")  # Debug statement

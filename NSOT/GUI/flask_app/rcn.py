@@ -152,7 +152,7 @@ def add_device():
 @app.route("/configure-device", methods=["GET", "POST"])
 def configure_device():
     jenkins_result = None  # Default value if no job was run
-    push_status = None 
+    device_id = None  # Initialize device_id to None
 
     if request.method == "POST":
         device_id = request.form["device_id"]
@@ -193,13 +193,9 @@ def configure_device():
         ospf = None
         ospf_process_ids = request.form.getlist("ospf_process_id[]")
         ospf_networks = request.form.getlist("ospf_network[]")
-        ospf_wildcards = request.form.getlist(
-            "ospf_wildcard[]"
-        )  # Capture wildcard mask for OSPF
+        ospf_wildcards = request.form.getlist("ospf_wildcard[]")
         ospf_areas = request.form.getlist("ospf_area[]")
-        ospf_redistribute_connected = request.form.getlist(
-            "ospf_redistribute_connected[]"
-        )
+        ospf_redistribute_connected = request.form.getlist("ospf_redistribute_connected[]")
         ospf_redistribute_bgp = request.form.getlist("ospf_redistribute_bgp[]")
 
         ospf = {
@@ -220,9 +216,7 @@ def configure_device():
         rip = None
         rip_versions = request.form.getlist("rip_version[]")
         rip_networks = request.form.getlist("rip_network[]")
-        rip_redistribute_selected = request.form.get(
-            "rip_redistribute"
-        )  # Check if the redistribute checkbox is selected
+        rip_redistribute_selected = request.form.get("rip_redistribute")
         rip_bgp_as = request.form.getlist("rip_bgp_as[]")
         rip_bgp_metric = request.form.getlist("rip_bgp_metric[]")
 
@@ -231,7 +225,7 @@ def configure_device():
                 "version": rip_versions[0],
                 "networks": [
                     {"ip": net} for net in rip_networks if net
-                ],  # Add networks only if non-empty
+                ],
             }
 
             if rip_redistribute_selected:
@@ -266,7 +260,7 @@ def configure_device():
                         "networks": [{"ip": net} for net in bgp_networks if net],
                     }
                     for af_type in bgp_address_families
-                    if af_type  # Only add if address family type is non-empty
+                    if af_type
                 ],
             }
 
@@ -293,16 +287,8 @@ def configure_device():
         # Run the Git push and Jenkins monitoring
         jenkins_result = push_and_monitor_jenkins()
 
-        if jenkins_result == "SUCCESS":
-            # Push the configuration to the device
-            print("this is from rcn.py: The device name is " + device_id)
-            push_status = push_configuration(device_id)
-            if "successfully" in push_status:
-                return redirect(url_for("home"))
-            else:
-                return jsonify({"status": "error", "message": push_status}), 500
+    return render_template("configure_device.html", jenkins_result=jenkins_result, device_id=device_id)
 
-    return render_template("configure_device.html", jenkins_result=jenkins_result)
 
 @app.route("/push-config", methods=["POST"])
 def push_config():

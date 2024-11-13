@@ -31,6 +31,7 @@
     </div>
 </form>
     {% if jenkins_result %}
+        <div id="config-data" data-device-id="{{ device_id }}"></div>
         <div id="jenkins-result" class="jenkins-status {% if jenkins_result == 'SUCCESS' %}success{% else %}failure{% endif %}">
             Jenkins Job Status: {{ jenkins_result }}
         </div>
@@ -375,7 +376,8 @@ function toggleSwitchport(checkbox) {
 }
 
 function pushConfiguration() {
-    const deviceId = document.querySelector('[name="device_id"]').value;
+    // Get device_id from the data attribute
+    const deviceId = document.getElementById("config-data").getAttribute("data-device-id");
     console.log("Device ID:", deviceId);  // Debugging statement
 
     fetch("/push-config", {
@@ -383,7 +385,7 @@ function pushConfiguration() {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ device_id: deviceId }),
+        body: JSON.stringify({ device_id: deviceId }),  // Send device_id in the request
     })
     .then(response => response.json())
     .then(data => {
@@ -403,6 +405,7 @@ function pushConfiguration() {
         window.location.href = "/configure-device";
     });
 }
+
 
 
 
