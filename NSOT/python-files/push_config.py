@@ -54,7 +54,8 @@ def push_configuration(device_id):
         print("Connected successfully.")
 
         # Use delay_factor to manage timing
-        output = net_connect.send_config_from_file(config_path, delay_factor=2)
+        net_connect.enable
+        output = net_connect.send_config_from_file(config_path)
         print("Configuration push output:")
         print(output)
 
