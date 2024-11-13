@@ -7,6 +7,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 hosts_csv_path = os.path.join(current_dir, "..", "IPAM", "hosts.csv")
 configs_dir = os.path.join(current_dir, "..", "configs")
 
+
 def get_device_credentials(device_id):
     """Fetches device credentials from hosts.csv based on the device_id."""
     print(f"Fetching credentials for device_id: {device_id}")
@@ -21,7 +22,7 @@ def get_device_credentials(device_id):
                         "device_type": "arista_eos",
                         "host": row["management_ip"],
                         "username": row["username"],
-                        "password": row["password"]
+                        "password": row["password"],
                     }
     except FileNotFoundError:
         print("Hosts CSV file not found.")
@@ -29,6 +30,7 @@ def get_device_credentials(device_id):
 
     print("Device credentials or management IP missing.")
     return None
+
 
 def get_configuration_commands(device_id):
     """Fetches configuration commands from a .cfg file based on the device_id."""
@@ -47,6 +49,7 @@ def get_configuration_commands(device_id):
     except Exception as e:
         print(f"Error reading configuration file: {e}")
         return None
+
 
 def push_configuration(device_id):
     """Connects to the device and pushes configuration commands from a .cfg file."""
@@ -75,6 +78,7 @@ def push_configuration(device_id):
     except Exception as e:
         print(f"Failed to push configuration: {e}")
         return f"Failed to push configuration: {e}"
+
 
 # Run the function for a specified device ID
 if __name__ == "__main__":
