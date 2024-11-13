@@ -293,7 +293,7 @@ def configure_device():
         # Run the Git push and Jenkins monitoring
         jenkins_result = push_and_monitor_jenkins()
 
-        if jenkins_result == "success":
+        if jenkins_result == "SUCCESS":
             # Push the configuration to the device
             print("this is from rcn.py: The device name is " + device_id)
             push_status = push_configuration(device_id)
