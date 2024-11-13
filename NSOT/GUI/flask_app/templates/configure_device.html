@@ -375,9 +375,29 @@ function toggleSwitchport(checkbox) {
 }
 
 function pushConfiguration() {
-    alert("Configuration successfully pushed!");
-    // Optional: You can make an AJAX call here if you want to handle the button's action on the server side
-}
+        const deviceId = document.getElementById('device_id').value;
+        if (!deviceId) {
+            alert("Device ID is required.");
+            return;
+        }
+
+        fetch("/push-config", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ device_id: deviceId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            window.location.href = "/";
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Failed to push configuration.");
+        });
+    }
 </script>
 
 
