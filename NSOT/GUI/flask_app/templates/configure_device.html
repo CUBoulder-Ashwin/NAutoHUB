@@ -30,20 +30,20 @@
         </button>
     </div>
 </form>
-{% if jenkins_result %}
-    <div id="jenkins-result" class="jenkins-status {% if jenkins_result == 'SUCCESS' %}success{% else %}failure{% endif %}">
-        Jenkins Job Status: {{ jenkins_result }}
-    </div>
-
-    {% if jenkins_result == 'SUCCESS' %}
-        <!-- Show the Push Configuration button only if Jenkins passed -->
-        <div style="text-align: center; margin-top: 20px;">
-            <button onclick="pushConfiguration()" class="form-button" style="background-color: #00d1b2; color: white; padding: 10px 20px; font-size: 16px; border-radius: 5px;">
-                Push Configuration
-            </button>
+    {% if jenkins_result %}
+        <div id="jenkins-result" class="jenkins-status {% if jenkins_result == 'SUCCESS' %}success{% else %}failure{% endif %}">
+            Jenkins Job Status: {{ jenkins_result }}
         </div>
+
+        {% if jenkins_result == 'SUCCESS' %}
+            <!-- Show the Push Configuration button only if Jenkins passed -->
+            <div style="text-align: center; margin-top: 20px;">
+                <button type="button" onclick="pushConfiguration()" class="form-button" style="background-color: #00d1b2; color: white; padding: 10px 20px; font-size: 16px; border-radius: 5px;">
+                    Push Configuration
+                </button>
+            </div>
+        {% endif %}
     {% endif %}
-{% endif %}
 
 <!-- Add JavaScript for dynamic form fields -->
 <script>
@@ -375,29 +375,29 @@ function toggleSwitchport(checkbox) {
 }
 
 function pushConfiguration() {
-        const deviceId = document.getElementById('device_id').value;
-        if (!deviceId) {
-            alert("Device ID is required.");
-            return;
-        }
+    const deviceId = document.querySelector('[name="device_id"]').value;
 
-        fetch("/push-config", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ device_id: deviceId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
+    fetch("/push-config", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ device_id: deviceId }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            alert("Configuration pushed successfully!");
             window.location.href = "/";
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("Failed to push configuration.");
-        });
-    }
+        } else {
+            alert("Failed to push configuration: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Error pushing configuration:", error);
+        alert("An error occurred while pushing the configuration.");
+    });
+}
 </script>
 
 

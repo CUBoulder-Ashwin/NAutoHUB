@@ -1,6 +1,6 @@
 import os
 import sys
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from jinja2 import Environment, FileSystemLoader
 import subprocess
 import threading
@@ -152,6 +152,7 @@ def add_device():
 @app.route("/configure-device", methods=["GET", "POST"])
 def configure_device():
     jenkins_result = None  # Default value if no job was run
+    push_status = None 
 
     if request.method == "POST":
         device_id = request.form["device_id"]
@@ -293,17 +294,27 @@ def configure_device():
         jenkins_result = push_and_monitor_jenkins()
 
         if jenkins_result == "success":
+            # Push the configuration to the device
             push_status = push_configuration(device_id)
-            if "successfully" not in push_status:
-                return (
-                    push_status  # Return error message if pushing configuration failed
-                )
-
-            # Redirect to homepage after successful configuration
-            return redirect(url_for("home"))
+            if "successfully" in push_status:
+                return redirect(url_for("home"))
+            else:
+                return jsonify({"status": "error", "message": push_status}), 500
 
     return render_template("configure_device.html", jenkins_result=jenkins_result)
 
+@app.route("/push-config", methods=["POST"])
+def push_config():
+    data = request.get_json()
+    device_id = data.get("device_id")
+    
+    # Run push_configuration function
+    push_status = push_configuration(device_id)
+    
+    if "successfully" in push_status:
+        return jsonify({"status": "success"})
+    else:
+        return jsonify({"status": "error", "message": push_status})
 
 @app.route("/tools", methods=["GET", "POST"])
 def tools():
