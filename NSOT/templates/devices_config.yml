@@ -5,8 +5,4 @@ devices:
   clear_config: 'no'
   vlans:
   - id: '200'
-    name: v200
-  - id: '300'
-    name: V300
-  - id: '400'
-    name: V400
+    name: V200

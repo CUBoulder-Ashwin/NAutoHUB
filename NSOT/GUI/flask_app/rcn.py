@@ -106,7 +106,7 @@ def add_device():
             os.path.dirname(__file__), "../../../pilot-config/topo.yml"
         )
 
-        if device_type == "router" or device_type =="switch":
+        if device_type == "router" or device_type == "switch":
             update_hosts_csv(device_name, ip_address)
 
         # Update topology
