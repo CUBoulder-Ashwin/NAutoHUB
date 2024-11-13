@@ -11,7 +11,7 @@ def push_configuration(device_id):
         with open(csv_path, mode="r") as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                if row["device_name"] == device_id:
+                if row["hostname"] == device_id:
                     management_ip = row["management_ip"]
                     username = row["username"]
                     password = row["password"]
