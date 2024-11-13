@@ -1,6 +1,6 @@
 ---
 devices:
-- hostname: R100
+- hostname: R3
   device_type: access
   clear_config: 'no'
   vlans:
