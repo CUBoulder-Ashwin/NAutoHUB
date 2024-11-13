@@ -53,13 +53,8 @@ def push_configuration(device_id):
         net_connect = ConnectHandler(**device)
         print("Connected successfully.")
 
-        # Adjust expect_string to match the prompt pattern and increase the read timeout
-        output = net_connect.send_config_from_file(
-            config_path,
-            expect_string=r"\)#",  # Adjust this regex based on the device's prompt in config mode
-            read_timeout=30,  # Increase timeout if needed
-        )
-
+        # Use delay_factor to manage timing
+        output = net_connect.send_config_from_file(config_path, delay_factor=2)
         print("Configuration push output:")
         print(output)
 
