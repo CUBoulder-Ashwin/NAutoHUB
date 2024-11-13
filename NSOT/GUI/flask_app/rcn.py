@@ -106,7 +106,8 @@ def add_device():
             os.path.dirname(__file__), "../../../pilot-config/topo.yml"
         )
 
-        update_hosts_csv(device_name, ip_address)
+        if device_type == "router" or device_type =="switch":
+            update_hosts_csv(device_name, ip_address)
 
         # Update topology
         update_topology(
@@ -146,7 +147,7 @@ def add_device():
         )
         thread.start()
 
-    return render_template("configure_device.html")
+    return render_template("add_device.html")
 
 
 @app.route("/configure-device", methods=["GET", "POST"])

@@ -73,8 +73,15 @@ topology:
         - ip route del default via 172.20.20.1 dev eth0
         - ip route add default via 200.200.200.1 dev eth1
         - ip -6 route add default via 2001:db8:200::1 dev eth1
+    H5:
+      kind: linux
+      image: ubu_hosts:latest
+      exec:
+        - ip route del default via 172.20.20.1 dev eth0
+        - sudo dhclient eth1
 
   links:
+    - endpoints: ["H5:eth1", "R2:eth5"]
     - endpoints: [S1:eth1, R1:eth1]
     - endpoints: [S1:eth4, S2:eth4]
     - endpoints: [S2:eth1, R2:eth1]

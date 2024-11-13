@@ -16,7 +16,7 @@ def update_topology(
             lines = file.readlines()
 
         # Prepare the new node entry
-        if device_type in ["router", "switch"]:
+        if device_type == "router" or device_type == "switch":
             new_node_entry = (
                 f"    {device_name}:\n"
                 f"      kind: ceos\n"
@@ -67,7 +67,7 @@ def update_topology(
 
 def create_base_config(device_name, device_interface, mac_address, device_type):
     try:
-        if device_type in ["router", "switch"]:
+        if device_type == "router" or device_type == "switch":
             config_dir = (
                 "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs"
             )

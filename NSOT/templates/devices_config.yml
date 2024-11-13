@@ -1,8 +1,12 @@
 ---
 devices:
-- hostname: R3
+- hostname: R2
   device_type: access
   clear_config: 'no'
   vlans:
   - id: '200'
-    name: v200
+    name: V200
+  - id: '300'
+    name: V300
+  - id: '400'
+    name: V400
