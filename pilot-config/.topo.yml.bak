@@ -6,35 +6,35 @@ topology:
     S1:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/configs/S1.cfg
+      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S1.cfg
     S2:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/configs/S2.cfg
+      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S2.cfg
     S3:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/configs/S3.cfg
+      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S3.cfg
     S4:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/configs/S4.cfg
+      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S4.cfg
     R1:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/configs/R1.cfg
+      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R1.cfg
     R2:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/configs/R2.cfg
+      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R2.cfg
     R3:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/configs/R3.cfg
+      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R3.cfg
     R4:
       kind: ceos
       image: ceos:4.32.2F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/configs/R4.cfg
+      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R4.cfg
     R5:
       kind: ceos
       image: ceos:4.32.2F
@@ -81,7 +81,7 @@ topology:
         - sudo dhclient eth1
 
   links:
-    - endpoints: ["H5:eth1", "R2:eth5"]
+    - endpoints: ["H5:eth1", "R2:eth3"]
     - endpoints: [S1:eth1, R1:eth1]
     - endpoints: [S1:eth4, S2:eth4]
     - endpoints: [S2:eth1, R2:eth1]
