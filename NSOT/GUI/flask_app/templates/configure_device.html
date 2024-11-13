@@ -388,16 +388,25 @@ function pushConfiguration() {
     .then(data => {
         if (data.status === "success") {
             alert("Configuration pushed successfully!");
-            window.location.href = "/";
         } else {
             alert("Failed to push configuration: " + data.message);
+            // Hide the "Push Configuration" button on failure
+            document.querySelector('button[onclick="pushConfiguration()"]').style.display = "none";
         }
+        // Redirect to "/configure-device" after the alert is closed
+        window.location.href = "/configure-device";
     })
     .catch(error => {
         console.error("Error pushing configuration:", error);
         alert("An error occurred while pushing the configuration.");
+        // Hide the "Push Configuration" button on error
+        document.querySelector('button[onclick="pushConfiguration()"]').style.display = "none";
+        // Redirect to "/configure-device" after the alert is closed
+        window.location.href = "/configure-device";
     });
 }
+
+
 </script>
 
 
