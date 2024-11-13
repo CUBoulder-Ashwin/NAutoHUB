@@ -295,6 +295,7 @@ def configure_device():
 
         if jenkins_result == "success":
             # Push the configuration to the device
+            print("this is from rcn.py: The device name is " + device_id)
             push_status = push_configuration(device_id)
             if "successfully" in push_status:
                 return redirect(url_for("home"))
