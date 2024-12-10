@@ -1,0 +1,21 @@
+edit protocols bgp group {{ bgp_group }}
+ set type {{ bgp_type }}
+ set local-as {{ bgp_as }}
+ {% if loc_addr -%}
+ {% for addr in loc_addr -%}
+   set local-address {{ addr }}
+ {% endfor -%}
+ {% endif -%}
+ {% if neigh_addr -%}
+ {% for neighbor in neigh_addr -%}
+   set neighbor {{ neighbor.ip }} peer-as {{ neighbor.remote_as }}
+ {% endfor -%}
+ {% endif -%}
+ top
+set routing-options autonomous-system {{ bgp_as }} 
+{% if conn_redistribute -%}
+   set policy-options policy-statement advertise-local term 1 protocol direct
+   set policy-options policy-statement advertise-local term 1 then accept
+{% endif -%}
+set protocols bgp group {{ bgp_group }} export advertise-local
+commit and-quit

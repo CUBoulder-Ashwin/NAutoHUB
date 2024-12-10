@@ -20,6 +20,16 @@
         </select>
     </div>
 
+    <div class="form-group" style="margin-bottom: 15px;">
+        <label for="device_vendor" style="display: block; color: #00d1b2; font-size: 1.1em;">Device Vendor:</label>
+        <select name="device_vendor" id="device_vendor" required class="form-input">
+            <option value="">Select Vendor</option>
+            <option value="cisco">Cisco</option>
+            <option value="arista">Arista</option>
+            <option value="juniper">Juniper</option>
+        </select>
+    </div>
+
     <!-- Configuration inputs will be shown based on router type -->
     <div id="config_inputs"></div>
     

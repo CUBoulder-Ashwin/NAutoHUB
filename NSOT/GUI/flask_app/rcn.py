@@ -158,6 +158,7 @@ def configure_device():
     if request.method == "POST":
         device_id = request.form["device_id"]
         router_type = request.form["router_type"]
+        device_vendor = request.form["device_vendor"]
 
         # Fetching interface configurations
         interfaces = []
@@ -277,6 +278,7 @@ def configure_device():
         create_yaml_from_form_data(
             device_id=device_id,
             router_type=router_type,
+            device_vendor=device_vendor,
             interfaces=interfaces,
             ospf=ospf,
             bgp=bgp,

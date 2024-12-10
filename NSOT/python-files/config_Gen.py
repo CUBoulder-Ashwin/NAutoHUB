@@ -32,7 +32,7 @@ def generate_device_configs():
         lstrip_blocks=True,
     )
 
-    # Load templates
+    # Load templates for both Cisco and Arista
     templates = {
         "bgp": env.get_template("bgp_template.j2"),
         "ospf": env.get_template("ospf_template.j2"),
@@ -40,11 +40,17 @@ def generate_device_configs():
         "dhcp": env.get_template("dhcp_template.j2"),
         "interfaces": env.get_template("interfaces_template.j2"),
         "vlan": env.get_template("vlan_template.j2"),
+        # Add Cisco-specific templates
+        "bgp_cisco": env.get_template("bgp_template_cisco.j2"),
+        "ospf_cisco": env.get_template("ospf_template_cisco.j2"),
+        "rip_cisco": env.get_template("rip_template_cisco.j2"),
+        "interfaces_cisco": env.get_template("interfaces_template_cisco.j2"),
     }
 
     for device in devices:
         config = ""
         clear_config = device.get("clear_config", "no")
+        device_vendor = device.get("vendor", "arista").lower()  # Get vendor (Arista/Cisco)
 
         # Generate interfaces config
         if "interfaces" in device:
@@ -52,9 +58,12 @@ def generate_device_configs():
                 for iface in device["interfaces"]:
                     config += f"no interface {iface['name']}\n"
             else:
-                config += templates["interfaces"].render(
-                    interfaces=device["interfaces"]
-                )
+                if device_vendor == "cisco":
+                    config += templates["interfaces_cisco"].render(
+                        interfaces=device["interfaces"]
+                    )
+                else:  # Default to Arista templates
+                    config += templates["interfaces"].render(interfaces=device["interfaces"])
 
         # Generate VLAN configuration
         if "vlans" in device:
@@ -70,10 +79,16 @@ def generate_device_configs():
             if clear_config == "yes":
                 config += f"no router ospf {ospf_data['process_id']}\n"
             else:
-                config += templates["ospf"].render(
-                    ospf_process=ospf_data["process_id"],
-                    ospf_networks=ospf_data.get("networks", []),
-                )
+                if device_vendor == "cisco":
+                    config += templates["ospf_cisco"].render(
+                        ospf_process=ospf_data["process_id"],
+                        ospf_networks=ospf_data.get("networks", []),
+                    )
+                else:
+                    config += templates["ospf"].render(
+                        ospf_process=ospf_data["process_id"],
+                        ospf_networks=ospf_data.get("networks", []),
+                    )
 
         # Generate BGP config
         if "bgp" in device:
@@ -86,11 +101,18 @@ def generate_device_configs():
                     for family in bgp_data.get("address_families", [])
                     for net in family.get("networks", [])
                 ]
-                config += templates["bgp"].render(
-                    bgp_as=bgp_data["as_number"],
-                    bgp_networks=bgp_networks,
-                    bgp_neighbors=bgp_data.get("neighbors", []),
-                )
+                if device_vendor == "cisco":
+                    config += templates["bgp_cisco"].render(
+                        bgp_as=bgp_data["as_number"],
+                        bgp_networks=bgp_networks,
+                        bgp_neighbors=bgp_data.get("neighbors", []),
+                    )
+                else:
+                    config += templates["bgp"].render(
+                        bgp_as=bgp_data["as_number"],
+                        bgp_networks=bgp_networks,
+                        bgp_neighbors=bgp_data.get("neighbors", []),
+                    )
 
         # Generate RIP configuration if present
         if "rip" in device:
@@ -98,13 +120,22 @@ def generate_device_configs():
             if clear_config == "yes":
                 config += "no router rip\n"
             else:
-                config += templates["rip"].render(
-                    rip_version=rip_data.get("version"),
-                    rip_networks=rip_data.get("networks", []),
-                    bgp_redistribute=rip_data["redistribute"].get("bgp", False),
-                    bgp_as=device.get("bgp", {}).get("as_number", ""),
-                    bgp_metric=rip_data["redistribute"].get("metric", 1),
-                )
+                if device_vendor == "cisco":
+                    config += templates["rip_cisco"].render(
+                        rip_version=rip_data.get("version"),
+                        rip_networks=rip_data.get("networks", []),
+                        bgp_redistribute=rip_data["redistribute"].get("bgp", False),
+                        bgp_as=device.get("bgp", {}).get("as_number", ""),
+                        bgp_metric=rip_data["redistribute"].get("metric", 1),
+                    )
+                else:
+                    config += templates["rip"].render(
+                        rip_version=rip_data.get("version"),
+                        rip_networks=rip_data.get("networks", []),
+                        bgp_redistribute=rip_data["redistribute"].get("bgp", False),
+                        bgp_as=device.get("bgp", {}).get("as_number", ""),
+                        bgp_metric=rip_data["redistribute"].get("metric", 1),
+                    )
 
         # Generate DHCP config
         if "dhcp" in device:

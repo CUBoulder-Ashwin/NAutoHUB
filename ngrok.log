@@ -320,3 +320,218 @@ t=2024-11-12T22:35:47-0700 lvl=info msg="join connections" obj=join id=6a32444da
 t=2024-11-12T22:35:57-0700 lvl=info msg="join connections" obj=join id=133c4802338e l=127.0.0.1:8080 r=128.138.64.27:45599
 t=2024-11-12T22:36:07-0700 lvl=info msg="join connections" obj=join id=a4c5dd03fb02 l=127.0.0.1:8080 r=128.138.64.27:46627
 t=2024-11-12T22:36:14-0700 lvl=info msg="join connections" obj=join id=d30feeb1030f l=127.0.0.1:8080 r=128.138.64.27:41646
+t=2024-11-12T22:46:15-0700 lvl=info msg="join connections" obj=join id=bf1d66949d96 l=127.0.0.1:8080 r=140.82.115.11:23628
+t=2024-11-12T22:46:24-0700 lvl=info msg="join connections" obj=join id=f72eb7743be6 l=127.0.0.1:8080 r=128.138.64.27:54104
+t=2024-11-12T22:46:24-0700 lvl=info msg="join connections" obj=join id=1c37a0cb5bff l=127.0.0.1:8080 r=128.138.64.27:34034
+t=2024-11-12T22:46:35-0700 lvl=info msg="join connections" obj=join id=ba96f44e82a7 l=127.0.0.1:8080 r=128.138.64.27:48786
+t=2024-11-12T22:46:45-0700 lvl=info msg="join connections" obj=join id=ee31218f670e l=127.0.0.1:8080 r=128.138.64.27:35375
+t=2024-11-12T22:47:25-0700 lvl=info msg="join connections" obj=join id=2f30ac19aba1 l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-12T22:47:39-0700 lvl=info msg="join connections" obj=join id=3099b0319e0f l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-12T22:47:39-0700 lvl=info msg="join connections" obj=join id=218a5e74bbf8 l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-12T22:47:58-0700 lvl=info msg="join connections" obj=join id=f18a99880119 l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-12T22:47:58-0700 lvl=info msg="join connections" obj=join id=78046f6d4b65 l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-12T22:47:58-0700 lvl=info msg="join connections" obj=join id=e19f46cfacc7 l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-12T22:47:58-0700 lvl=info msg="join connections" obj=join id=136344834099 l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-12T22:47:58-0700 lvl=info msg="join connections" obj=join id=0836856a2514 l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-12T22:47:58-0700 lvl=info msg="join connections" obj=join id=c64535baf58d l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-12T22:47:58-0700 lvl=info msg="join connections" obj=join id=83cdbec69394 l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-12T22:47:58-0700 lvl=info msg="join connections" obj=join id=a46b6e965107 l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-12T22:47:58-0700 lvl=info msg="join connections" obj=join id=0fc4c802e9db l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-12T22:47:58-0700 lvl=info msg="join connections" obj=join id=64cb7db5c682 l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-12T22:47:58-0700 lvl=info msg="join connections" obj=join id=a62589e5ef67 l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-12T22:47:58-0700 lvl=info msg="join connections" obj=join id=399bb99ae6cb l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-12T22:47:58-0700 lvl=info msg="join connections" obj=join id=d1f2aded7854 l=127.0.0.1:8080 r=128.138.64.27:52216
+t=2024-11-13T04:01:23-0700 lvl=info msg="update available" obj=updater
+t=2024-11-13T10:01:24-0700 lvl=info msg="update available" obj=updater
+t=2024-11-13T16:01:24-0700 lvl=info msg="update available" obj=updater
+t=2024-11-13T22:01:25-0700 lvl=info msg="update available" obj=updater
+t=2024-11-14T04:01:25-0700 lvl=info msg="update available" obj=updater
+t=2024-11-14T10:01:25-0700 lvl=info msg="update available" obj=updater
+t=2024-11-14T16:01:26-0700 lvl=info msg="update available" obj=updater
+t=2024-11-14T22:01:26-0700 lvl=info msg="update available" obj=updater
+t=2024-11-15T04:01:27-0700 lvl=info msg="update available" obj=updater
+t=2024-11-15T10:01:27-0700 lvl=info msg="update available" obj=updater
+t=2024-11-15T16:01:27-0700 lvl=info msg="update available" obj=updater
+t=2024-11-15T22:01:28-0700 lvl=info msg="update available" obj=updater
+t=2024-11-16T04:01:28-0700 lvl=info msg="update available" obj=updater
+t=2024-11-16T10:01:28-0700 lvl=info msg="update available" obj=updater
+t=2024-11-16T16:01:29-0700 lvl=info msg="update available" obj=updater
+t=2024-11-16T22:01:29-0700 lvl=info msg="update available" obj=updater
+t=2024-11-17T04:01:30-0700 lvl=info msg="update available" obj=updater
+t=2024-11-17T10:01:30-0700 lvl=info msg="update available" obj=updater
+t=2024-11-17T16:01:30-0700 lvl=info msg="update available" obj=updater
+t=2024-11-17T22:01:31-0700 lvl=info msg="update available" obj=updater
+t=2024-11-18T04:01:31-0700 lvl=info msg="update available" obj=updater
+t=2024-11-18T10:01:31-0700 lvl=info msg="update available" obj=updater
+t=2024-11-18T16:01:32-0700 lvl=info msg="update available" obj=updater
+t=2024-11-18T22:01:32-0700 lvl=info msg="update available" obj=updater
+t=2024-11-19T04:01:33-0700 lvl=info msg="update available" obj=updater
+t=2024-11-19T10:01:33-0700 lvl=info msg="update available" obj=updater
+t=2024-11-19T16:01:33-0700 lvl=info msg="update available" obj=updater
+t=2024-11-19T22:01:34-0700 lvl=info msg="update available" obj=updater
+t=2024-11-20T04:01:34-0700 lvl=info msg="update available" obj=updater
+t=2024-11-20T10:01:35-0700 lvl=info msg="update available" obj=updater
+t=2024-11-20T16:01:35-0700 lvl=info msg="update available" obj=updater
+t=2024-11-20T22:01:35-0700 lvl=info msg="update available" obj=updater
+t=2024-11-21T04:01:36-0700 lvl=info msg="update available" obj=updater
+t=2024-11-21T10:01:36-0700 lvl=info msg="update available" obj=updater
+t=2024-11-21T16:01:37-0700 lvl=info msg="update available" obj=updater
+t=2024-11-21T22:01:37-0700 lvl=info msg="update available" obj=updater
+t=2024-11-22T04:01:37-0700 lvl=info msg="update available" obj=updater
+t=2024-11-22T10:01:38-0700 lvl=info msg="update available" obj=updater
+t=2024-11-22T13:06:06-0700 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=9a171b441b87 err="read EOF from remote peer"
+t=2024-11-22T13:06:06-0700 lvl=eror msg="failed to reconnect session" obj=tunnels.session err="authentication failed: Your account is limited to 1 simultaneous ngrok agent sessions.\nYou can run multiple simultaneous tunnels from a single agent session by defining the tunnels in your agent configuration file and starting them with the command `ngrok start --all`.\nRead more about the agent configuration file: https://ngrok.com/docs/secure-tunnels/ngrok-agent/reference/config\nYou can view your current agent sessions in the dashboard:\nhttps://dashboard.ngrok.com/agents\r\n\r\nERR_NGROK_108\r\n"
+t=2024-11-22T13:06:07-0700 lvl=eror msg="failed to reconnect session" obj=tunnels.session err="authentication failed: Your account is limited to 1 simultaneous ngrok agent sessions.\nYou can run multiple simultaneous tunnels from a single agent session by defining the tunnels in your agent configuration file and starting them with the command `ngrok start --all`.\nRead more about the agent configuration file: https://ngrok.com/docs/secure-tunnels/ngrok-agent/reference/config\nYou can view your current agent sessions in the dashboard:\nhttps://dashboard.ngrok.com/agents\r\n\r\nERR_NGROK_108\r\n"
+t=2024-11-22T13:06:08-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2024-11-22T13:06:08-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2024-11-22T13:06:27-0700 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=df38811cd232 clientid=075760e15378248fec4e67b2cc16c72a
+t=2024-11-22T16:01:38-0700 lvl=info msg="update available" obj=updater
+t=2024-11-22T22:01:39-0700 lvl=info msg="update available" obj=updater
+t=2024-11-23T04:01:39-0700 lvl=info msg="update available" obj=updater
+t=2024-11-23T10:01:40-0700 lvl=info msg="update available" obj=updater
+t=2024-11-23T16:01:40-0700 lvl=info msg="update available" obj=updater
+t=2024-11-23T22:01:40-0700 lvl=info msg="update available" obj=updater
+t=2024-11-24T04:01:41-0700 lvl=info msg="update available" obj=updater
+t=2024-11-24T10:01:41-0700 lvl=info msg="update available" obj=updater
+t=2024-11-24T16:01:41-0700 lvl=info msg="update available" obj=updater
+t=2024-11-24T22:01:42-0700 lvl=info msg="update available" obj=updater
+t=2024-11-25T04:01:42-0700 lvl=info msg="update available" obj=updater
+t=2024-11-25T10:01:42-0700 lvl=info msg="update available" obj=updater
+t=2024-11-25T16:01:43-0700 lvl=info msg="update available" obj=updater
+t=2024-11-25T22:01:43-0700 lvl=info msg="update available" obj=updater
+t=2024-11-26T04:01:43-0700 lvl=info msg="update available" obj=updater
+t=2024-11-26T10:01:44-0700 lvl=info msg="update available" obj=updater
+t=2024-11-26T16:01:44-0700 lvl=info msg="update available" obj=updater
+t=2024-11-26T22:01:44-0700 lvl=info msg="update available" obj=updater
+t=2024-11-27T04:01:45-0700 lvl=info msg="update available" obj=updater
+t=2024-11-27T10:01:45-0700 lvl=info msg="update available" obj=updater
+t=2024-11-27T16:01:46-0700 lvl=info msg="update available" obj=updater
+t=2024-11-27T22:01:46-0700 lvl=info msg="update available" obj=updater
+t=2024-11-28T04:01:46-0700 lvl=info msg="update available" obj=updater
+t=2024-11-28T10:01:47-0700 lvl=info msg="update available" obj=updater
+t=2024-11-28T16:01:47-0700 lvl=info msg="update available" obj=updater
+t=2024-11-28T22:01:47-0700 lvl=info msg="update available" obj=updater
+t=2024-11-29T04:01:48-0700 lvl=info msg="update available" obj=updater
+t=2024-11-29T10:01:48-0700 lvl=info msg="update available" obj=updater
+t=2024-11-29T16:01:48-0700 lvl=info msg="update available" obj=updater
+t=2024-11-29T22:01:49-0700 lvl=info msg="update available" obj=updater
+t=2024-11-30T04:01:49-0700 lvl=info msg="update available" obj=updater
+t=2024-11-30T10:01:50-0700 lvl=info msg="update available" obj=updater
+t=2024-11-30T16:01:50-0700 lvl=info msg="update available" obj=updater
+t=2024-11-30T22:01:50-0700 lvl=info msg="update available" obj=updater
+t=2024-12-01T04:01:51-0700 lvl=info msg="update available" obj=updater
+t=2024-12-01T10:01:51-0700 lvl=info msg="update available" obj=updater
+t=2024-12-01T16:01:51-0700 lvl=info msg="update available" obj=updater
+t=2024-12-01T20:24:24-0700 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2024-12-01T20:24:24-0700 lvl=info msg="session closing" obj=tunnels.session err=nil
+t=2024-12-01T20:24:53-0700 lvl=info msg="open config file" path=/home/student/Desktop/Advanced-Netman/ngrok_config.yml err=nil
+t=2024-12-01T20:24:54-0700 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2024-12-01T20:24:54-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2024-12-01T20:24:54-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2024-12-01T20:24:54-0700 lvl=info msg="started tunnel" obj=tunnels name=jenkins addr=http://localhost:8080 url=https://796d-128-138-64-27.ngrok-free.app
+t=2024-12-01T20:24:54-0700 lvl=info msg="update available" obj=updater
+t=2024-12-02T02:24:55-0700 lvl=info msg="update available" obj=updater
+t=2024-12-02T08:24:55-0700 lvl=info msg="update available" obj=updater
+t=2024-12-02T11:04:05-0700 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2024-12-02T11:04:05-0700 lvl=info msg="session closing" obj=tunnels.session err=nil
+t=2024-12-02T11:04:43-0700 lvl=info msg="open config file" path=/home/student/Desktop/Advanced-Netman/ngrok_config.yml err=nil
+t=2024-12-02T11:04:43-0700 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2024-12-02T11:04:44-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2024-12-02T11:04:44-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2024-12-02T11:04:44-0700 lvl=info msg="started tunnel" obj=tunnels name=jenkins addr=http://localhost:8080 url=https://9a53-128-138-64-27.ngrok-free.app
+t=2024-12-02T11:04:44-0700 lvl=info msg="update available" obj=updater
+t=2024-12-02T11:10:47-0700 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2024-12-02T11:10:47-0700 lvl=info msg="session closing" obj=tunnels.session err=nil
+t=2024-12-02T11:11:15-0700 lvl=info msg="open config file" path=/home/student/Desktop/Advanced-Netman/ngrok_config.yml err=nil
+t=2024-12-02T11:11:15-0700 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2024-12-02T11:11:15-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2024-12-02T11:11:15-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2024-12-02T11:11:15-0700 lvl=info msg="started tunnel" obj=tunnels name=jenkins addr=http://localhost:8080 url=https://ab30-128-138-64-27.ngrok-free.app
+t=2024-12-02T11:11:15-0700 lvl=info msg="update available" obj=updater
+t=2024-12-02T13:23:27-0700 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2024-12-02T13:23:27-0700 lvl=info msg="session closing" obj=tunnels.session err=nil
+t=2024-12-02T13:23:27-0700 lvl=info msg="accept failed" obj=tunnels.session obj=csess id=c73d046a7a82 err="reconnecting session closed"
+t=2024-12-02T13:23:27-0700 lvl=info msg="failed to accept connection: Listener closed" obj=tunnels.session clientid=5738dcf40e7432922e125cd67ae09a6b
+t=2024-12-02T13:23:27-0700 lvl=warn msg="Stopping forwarder" name=jenkins acceptErr="failed to accept connection: Listener closed"
+t=2024-12-02T13:23:27-0700 lvl=warn msg="Error restarting forwarder" name=jenkins err="failed to start tunnel: session closed"
+t=2024-12-02T13:23:27-0700 lvl=info msg="no more state changes" obj=tunnels.session
+t=2024-12-02T13:24:05-0700 lvl=info msg="open config file" path=/home/student/Desktop/Advanced-Netman/ngrok_config.yml err=nil
+t=2024-12-02T13:24:05-0700 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2024-12-02T13:24:05-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2024-12-02T13:24:05-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2024-12-02T13:24:05-0700 lvl=info msg="started tunnel" obj=tunnels name=jenkins addr=http://localhost:8080 url=https://7cb7-128-138-64-27.ngrok-free.app
+t=2024-12-02T13:24:09-0700 lvl=info msg="update available" obj=updater
+t=2024-12-02T16:30:53-0700 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2024-12-02T16:30:53-0700 lvl=info msg="session closing" obj=tunnels.session err=nil
+t=2024-12-02T16:31:23-0700 lvl=info msg="open config file" path=/home/student/Desktop/Advanced-Netman/ngrok_config.yml err=nil
+t=2024-12-02T16:31:23-0700 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2024-12-02T16:31:23-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2024-12-02T16:31:23-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2024-12-02T16:31:24-0700 lvl=info msg="started tunnel" obj=tunnels name=jenkins addr=http://localhost:8080 url=https://e394-128-138-64-27.ngrok-free.app
+t=2024-12-02T16:31:24-0700 lvl=info msg="update available" obj=updater
+t=2024-12-02T20:54:28-0700 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2024-12-02T20:54:28-0700 lvl=info msg="session closing" obj=tunnels.session err=nil
+t=2024-12-02T20:54:28-0700 lvl=info msg="accept failed" obj=tunnels.session obj=csess id=6763ada66fb5 err="reconnecting session closed"
+t=2024-12-02T20:54:28-0700 lvl=info msg="no more state changes" obj=tunnels.session
+t=2024-12-02T20:54:28-0700 lvl=info msg="failed to accept connection: Listener closed" obj=tunnels.session clientid=8dfa0fc3b400e6b9f609df5005732977
+t=2024-12-02T20:54:28-0700 lvl=warn msg="Stopping forwarder" name=jenkins acceptErr="failed to accept connection: Listener closed"
+t=2024-12-02T20:54:28-0700 lvl=warn msg="Error restarting forwarder" name=jenkins err="failed to start tunnel: session closed"
+t=2024-12-02T20:55:06-0700 lvl=info msg="open config file" path=/home/student/Desktop/Advanced-Netman/ngrok_config.yml err=nil
+t=2024-12-02T20:55:06-0700 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2024-12-02T20:55:07-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2024-12-02T20:55:07-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2024-12-02T20:55:07-0700 lvl=info msg="started tunnel" obj=tunnels name=jenkins addr=http://localhost:8080 url=https://d21d-128-138-64-27.ngrok-free.app
+t=2024-12-02T20:55:11-0700 lvl=warn msg="failed to check for update" obj=updater err="Post \"https://update.equinox.io/check\": context deadline exceeded"
+t=2024-12-03T02:55:14-0700 lvl=info msg="update available" obj=updater
+t=2024-12-03T08:55:15-0700 lvl=info msg="update available" obj=updater
+t=2024-12-03T14:55:16-0700 lvl=info msg="update available" obj=updater
+t=2024-12-03T18:07:06-0700 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2024-12-03T18:07:06-0700 lvl=info msg="session closing" obj=tunnels.session err=nil
+t=2024-12-03T18:07:43-0700 lvl=info msg="open config file" path=/home/student/Desktop/Advanced-Netman/ngrok_config.yml err=nil
+t=2024-12-03T18:07:43-0700 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2024-12-03T18:07:43-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2024-12-03T18:07:43-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2024-12-03T18:07:43-0700 lvl=info msg="started tunnel" obj=tunnels name=jenkins addr=http://localhost:8080 url=https://e4c0-128-138-64-27.ngrok-free.app
+t=2024-12-03T18:07:44-0700 lvl=info msg="update available" obj=updater
+t=2024-12-04T00:07:44-0700 lvl=info msg="update available" obj=updater
+t=2024-12-04T06:07:44-0700 lvl=info msg="update available" obj=updater
+t=2024-12-04T12:07:45-0700 lvl=info msg="update available" obj=updater
+t=2024-12-04T18:07:45-0700 lvl=info msg="update available" obj=updater
+t=2024-12-05T00:07:45-0700 lvl=info msg="update available" obj=updater
+t=2024-12-05T06:07:46-0700 lvl=info msg="update available" obj=updater
+t=2024-12-05T12:07:46-0700 lvl=info msg="update available" obj=updater
+t=2024-12-05T18:07:46-0700 lvl=info msg="update available" obj=updater
+t=2024-12-06T00:07:47-0700 lvl=info msg="update available" obj=updater
+t=2024-12-06T06:07:47-0700 lvl=info msg="update available" obj=updater
+t=2024-12-06T12:07:48-0700 lvl=info msg="update available" obj=updater
+t=2024-12-06T18:07:48-0700 lvl=info msg="update available" obj=updater
+t=2024-12-07T00:07:48-0700 lvl=info msg="update available" obj=updater
+t=2024-12-07T06:07:49-0700 lvl=info msg="update available" obj=updater
+t=2024-12-07T12:07:49-0700 lvl=info msg="update available" obj=updater
+t=2024-12-07T18:07:50-0700 lvl=info msg="update available" obj=updater
+t=2024-12-08T00:07:50-0700 lvl=info msg="update available" obj=updater
+t=2024-12-08T06:07:50-0700 lvl=info msg="update available" obj=updater
+t=2024-12-08T12:07:51-0700 lvl=info msg="update available" obj=updater
+t=2024-12-08T18:07:51-0700 lvl=info msg="update available" obj=updater
+t=2024-12-09T00:07:51-0700 lvl=info msg="update available" obj=updater
+t=2024-12-09T06:07:52-0700 lvl=info msg="update available" obj=updater
+t=2024-12-09T12:07:52-0700 lvl=info msg="update available" obj=updater
+t=2024-12-09T18:07:53-0700 lvl=info msg="update available" obj=updater
+t=2024-12-10T00:07:53-0700 lvl=info msg="update available" obj=updater
+t=2024-12-10T06:07:53-0700 lvl=info msg="update available" obj=updater
+t=2024-12-10T09:56:15-0700 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2024-12-10T09:56:15-0700 lvl=info msg="session closing" obj=tunnels.session err=nil
+t=2024-12-10T09:56:43-0700 lvl=info msg="open config file" path=/home/student/Desktop/Advanced-Netman/ngrok_config.yml err=nil
+t=2024-12-10T09:56:43-0700 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2024-12-10T09:56:43-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2024-12-10T09:56:43-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2024-12-10T09:56:44-0700 lvl=info msg="started tunnel" obj=tunnels name=jenkins addr=http://localhost:8080 url=https://50c8-128-138-64-27.ngrok-free.app
+t=2024-12-10T09:56:44-0700 lvl=info msg="update available" obj=updater
+t=2024-12-10T11:37:00-0700 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2024-12-10T11:37:00-0700 lvl=info msg="session closing" obj=tunnels.session err=nil
+t=2024-12-10T11:37:28-0700 lvl=info msg="open config file" path=/home/student/Desktop/Advanced-Netman/ngrok_config.yml err=nil
+t=2024-12-10T11:37:28-0700 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2024-12-10T11:37:28-0700 lvl=info msg="client session established" obj=tunnels.session
+t=2024-12-10T11:37:28-0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2024-12-10T11:37:28-0700 lvl=info msg="started tunnel" obj=tunnels name=jenkins addr=http://localhost:8080 url=https://63aa-128-138-64-27.ngrok-free.app
+t=2024-12-10T11:37:28-0700 lvl=info msg="update available" obj=updater

@@ -1,21 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="homepage-header">
-    <h1>RCN Network Management</h1>
-</div>
-
-<div class="category-container">
-    <h3 class="category-title">Main Features</h3>
+<!-- First Row -->
+<div class="category-container-row">
+    <div class="category-title">Configure</div>
     <div class="tile-container">
-        <div class="tile">
-            <a href="{{ url_for('dashboard') }}">
-                <div class="tile-content">
-                    <h2>Dashboard</h2>
-                    <p>View the main dashboard for network overview</p>
-                </div>
-            </a>
-        </div>
         <div class="tile">
             <a href="{{ url_for('add_device') }}">
                 <div class="tile-content">
@@ -35,14 +24,46 @@
     </div>
 </div>
 
-<div class="category-container">
-    <h3 class="category-title">Tools</h3>
+<!-- Second Row -->
+<div class="category-container-row">
+    <div class="category-title">Manage</div>
     <div class="tile-container">
         <div class="tile">
             <a href="{{ url_for('tools') }}">
                 <div class="tile-content">
                     <h2>Tools</h2>
                     <p>Access network management tools</p>
+                </div>
+            </a>
+        </div>
+        <div class="tile">
+            <a href="#">
+                <div class="tile-content">
+                    <h2>IPAM</h2>
+                    <p>Manage and allocate IP addresses in your network</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Third Row -->
+<div class="category-container-row">
+    <div class="category-title">Monitor</div>
+    <div class="tile-container">
+        <div class="tile">
+            <a href="{{ url_for('dashboard') }}">
+                <div class="tile-content">
+                    <h2>Dashboard</h2>
+                    <p>View the main dashboard for network overview</p>
+                </div>
+            </a>
+        </div>
+        <div class="tile">
+            <a href="#">
+                <div class="tile-content">
+                    <h2>Topology</h2>
+                    <p>Visualize and manage your network topology</p>
                 </div>
             </a>
         </div>
@@ -55,59 +76,94 @@ body {
     font-family: Arial, sans-serif;
     background-color: #1a1a2e;
     color: #ffffff;
+    margin: 0;
+    padding: 0;
 }
 
 .homepage-header h1 {
     text-align: center;
     color: #00d1b2;
     font-size: 2.5em;
-    margin-top: 20px;
+    margin: 20px 0;
     font-family: 'Arial Black', sans-serif;
 }
 
-/* Category Styling */
-.category-container {
+/* Row Styling */
+.category-container-row {
+    position: relative;
     border: 2px solid #00d1b2;
     border-radius: 15px;
-    padding: 20px;
     margin: 30px auto;
-    max-width: 950px;
+    max-width: 750px;
+    height: 250px;
     box-shadow: 0 0 20px rgba(0, 209, 178, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 209, 178, 0.05);
 }
 
 .category-title {
-    color: #00ffcc;
-    font-size: 1.8em;
+    font-size: 3em;
+    font-weight: bold;
+    color: #00d1b2;
+    background-color: rgba(0, 209, 178, 0.1);
+    width: 100%;
     text-align: center;
-    margin-bottom: 20px;
-    font-family: 'Arial Black', sans-serif;
+    padding: 80px 0;
+    position: absolute;
+    z-index: 2;
+    opacity: 1;
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    pointer-events: all;
 }
 
-/* Tile Container Styling */
+.category-container-row:hover .category-title {
+    animation: fade-out 0.5s ease-out forwards;
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+}
+
 .tile-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+    z-index: 1;
 }
 
-/* Individual Tile Styling */
+.category-container-row:hover .tile-container {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Tile Styling */
 .tile {
     width: 250px;
     background-color: #0d0d15;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 209, 178, 0.3);
-    transition: transform 0.3s, box-shadow 0.3s;
-    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .tile a {
     color: #ffffff;
     text-decoration: none;
     display: block;
-}
-
-.tile-content {
     padding: 20px;
     text-align: center;
 }
@@ -135,6 +191,7 @@ body {
 .tile:hover p {
     color: #b3f0e6;
 }
+
 </style>
 
 {% endblock %}

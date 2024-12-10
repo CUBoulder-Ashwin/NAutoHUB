@@ -1,0 +1,9 @@
+{% if router_id -%}
+    set routing-option router-id {{ router_id }}
+{% endif -%}
+ {% if interfaces -%}
+ {% for interface in interfaces -%}
+   set protocol ospf area {{ network.area }} interface {{ interface }}
+ {% endfor -%}
+ {% endif -%}
+commit and-quit

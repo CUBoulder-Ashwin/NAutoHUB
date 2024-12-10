@@ -13,14 +13,30 @@
             background-color: #f4f4f9;
             transition: background-color 0.3s, color 0.3s;
         }
+
         .dark-mode {
             background-color: #1a1a2e;
             color: #e0e0e0;
         }
+
+        /* Light Mode */
         .light-mode {
             background-color: #ffffff;
-            color: #333333;
+            color: #004d46; /* Dark teal font color */
         }
+
+        /* Navbar Adjustments for Light Mode */
+        .light-mode .navbar {
+            background-color: #004d46; /* Dark teal background for navbar */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .light-mode .navbar-logo,
+        .light-mode #darkModeToggle,
+        .light-mode .profile-button {
+            color: #ffffff; /* White font color for better contrast */
+        }
+
 
         /* Navbar */
         .navbar {
@@ -30,64 +46,53 @@
             padding: 15px 30px;
             background-color: #00d1b2;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease-in-out;
         }
-        .navbar-logo a {
+
+        .navbar-left {
+            flex: 1;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .navbar-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .navbar-right {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .navbar-logo {
             font-size: 1.5em;
             color: #ffffff;
             text-decoration: none;
             font-weight: bold;
         }
-        .navbar-links {
-            list-style: none;
-            display: flex;
-            gap: 20px;
-        }
-        .navbar-links li {
-            display: inline;
-        }
-        .navbar-links a {
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 8px 12px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .navbar-links a:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-        }
 
-        /* Search Bar */
-        .search-container input[type="text"] {
-            padding: 6px;
-            border: none;
-            border-radius: 5px;
-            outline: none;
-            transition: box-shadow 0.3s;
-        }
-        .search-container input[type="text"]:focus {
-            box-shadow: 0 0 8px rgba(0, 209, 178, 0.6);
-        }
-
-        /* Dark Mode Toggle */
         #darkModeToggle {
             background: none;
             border: none;
             font-size: 1.5em;
             cursor: pointer;
             color: #ffffff;
-            margin-right: 20px;
             transition: color 0.3s;
         }
+
         #darkModeToggle:hover {
             color: #ffeb3b;
         }
 
-        /* Profile Dropdown */
+        /* Hamburger Menu */
         .profile-dropdown {
             position: relative;
-            display: inline-block;
         }
+
         .profile-button {
             background: none;
             border: none;
@@ -95,108 +100,122 @@
             cursor: pointer;
             color: #ffffff;
         }
-        .profile-content {
-            display: none;
-            position: absolute;
+
+        .hamburger-menu {
+            position: fixed;
+            top: 0;
             right: 0;
-            background-color: #333333;
-            min-width: 150px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            border-radius: 5px;
-        }
-        .profile-content a {
+            width: 300px;
+            height: 100%;
+            background-color: #1a1a2e;
             color: #ffffff;
-            padding: 10px 15px;
-            text-decoration: none;
-            display: block;
-            transition: background-color 0.3s;
-        }
-        .profile-content a:hover {
-            background-color: #00d1b2;
-        }
-        .profile-dropdown:hover .profile-content {
-            display: block;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 1000;
         }
 
-        /* Container */
-        .container {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s, color 0.3s;
+        .hamburger-menu.open {
+            transform: translateX(0);
         }
-        .dark-mode .container {
-            background-color: #1e1e2f;
-            color: #e0e0e0;
+
+        .hamburger-close {
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 10px;
+            display: block;
+            text-align: right;
+            color: #ffffff;
+            transition: color 0.2s ease-in-out;
         }
+
+        .hamburger-menu a {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #ffffff;
+            border-bottom: 1px solid #333333;
+            transition: background-color 0.3s ease-in-out, transform 0.2s;
+        }
+
+        .hamburger-menu a:hover {
+            background-color: #00d1b2;
+            transform: translateX(10px);
+        }
+
     </style>
     <script>
+        function toggleHamburgerMenu() {
+            const menu = document.querySelector('.hamburger-menu');
+            menu.classList.toggle('open');
+        }
+
         function toggleDarkMode() {
             const body = document.body;
-            const currentMode = body.classList.contains('dark-mode') ? 'dark-mode' : 'light-mode';
-            body.classList.toggle('dark-mode');
-            body.classList.toggle('light-mode');
+            const isLightMode = body.classList.contains('light-mode');
 
+            // Toggle between light and dark modes
+            body.classList.toggle('dark-mode', isLightMode);
+            body.classList.toggle('light-mode', !isLightMode);
+
+            // Update the dark mode button icon and save preference
             const toggleButton = document.getElementById('darkModeToggle');
-            if (currentMode === 'light-mode') {
-                toggleButton.textContent = '🌞';
+            if (isLightMode) {
+                toggleButton.textContent = '🌞'; // Dark mode icon
                 localStorage.setItem('theme', 'dark-mode');
             } else {
-                toggleButton.textContent = '🌜';
+                toggleButton.textContent = '🌜'; // Light mode icon
                 localStorage.setItem('theme', 'light-mode');
             }
         }
 
-        window.onload = function() {
+        // Apply the saved theme on page load
+        window.onload = function () {
             const savedTheme = localStorage.getItem('theme');
+            const body = document.body;
+            const toggleButton = document.getElementById('darkModeToggle');
+
             if (savedTheme) {
-                document.body.classList.add(savedTheme);
-                const toggleButton = document.getElementById('darkModeToggle');
+                body.classList.add(savedTheme);
                 toggleButton.textContent = savedTheme === 'dark-mode' ? '🌞' : '🌜';
             } else {
-                document.body.classList.add('light-mode');
+                // Default to light mode if no preference is saved
+                body.classList.add('light-mode');
+                toggleButton.textContent = '🌞';
             }
         };
+
     </script>
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="navbar-logo">
-            <a href="{{ url_for('homepage') }}">RoboControl</a>
+        <div class="navbar-left">
+            <button id="darkModeToggle" onclick="toggleDarkMode()">🌜</button>
         </div>
-        <ul class="navbar-links">
-            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ url_for('add_device') }}">Add Device</a></li>
-            <li><a href="{{ url_for('configure_device') }}">Configure Device</a></li>
-            <li><a href="{{ url_for('tools') }}">Tools</a></li>
-            <li><a href="{{ url_for('about') }}">About</a></li>
-            <li><a href="{{ url_for('contact') }}">Contact</a></li>
-        </ul>
-
-        <!-- Search Bar -->
-        <div class="search-container">
-            <input type="text" placeholder="Search.." />
+        <div class="navbar-center">
+            <a class="navbar-logo" href="{{ url_for('homepage') }}">RoboControl</a>
         </div>
-
-        <!-- Dark Mode Toggle -->
-        <button id="darkModeToggle" onclick="toggleDarkMode()">🌜</button>
-
-        <!-- Profile Dropdown (hamburger icon) -->
-        <div class="profile-dropdown">
-            <button class="profile-button">
-                <span class="hamburger-icon">&#x2630;</span>
-            </button>
-            <div class="profile-content">
-                <a href="#">Account</a>
-                <a href="#">Settings</a>
+        <div class="navbar-right">
+            <div class="profile-dropdown">
+                <button class="profile-button" onclick="toggleHamburgerMenu()">
+                    <span class="hamburger-icon">&#x2630;</span>
+                </button>
             </div>
         </div>
     </nav>
+
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu">
+        <span class="hamburger-close" onclick="toggleHamburgerMenu()">&#x2715;</span>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/add-device">Add Device</a>
+        <a href="/configure-device">Configure Device</a>
+        <a href="/tools">Tools</a>
+        <a href="#">Account</a>
+        <a href="#">Settings</a>
+    </div>
 
     <!-- Content -->
     <div class="container">

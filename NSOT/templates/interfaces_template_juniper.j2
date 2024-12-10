@@ -1,0 +1,4 @@
+{% for interface in interfaces -%}
+ set interfaces {{ interface.name }} family inet address {{ interface.ip_address }}/{{ interface.subnet_mask }}
+{% endfor %}
+commit and-quit

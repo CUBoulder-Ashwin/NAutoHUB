@@ -34,6 +34,7 @@ def create_yaml_from_form(device_data, filename="devices_config.yml"):
 def build_device_data(
     device_id,
     router_type,
+    device_vendor,
     interfaces,
     ospf=None,
     bgp=None,
@@ -45,6 +46,7 @@ def build_device_data(
     device_data = {
         "hostname": device_id,
         "device_type": router_type,
+        "vendor": device_vendor,  # Add vendor information
         "clear_config": "no",
     }
 
@@ -125,6 +127,7 @@ def build_device_data(
 def create_yaml_from_form_data(
     device_id,
     router_type,
+    device_vendor,  # Add vendor as a parameter
     interfaces,
     ospf=None,
     bgp=None,
@@ -136,6 +139,7 @@ def create_yaml_from_form_data(
     device_data = build_device_data(
         device_id,
         router_type,
+        device_vendor,  # Include vendor in device data
         interfaces,
         ospf,
         bgp,
