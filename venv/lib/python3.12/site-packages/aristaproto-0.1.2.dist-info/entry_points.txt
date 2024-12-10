@@ -1,0 +1,3 @@
+[console_scripts]
+protoc-gen-python_aristaproto=aristaproto.plugin:main
+

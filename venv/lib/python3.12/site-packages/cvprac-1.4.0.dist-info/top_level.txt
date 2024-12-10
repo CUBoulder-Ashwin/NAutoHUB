@@ -1,0 +1,2 @@
+cvprac
+cvprac/__pycache__

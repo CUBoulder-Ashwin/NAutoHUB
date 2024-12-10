@@ -1,0 +1,2 @@
+[console_scripts]
+anta = anta.cli:cli
