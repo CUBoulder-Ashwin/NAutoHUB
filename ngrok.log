@@ -537,3 +537,5 @@ t=2024-12-10T11:37:28-0700 lvl=info msg="started tunnel" obj=tunnels name=jenkin
 t=2024-12-10T11:37:28-0700 lvl=info msg="update available" obj=updater
 t=2024-12-10T12:51:03-0700 lvl=info msg="join connections" obj=join id=381c1a9b4534 l=127.0.0.1:8080 r=128.138.64.27:49069
 t=2024-12-10T12:51:04-0700 lvl=info msg="join connections" obj=join id=8decd6a42814 l=127.0.0.1:8080 r=128.138.64.27:46292
+t=2024-12-10T13:24:40-0700 lvl=info msg="join connections" obj=join id=f9767c07942a l=127.0.0.1:8080 r=128.138.64.27:39809
+t=2024-12-10T13:24:40-0700 lvl=info msg="join connections" obj=join id=431d27787915 l=127.0.0.1:8080 r=128.138.64.27:43798

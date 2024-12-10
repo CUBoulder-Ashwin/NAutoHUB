@@ -4,15 +4,15 @@ router ospf {{ ospf_process }}
  {% endif -%}
  {% if ospf_networks -%}
  {% for network in ospf_networks -%}
-   network {{ network.ip }} {{ network.wildcard }} area {{ network.area }}
+    network {{ network.ip }} {{ network.wildcard }} area {{ network.area }}
  {% endfor -%}
  {% endif -%}
  {% if ospf_redistribute and ospf_redistribute.bgp -%}
-   redistribute bgp {{ ospf_redistribute.as_number }} subnets
+    redistribute bgp {{ ospf_redistribute.as_number }} subnets
  {% endif %}
  {% if ospf_redistribute and ospf_redistribute.connected -%}
-   redistribute connected
+    redistribute connected
  {% endif %}
  {% if ospf_redistribute and ospf_redistribute.rip -%}
-   redistribute rip subnets
+    redistribute rip subnets
  {% endif %}

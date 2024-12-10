@@ -4,14 +4,14 @@ router bgp {{ bgp_as }}
  {% endif -%}
  {% if bgp_networks -%}
  {% for network in bgp_networks -%}
-   network {{ network.ip }} mask {{ network.mask }}
+    network {{ network.ip }} mask {{ network.mask }}
  {% endfor -%}
  {% endif -%}
  {% if bgp_neighbors -%}
  {% for neighbor in bgp_neighbors -%}
-   neighbor {{ neighbor.ip }} remote-as {{ neighbor.remote_as }}
+    neighbor {{ neighbor.ip }} remote-as {{ neighbor.remote_as }}
  {% endfor -%}
  {% endif -%}
  {% if ospf_redistribute -%}
-   redistribute ospf {{ ospf_redistribute.process_id }}
+    redistribute ospf {{ ospf_redistribute.process_id }}
  {% endif -%}

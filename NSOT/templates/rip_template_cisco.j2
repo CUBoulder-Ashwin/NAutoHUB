@@ -2,10 +2,10 @@ router rip
  version {{ rip_version }}
  {% if rip_networks -%}
  {% for network in rip_networks -%}
-  network {{ network }}
+   network {{ network }}
  {% endfor -%}
  {% endif -%}
-  no auto-summary
+   no auto-summary
  {% if bgp_redistribute -%}
-  redistribute bgp {{ bgp_as }} metric {{ bgp_metric }}
+   redistribute bgp {{ bgp_as }} metric {{ bgp_metric }}
  {% endif %}
