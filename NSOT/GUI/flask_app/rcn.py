@@ -240,10 +240,11 @@ def configure_device():
                 if redistribute:
                     rip["redistribute"] = redistribute
 
-        # Fetching BGP configurations with network subnet
+        # Fetching BGP configurations with network subnet and masks
         bgp = None
         bgp_asns = request.form.getlist("bgp_asn[]")
         bgp_networks = request.form.getlist("bgp_network[]")
+        bgp_masks = request.form.getlist("bgp_mask[]")  # New mask input
         bgp_neighbors = request.form.getlist("bgp_neighbor[]")
         bgp_remote_as = request.form.getlist("bgp_remote_as[]")
         bgp_address_families = request.form.getlist("bgp_address_family[]")
@@ -259,12 +260,17 @@ def configure_device():
                 "address_families": [
                     {
                         "type": af_type,
-                        "networks": [{"ip": net} for net in bgp_networks if net],
+                        "networks": [
+                            {"ip": net, "mask": mask}  # Include both IP and mask
+                            for net, mask in zip(bgp_networks, bgp_masks)
+                            if net and mask  # Ensure both IP and mask are provided
+                        ],
                     }
                     for af_type in bgp_address_families
                     if af_type
                 ],
             }
+
 
         # Fetching VLAN configurations
         vlans = []

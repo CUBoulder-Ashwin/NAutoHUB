@@ -93,9 +93,9 @@ def build_device_data(
                 {
                     "type": family["type"],
                     "networks": [
-                        {"ip": net["ip"]}
+                        {"ip": net["ip"], "mask": net.get("mask")}  # Include mask
                         for net in family.get("networks", [])
-                        if net.get("ip")
+                        if net.get("ip") and net.get("mask")  # Ensure both IP and mask exist
                     ],
                 }
                 for family in bgp.get("address_families", [])
@@ -110,6 +110,7 @@ def build_device_data(
                 if neighbor.get("ip") and neighbor.get("remote_as")
             ],
         }
+
 
     if rip and rip.get("version") and any(rip.get("networks")):
         device_data["rip"] = {

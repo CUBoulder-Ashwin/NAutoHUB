@@ -114,6 +114,26 @@ function generateAccessRouterFields() {
             </label>
         </div>
         <button type="button" onclick="addOspf()" class="form-button">+ Add OSPF Process</button>
+        
+        <h3 style="color: #00d1b2;">BGP</h3>
+        <div id="bgp" class="inline-group">
+            <label for="bgp_asn" class="form-label">BGP ASN:</label>
+            <input type="text" name="bgp_asn[]" placeholder="BGP ASN" class="form-input-small">
+            <label for="bgp_network" class="form-label">BGP Network:</label>
+            <input type="text" name="bgp_network[]" placeholder="BGP Network (e.g., 10.0.0.0/24)" class="form-input-small">
+            <label for="bgp_mask" style="display: block; color: #00d1b2; margin-top: 10px;">Network Mask:</label>
+            <input type="text" name="bgp_mask[]" placeholder="BGP Network Mask" class="form-input-small">
+            <label for="bgp_neighbor" class="form-label">BGP Neighbor:</label>
+            <input type="text" name="bgp_neighbor[]" placeholder="Neighbor IP" class="form-input-small">
+            <label for="bgp_remote_as" class="form-label">Remote AS:</label>
+            <input type="text" name="bgp_remote_as[]" placeholder="Remote AS" class="form-input-small">
+            <label for="bgp_address_family" class="form-label">Address Family:</label>
+            <select name="bgp_address_family[]" class="form-input-small">
+                <option value="ipv4">IPv4</option>
+                <option value="ipv6">IPv6</option>
+            </select>
+        </div>
+        <button type="button" onclick="addBgp()" class="form-button">+ Add BGP Configuration</button>
 
         <h3 style="color: #00d1b2; font-size: 1.2em; margin-top: 20px;">RIP</h3>
         <div id="rip" class="inline-group" style="margin-bottom: 15px;">
