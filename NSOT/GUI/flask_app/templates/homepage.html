@@ -37,7 +37,7 @@
             </a>
         </div>
         <div class="tile">
-            <a href="#">
+            <a href="/ipam">
                 <div class="tile-content">
                     <h2>IPAM</h2>
                     <p>Manage and allocate IP addresses in your network</p>
@@ -52,7 +52,7 @@
     <div class="category-title">Monitor</div>
     <div class="tile-container">
         <div class="tile">
-            <a href="{{ url_for('dashboard') }}">
+            <a href="/dashboard">
                 <div class="tile-content">
                     <h2>Dashboard</h2>
                     <p>View the main dashboard for network overview</p>
@@ -114,10 +114,10 @@ body {
     text-align: center;
     padding: 80px 0;
     position: absolute;
-    z-index: 2;
+    z-index: 1;
     opacity: 1;
     transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-    pointer-events: all;
+    pointer-events: none;
 }
 
 .category-container-row:hover .category-title {
@@ -143,12 +143,14 @@ body {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
-    z-index: 1;
+    z-index: 2;
+    pointer-events: none;
 }
 
 .category-container-row:hover .tile-container {
     opacity: 1;
     visibility: visible;
+    pointer-events: all;
 }
 
 /* Tile Styling */

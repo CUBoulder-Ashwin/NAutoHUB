@@ -3,7 +3,7 @@ import sys
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from jinja2 import Environment, FileSystemLoader
 import subprocess
-import threading
+from threading import Thread
 
 # Get the current directory of this script
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -27,6 +27,17 @@ from dhcp_updates import configure_dhcp_relay, configure_dhcp_server
 from update_hosts import update_hosts_csv
 from git_jenkins import push_and_monitor_jenkins
 from push_config import push_configuration
+from read_IPAM import IPAMReader 
+from read_hosts import HostsReader
+
+# File path for IPAM CSV file
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+IPAM_DIR = os.path.join(BASE_DIR, "..", "..", "IPAM")
+ipam_file_path = os.path.join(IPAM_DIR, "ipam_output.csv")
+
+# Initialize
+ipam_reader = IPAMReader(file_path=ipam_file_path, update_interval=10)
+hosts_reader = HostsReader(BASE_DIR)
 
 app = Flask(__name__)
 
@@ -317,6 +328,9 @@ def tools():
     ping_result = None
     config_result = None
 
+    # Fetch devices dynamically
+    devices = hosts_reader.get_devices()
+
     # Handling Ping Test
     if (
         request.method == "POST"
@@ -359,9 +373,14 @@ def tools():
             config_result += "</ul>"
 
     return render_template(
-        "tools.html", ping_result=ping_result, config_result=config_result
+        "tools.html", ping_result=ping_result, config_result=config_result, devices=devices
     )
 
+@app.route("/ipam")
+def ipam():
+    """Route to display IPAM table."""
+    #print(f"Rendering IPAM table with data: {ipam_reader.ipam_data}")  # Debug statement
+    return render_template("ipam.html", ipam_data=ipam_reader.ipam_data)
 
 @app.route("/about")
 def about():
@@ -374,4 +393,6 @@ def contact():
 
 
 if __name__ == "__main__":
+    thread = Thread(target=ipam_reader.read_ipam_file, daemon=True)
+    thread.start()
     app.run(host="localhost", port="5000", debug=True)

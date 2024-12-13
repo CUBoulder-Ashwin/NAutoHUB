@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="category-container-row">
+    <h2 class="page-title">IP Address Management</h2>
+    <div class="tile-container">
+        <table class="ipam-table">
+            <thead>
+                <tr>
+                    <th>Device Name</th>
+                    <th>Interface Name</th>
+                    <th>IP Address</th>
+                    <th>Subnet Mask</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in ipam_data %}
+                <tr>
+                    {% if row.get("rowspan") %}
+                        <td rowspan="{{ row.rowspan }}">{{ row["Device Name"] }}</td>
+                    {% endif %}
+                    <td>{{ row["Interface Name"] }}</td>
+                    <td>{{ row["IP Address"] }}</td>
+                    <td>{{ row["Subnet Mask"] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+/* General Styling */
+.page-title {
+    text-align: center;
+    color: #00d1b2;
+    font-family: 'Arial Black', sans-serif;
+    margin-bottom: 20px;
+}
+
+/* Table Styling */
+.ipam-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto;
+    background-color: #0d0d15;
+    color: #ffffff;
+    text-align: left;
+}
+
+.ipam-table th, .ipam-table td {
+    padding: 15px;
+    border: 1px solid #00d1b2;
+    vertical-align: top;
+}
+
+.ipam-table th {
+    background-color: #00d1b2;
+    color: #0d0d15;
+    font-weight: bold;
+    font-family: 'Arial Black', sans-serif;
+    font-size: 1.2em;
+    text-transform: uppercase;
+}
+
+.ipam-table tr:nth-child(even) {
+    background-color: #1a1a2e;
+}
+
+.ipam-table tr:hover {
+    background-color: #00d1b2;
+    color: #0d0d15;
+}
+</style>
+{% endblock %}

@@ -2,35 +2,9 @@
 devices:
 - hostname: R100
   device_type: access
-  vendor: cisco
+  vendor: arista
   clear_config: 'no'
   interfaces:
   - name: ethernet1
     ip_address: 10.0.0.1
     subnet_mask: 255.255.255.0
-  ospf:
-    process_id: '1'
-    networks:
-    - ip: 10.0.0.0
-      wildcard: 0.0.0.255
-      area: '0'
-    redistribute:
-      connected: false
-      bgp: false
-  bgp:
-    as_number: '65001'
-    address_families:
-    - type: ipv4
-      networks:
-      - ip: 10.0.0.0
-        mask: 255.255.255.0
-    neighbors:
-    - ip: 10.0.0.2
-      remote_as: '65002'
-  rip:
-    version: '2'
-    networks:
-    - 10.0.0.0
-    redistribute:
-      bgp: false
-      metric: 1

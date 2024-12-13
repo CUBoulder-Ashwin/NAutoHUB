@@ -4,6 +4,75 @@
 <h2 class="page-title">Tools</h2>
 
 <div class="tile-container">
+    <!-- Golden Config Generator Tile -->
+    <div class="tool-tile">
+        <h3>Golden Config Generator</h3>
+        <form method="POST" class="form-container">
+            <label for="device">Enter Device Name:</label>
+            <input type="text" name="device" id="device-name" class="form-input-small"><br>
+
+            <div class="checkbox-container">
+                <label for="select-all" class="checkbox-label">Select All Devices from IPAM:</label>
+                <input type="checkbox" id="select-all" name="select_all" onclick="toggleInputFields()" class="switchport">
+            </div>
+
+            <div class="form-group text-center">
+                <button type="submit" class="form-button small">Generate Config</button>
+            </div>
+        </form>
+        {% if config_result %}
+        <div class="output">
+            {{ config_result|safe }}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Show Configs Tile -->
+    <div class="tool-tile">
+        <h3>Show Configs</h3>
+        <form method="POST" class="form-container">
+            <label for="device-select">Select Device:</label>
+            <select name="device" id="device-select" class="form-input-small">
+                <option value="" disabled selected>Select Device</option>
+                {% for device in devices %}
+                <option value="{{ device }}">{{ device }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="command-category">Select Show Command:</label>
+            <div class="command-dropdowns">
+                <select id="routing-dropdown" class="dropdown-button small" onchange="updateCommandField(this.value)">
+                    <option value="" disabled selected>Routing Protocols</option>
+                    <option value="show ip bgp summary">BGP Summary</option>
+                    <option value="show ip ospf neighbor">OSPF Neighbor</option>
+                    <option value="show ip rip database">RIP Database</option>
+                </select>
+                <select id="layer2-dropdown" class="dropdown-button small" onchange="updateCommandField(this.value)">
+                    <option value="" disabled selected>Layer 2 Info</option>
+                    <option value="show mac address-table">MAC Address Table</option>
+                    <option value="show lldp neighbors">LLDP Neighbors</option>
+                    <option value="show vlan brief">VLAN Brief</option>
+                </select>
+                <select id="general-dropdown" class="dropdown-button small" onchange="updateCommandField(this.value)">
+                    <option value="" disabled selected>General Info</option>
+                    <option value="show version">Version</option>
+                    <option value="show running-config">Running Config</option>
+                    <option value="show ip interface brief">IP Interface Brief</option>
+                </select>
+            </div>
+
+            <label for="custom-command">Or Enter Custom Command:</label>
+            <input type="text" id="custom-command" name="command" placeholder="e.g., show version" class="form-input-small"><br>
+
+            <div class="form-group text-center" style="margin-top: 15px;">
+                <button type="submit" class="form-button small">Show Config</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Row Break -->
+    <div class="tile-break"></div>
+
     <!-- Ping Test Tile -->
     <div class="tool-tile">
         <h3>Ping Test</h3>
@@ -19,10 +88,11 @@
 
             <label for="password">SSH Password (for remote ping):</label>
             <input type="password" name="password" class="form-input-small"><br>
-            <button type="submit" class="form-button">Ping</button>
-        </form>
 
-        <!-- Display result under Ping Test -->
+            <div class="form-group text-center">
+                <button type="submit" class="form-button small">Ping</button>
+            </div>
+        </form>
         {% if ping_result %}
         <div class="output">
             {{ ping_result|safe }}
@@ -30,41 +100,7 @@
         {% endif %}
     </div>
 
-    <!-- Golden Config Generator Tile -->
-    <div class="tool-tile">
-        <h3>Golden Config Generator</h3>
-        <form method="POST" class="form-container">
-            <label for="device">Enter Device Name:</label>
-            <input type="text" name="device" id="device-name" class="form-input-small"><br>
-
-            <label for="toggle">Select All Devices from IPAM:</label>
-            <input type="checkbox" id="select-all" name="select_all" onclick="toggleInputFields()" class="switchport"><br>
-
-            <button type="submit" class="form-button">Generate Config</button>
-        </form>
-        <!-- Display result under Golden Config Generator -->
-        {% if config_result %}
-        <div class="output">
-            {{ config_result|safe }}
-        </div>
-        {% endif %}
-    </div>
-
-    <!-- Show Running Configs Tile -->
-    <div class="tool-tile">
-        <h3>Show Running Configs</h3>
-        <form method="POST" class="form-container">
-            <label for="device">Enter Device Name:</label>
-            <input type="text" name="device" required class="form-input-small"><br>
-
-            <button type="submit" class="form-button">Show Configs</button>
-        </form>
-    </div>
-    
-    <!-- Force row break before the large tile -->
-    <div class="tile-break"></div>
-
-    <!-- Difference Comparator Tile (Bigger Tile on Second Row) -->
+    <!-- Difference Comparator Tile -->
     <div class="tool-tile tool-tile-large">
         <h3>Difference Comparator</h3>
         <p>Paste two sets of configurations to compare:</p>
@@ -72,7 +108,9 @@
             <textarea name="config1" placeholder="Paste first config here" class="textarea-box"></textarea>
             <textarea name="config2" placeholder="Paste second config here" class="textarea-box"></textarea>
         </div>
-        <button type="submit" class="form-button">Compare</button>
+        <div class="form-group text-center" style="margin-top: 15px;">
+            <button type="submit" class="form-button small">Compare</button>
+        </div>
     </div>
 </div>
 
@@ -86,120 +124,126 @@
             deviceName.disabled = false;
         }
     }
+
+    function updateCommandField(value) {
+        const customCommandField = document.getElementById('custom-command');
+        customCommandField.value = value; // Set the selected command in the text field
+    }
 </script>
 
 <style>
-    /* General Styling */
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #1a1a2e;
-        color: #ffffff;
-    }
-    
-    .page-title {
-        text-align: center;
-        color: #00d1b2;
-        font-size: 2.2em;
-        margin-top: 20px;
-        font-family: 'Arial Black', sans-serif;
-    }
-    
-    /* Tile Container Styling */
-    .tile-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
-        margin: 40px auto;
-        max-width: 900px;
-    }
-    
-    /* Individual Tool Tile Styling */
-    .tool-tile {
-        width: 250px;
-        background-color: #0d0d15;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 209, 178, 0.3);
-        padding: 20px;
-        transition: transform 0.3s, box-shadow 0.3s;
-        overflow: hidden;
-    }
-    
-    .tool-tile-large {
-        width: 520px;
-    }
-    
-    .tool-tile h3 {
-        color: #00d1b2;
-        font-size: 1.5em;
-        margin-bottom: 10px;
-        text-align: center;
-    }
-    
-    .tool-tile p {
-        color: #a0a0a0;
-        text-align: center;
-        font-size: 1em;
-        margin-bottom: 15px;
-    }
-    
-    .tool-tile form label {
-        color: #a0a0a0;
-        font-size: 0.9em;
-        margin-bottom: 5px;
-        display: block;
-    }
-    
-    .tool-tile form .form-input-small {
-        width: 95%;
-        padding: 8px;
-        margin-bottom: 10px;
-        border: 1px solid #00d1b2;
-        border-radius: 5px;
-        background-color: #0d0d15;
-        color: #ffffff;
-        outline: none;
-    }
-    
-    .tool-tile form .textarea-box {
-        width: 45%; /* Adjust width for smaller boxes */
-        height: 100px;
-        padding: 10px;
-        border: 1px solid #00d1b2;
-        border-radius: 5px;
-        background-color: #0d0d15;
-        color: #ffffff;
-        resize: vertical;
-    }
-    
-    .tool-tile form .form-button {
-        width: 100%;
-        padding: 10px;
-        font-size: 14px;
-        background-color: #00d1b2;
-        color: #ffffff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    
-    .tool-tile form .form-button:hover {
-        background-color: #00a793;
-    }
-    
-    .tool-tile:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 30px rgba(0, 209, 178, 0.5);
-    }
-    
-    /* Comparator Box Flex Alignment */
-    .comparator-boxes {
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-        margin-bottom: 15px;
-    }
-    </style>
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a2e;
+    color: #ffffff;
+}
+
+.page-title {
+    text-align: center;
+    color: #00d1b2;
+    font-family: 'Arial Black', sans-serif;
+    margin-bottom: 20px;
+}
+
+/* Tile Container Styling */
+.tile-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin: 40px auto;
+    max-width: 1000px;
+}
+
+/* Individual Tool Tile Styling */
+.tool-tile {
+    width: 300px;
+    background-color: #0d0d15;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 209, 178, 0.3);
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+}
+
+.tool-tile-large {
+    width: 540px;
+}
+
+.tool-tile h3 {
+    color: #00d1b2;
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.tool-tile form label {
+    color: #00d1b2;
+    font-size: 1em;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.tool-tile form .form-input-small {
+    width: 95%;
+    padding: 8px;
+    border: 1px solid #00d1b2;
+    border-radius: 5px;
+    background-color: #0d0d15;
+    color: #ffffff;
+    outline: none;
+}
+
+.tool-tile form .form-button.small {
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+    background-color: #00d1b2;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tool-tile form .form-button.small:hover {
+    background-color: #00a793;
+}
+
+.command-dropdowns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.dropdown-button.small {
+    width: 100%;
+    padding: 8px 15px;
+    background-color: #00d1b2;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+}
+
+.dropdown-button.small:hover {
+    background-color: #00a793;
+}
+
+.comparator-boxes {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+</style>
 
 {% endblock %}
