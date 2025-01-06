@@ -1,0 +1,17 @@
+# Use the official Ubuntu base image
+FROM ubuntu:latest
+
+# Update package list and install OpenSSH server, iputils-ping, net-tools, iproute2, curl, isc-dhcp-client, and traceroute
+RUN apt update && \
+    apt install -y openssh-server iputils-ping net-tools iproute2 curl isc-dhcp-client traceroute && \
+    # Set up SSH server
+    mkdir /var/run/sshd && \
+    echo 'root:password' | chpasswd && \
+    sed -i 's/^#Port 22/Port 22/' /etc/ssh/sshd_config && \
+    sed -i 's/^#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# Expose port 22 for SSH
+EXPOSE 22
+
+# Start SSH server when the container starts
+CMD ["/bin/bash", "-c", "/usr/sbin/sshd -D"]

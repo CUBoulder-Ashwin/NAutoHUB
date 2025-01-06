@@ -1,0 +1,19 @@
+# Use the official Ubuntu base image
+FROM ubuntu:latest
+
+# Update package list and install Apache2, OpenSSH server, iputils-ping, net-tools, iproute2, and curl
+RUN apt update && \
+    apt install -y apache2 openssh-server iputils-ping net-tools iproute2 curl && \
+    # Set up SSH server
+    mkdir /var/run/sshd && \
+    echo 'root:password' | chpasswd && \
+    sed -i 's/^#Port 22/Port 22/' /etc/ssh/sshd_config && \
+    sed -i 's/^#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    # Write "Hello World!" to the index.html file
+    echo '<h1>Hello World!</h1>' > /var/www/html/index.html
+
+# Expose port 80 for Apache and port 22 for SSH
+EXPOSE 80 22
+
+# Start Apache2 and SSH server when the container starts
+CMD ["/bin/bash", "-c", "service apache2 start && /usr/sbin/sshd -D"]

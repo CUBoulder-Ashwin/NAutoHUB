@@ -1,0 +1,30 @@
+# Use the official Ubuntu base image
+FROM ubuntu:latest
+
+# Update package list and install all necessary packages including OpenSSH server, Wireshark, tcpdump, nmap, etc.
+RUN apt-get update && \
+    apt-get install -y \
+    openssh-server \
+    wireshark \
+    tcpdump \
+    nmap \
+    net-tools \
+    iputils-ping \
+    tshark \
+    curl \
+    wget \
+    nano \
+    iproute2 \
+    sudo \
+    && apt-get clean && \
+    # Set up SSH server
+    mkdir /var/run/sshd && \
+    echo 'root:password' | chpasswd && \
+    sed -i 's/^#Port 22/Port 22/' /etc/ssh/sshd_config && \
+    sed -i 's/^#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# Expose port 22 for SSH
+EXPOSE 22
+
+# Start SSH server when the container starts
+CMD ["/bin/bash", "-c", "/usr/sbin/sshd -D"]
