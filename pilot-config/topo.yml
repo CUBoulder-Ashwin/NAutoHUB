@@ -6,39 +6,39 @@ topology:
     S1:
       kind: ceos
       image: ceos:4.33.1F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S1.cfg
+      startup-config: /Users/ashwin/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S1.cfg
     S2:
       kind: ceos
       image: ceos:4.33.1F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S2.cfg
+      startup-config: /Users/ashwin/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S2.cfg
     S3:
       kind: ceos
       image: ceos:4.33.1F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S3.cfg
+      startup-config: /Users/ashwin/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S3.cfg
     S4:
       kind: ceos
       image: ceos:4.33.1F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S4.cfg
+      startup-config: /Users/ashwin/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S4.cfg
     R1:
       kind: ceos
       image: ceos:4.33.1F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R1.cfg
+      startup-config: /Users/ashwin/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R1.cfg
     R2:
       kind: ceos
       image: ceos:4.33.1F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R2.cfg
+      startup-config: /Users/ashwin/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R2.cfg
     R3:
       kind: ceos
       image: ceos:4.33.1F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R3.cfg
+      startup-config: /Users/ashwin/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R3.cfg
     R4:
       kind: ceos
       image: ceos:4.33.1F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R4.cfg
+      startup-config: /Users/ashwin/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R4.cfg
     R5:
       kind: ceos
       image: ceos:4.33.1F
-      startup-config: /home/student/Desktop/Advanced-Netman/NSOT/configs/R5.cfg
+      startup-config: /Users/ashwin/Desktop/Projects/Advanced-Netman/NSOT/configs/R5.cfg
     H1:
       kind: linux
       image: hosts:latest
@@ -65,7 +65,7 @@ topology:
         - dhclient eth1
     Web_Server:
       kind: linux
-      image: webserver:latest
+      image: server:latest
       exec:
         - ip addr add 200.200.200.2/24 dev eth1
         - ip -6 addr add 2001:db8:200::2/64 dev eth0
