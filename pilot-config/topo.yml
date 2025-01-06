@@ -5,67 +5,67 @@ topology:
   nodes:
     S1:
       kind: ceos
-      image: ceos:4.32.2F
+      image: ceos:4.33.1F
       startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S1.cfg
     S2:
       kind: ceos
-      image: ceos:4.32.2F
+      image: ceos:4.33.1F
       startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S2.cfg
     S3:
       kind: ceos
-      image: ceos:4.32.2F
+      image: ceos:4.33.1F
       startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S3.cfg
     S4:
       kind: ceos
-      image: ceos:4.32.2F
+      image: ceos:4.33.1F
       startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S4.cfg
     R1:
       kind: ceos
-      image: ceos:4.32.2F
+      image: ceos:4.33.1F
       startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R1.cfg
     R2:
       kind: ceos
-      image: ceos:4.32.2F
+      image: ceos:4.33.1F
       startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R2.cfg
     R3:
       kind: ceos
-      image: ceos:4.32.2F
+      image: ceos:4.33.1F
       startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R3.cfg
     R4:
       kind: ceos
-      image: ceos:4.32.2F
+      image: ceos:4.33.1F
       startup-config: /home/student/Desktop/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R4.cfg
     R5:
       kind: ceos
-      image: ceos:4.32.2F
+      image: ceos:4.33.1F
       startup-config: /home/student/Desktop/Advanced-Netman/NSOT/configs/R5.cfg
     H1:
       kind: linux
-      image: ubu_hosts:latest
+      image: hosts:latest
       exec:
         - ip route del default via 172.20.20.1 dev eth0
         - dhclient eth1
     H2:
       kind: linux
-      image: ubu_hosts:latest
+      image: hosts:latest
       exec:
         - ip route del default via 172.20.20.1 dev eth0
         - dhclient eth1
     H3:
       kind: linux
-      image: ubu_hosts:latest
+      image: hosts:latest
       exec:
         - ip route del default via 172.20.20.1 dev eth0
         - dhclient eth1
     H4:
       kind: linux
-      image: ubu_hosts:latest
+      image: hosts:latest
       exec:
         - ip route del default via 172.20.20.1 dev eth0
         - dhclient eth1
     Web_Server:
       kind: linux
-      image: ubu_webserver:latest
+      image: webserver:latest
       exec:
         - ip addr add 200.200.200.2/24 dev eth1
         - ip -6 addr add 2001:db8:200::2/64 dev eth0
@@ -75,7 +75,7 @@ topology:
         - ip -6 route add default via 2001:db8:200::1 dev eth1
     H5:
       kind: linux
-      image: ubu_hosts:latest
+      image: hosts:latest
       exec:
         - ip route del default via 172.20.20.1 dev eth0
         - sudo dhclient eth1
@@ -98,4 +98,4 @@ topology:
     - endpoints: [S2:eth2, H3:eth1]
     - endpoints: [S2:eth3, H4:eth1]
     - endpoints: [R5:eth1, Web_Server:eth1]
-    - endpoints: [S3:eth4, host:eth0]
+    - endpoints: [S3:eth4, host:eth1]

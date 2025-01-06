@@ -98,4 +98,4 @@ topology:
     - endpoints: [S2:eth2, H3:eth1]
     - endpoints: [S2:eth3, H4:eth1]
     - endpoints: [R5:eth1, Web_Server:eth1]
-    - endpoints: [S3:eth4, host:eth0]
+    - endpoints: [S3:eth4, host:eth1]
