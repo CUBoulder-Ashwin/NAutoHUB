@@ -143,4 +143,7 @@ WantedBy=multi-user.target
     deploy()
 
 if __name__ == "__main__":
+    subprocess.run(["sudo", "systemctl", "enable", "jenkins"], check=True)
+    subprocess.run(["sudo", "systemctl", "start", "jenkins"], check=True)
+    print("Jenkins enabled and started successfully")
     main()
