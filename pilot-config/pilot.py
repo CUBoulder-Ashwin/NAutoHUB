@@ -15,11 +15,9 @@ def find_base_path():
 
 def get_service_user():
     """Determine the appropriate user for the service."""
-    # Check if the script is being run as root
     if os.geteuid() == 0:
         return "root"
     else:
-        # Return the current non-root user
         return getpass.getuser()
 
 def create_service_or_timer_file(file_name, file_content):
@@ -42,39 +40,22 @@ def deploy():
         print("Error: Failed to reload the daemon. Make sure you have sudo privileges.")
     except Exception as e:
         print(f"An error occurred while reloading the daemon: {e}")
-
-    try:
-        subprocess.run(["sudo", "systemctl", "enable", "password_update.service"], check=True)
-        subprocess.run(["sudo", "systemctl", "enable", "device_health_check.timer"], check=True)
-        subprocess.run(["sudo", "systemctl", "enable", "device_health_check.service"], check=True)
-        subprocess.run(["sudo", "systemctl", "enable", "ipam.service"], check=True)
-        print("Services and timers enabled successfully")
-    except subprocess.CalledProcessError:
-        print("Error: Failed to enable services and timers. Make sure you have sudo privileges.")
-    except Exception as e:
-        print(f"An error occurred while enabling services and timers: {e}")
-
-    try:
-        subprocess.run(["sudo", "systemctl", "start", "password_update.service"], check=True)
-        subprocess.run(["sudo", "systemctl", "start", "device_health_check.timer"], check=True)
-        subprocess.run(["sudo", "systemctl", "start", "device_health_check.service"], check=True)
-        subprocess.run(["sudo", "systemctl", "start", "ipam.service"], check=True)
-        print("Services and timers started successfully")
-    except subprocess.CalledProcessError:
-        print("Error: Failed to start services and timers. Make sure you have sudo privileges.")
-    except Exception as e:
-        print(f"An error occurred while starting services and timers: {e}")
-
-    print("Deployment complete")
+    
+    services = ["password_update.service", "device_health_check.timer", "device_health_check.service", "ipam.service", "ngrok.service"]
+    for service in services:
+        try:
+            subprocess.run(["sudo", "systemctl", "enable", service], check=True)
+            subprocess.run(["sudo", "systemctl", "start", service], check=True)
+            print(f"{service} enabled and started successfully")
+        except subprocess.CalledProcessError:
+            print(f"Error: Failed to enable/start {service}. Make sure you have sudo privileges.")
+        except Exception as e:
+            print(f"An error occurred while enabling/starting {service}: {e}")
 
 def main():
-    # Find the base path dynamically
     base_path = find_base_path()
-
-    # Determine the user for running services
     service_user = get_service_user()
 
-    # Define services and timers
     services_and_timers = [
         {
             "file_name": "password_update.service",
@@ -93,7 +74,7 @@ WantedBy=multi-user.target
         },
         {
             "file_name": "device_health_check.timer",
-            "content": f"""[Unit]
+            "content": """[Unit]
 Description=Run Device Health Check Every Hour
 
 [Timer]
@@ -136,14 +117,29 @@ Environment=PYTHONUNBUFFERED=1
 [Install]
 WantedBy=multi-user.target
 """
+        },
+        {
+            "file_name": "ngrok.service",
+            "content": f"""[Unit]
+Description=Ngrok HTTP Tunnel Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/ngrok start --all --config={base_path}/ngrok_config.yml --log={base_path}/ngrok.log
+WorkingDirectory={base_path}
+Restart=on-failure
+User={service_user}
+
+[Install]
+WantedBy=multi-user.target
+"""
         }
     ]
 
-    # Create each service or timer file
     for item in services_and_timers:
         create_service_or_timer_file(item["file_name"], item["content"])
-
-    # Deploy the services and timers
+    
     deploy()
 
 if __name__ == "__main__":
