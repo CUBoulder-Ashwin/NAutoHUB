@@ -814,3 +814,4 @@ t=2025-01-26T03:24:04-0700 lvl=info msg="join connections" obj=join id=71ec2460d
 t=2025-01-26T03:24:36-0700 lvl=info msg="join connections" obj=join id=1d279493953d l=127.0.0.1:8080 r=128.138.64.27:45578
 t=2025-01-26T03:24:39-0700 lvl=info msg="join connections" obj=join id=375755e4b6de l=127.0.0.1:8080 r=128.138.64.27:45578
 t=2025-01-26T03:25:35-0700 lvl=info msg="join connections" obj=join id=57329a0ee8f8 l=127.0.0.1:8080 r=140.82.115.242:50054
+t=2025-01-26T03:27:35-0700 lvl=info msg="join connections" obj=join id=4b09949c36de l=127.0.0.1:8080 r=140.82.115.175:60058
