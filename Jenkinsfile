@@ -7,9 +7,9 @@ pipeline {
         PIP_CACHE_DIR = "${HOME}/.cache/pip"
     }
 
-     properties([
-        buildDiscarder(logRotator(numToKeepStr: '1'))
-    ])
+    options {
+    buildDiscarder(logRotator(numToKeepStr: '1'))
+}
 
     stages {
 
