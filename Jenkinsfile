@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     environment {
         PROJECT_ROOT = "/home/student/Desktop/Advanced-Netman"
         VIRTUAL_ENV = "${PROJECT_ROOT}/venv"  // Adjust this to your actual venv path if needed
