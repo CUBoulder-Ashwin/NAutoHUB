@@ -23,7 +23,7 @@ class IPAMReader:
         """Continuously read the IPAM file and update data."""
         while True:
             try:
-                with open(self.file_path, 'r') as file:
+                with open(self.file_path, "r") as file:
                     reader = csv.DictReader(file)
                     raw_data = list(reader)
                     self.ipam_data = self.preprocess_data(raw_data)  # Preprocess data

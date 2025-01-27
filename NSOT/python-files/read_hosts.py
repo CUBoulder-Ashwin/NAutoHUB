@@ -1,6 +1,7 @@
 import os
 import csv
 
+
 class HostsReader:
     def __init__(self, base_dir):
         self.base_dir = base_dir
@@ -10,7 +11,7 @@ class HostsReader:
         """Fetch devices dynamically from hosts.csv."""
         devices = []
         try:
-            with open(self.hosts_csv, 'r') as file:
+            with open(self.hosts_csv, "r") as file:
                 reader = csv.DictReader(file)
                 for row in reader:
                     devices.append(row.get("hostname", "Unknown Device"))

@@ -50,7 +50,9 @@ def generate_device_configs():
     for device in devices:
         config = ""
         clear_config = device.get("clear_config", "no")
-        device_vendor = device.get("vendor", "arista").lower()  # Get vendor (Arista/Cisco)
+        device_vendor = device.get(
+            "vendor", "arista"
+        ).lower()  # Get vendor (Arista/Cisco)
 
         # Generate interfaces config
         if "interfaces" in device:
@@ -63,7 +65,9 @@ def generate_device_configs():
                         interfaces=device["interfaces"]
                     )
                 else:  # Default to Arista templates
-                    config += templates["interfaces"].render(interfaces=device["interfaces"])
+                    config += templates["interfaces"].render(
+                        interfaces=device["interfaces"]
+                    )
 
         # Generate VLAN configuration
         if "vlans" in device:
@@ -97,10 +101,14 @@ def generate_device_configs():
                 config += f"no router bgp {bgp_data['as_number']}\n"
             else:
                 bgp_networks = [
-                    {"ip": net["ip"], "mask": net.get("mask")}  # Include mask in the networks
+                    {
+                        "ip": net["ip"],
+                        "mask": net.get("mask"),
+                    }  # Include mask in the networks
                     for family in bgp_data.get("address_families", [])
                     for net in family.get("networks", [])
-                    if net.get("ip") and net.get("mask")  # Ensure both IP and mask exist
+                    if net.get("ip")
+                    and net.get("mask")  # Ensure both IP and mask exist
                 ]
                 if device_vendor == "cisco":
                     config += templates["bgp_cisco"].render(

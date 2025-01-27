@@ -50,7 +50,9 @@ def generate_device_configs():
     for device in devices:
         config = ""
         clear_config = device.get("clear_config", "no")
-        device_vendor = device.get("vendor", "arista").lower()  # Get vendor (Arista/Cisco)
+        device_vendor = device.get(
+            "vendor", "arista"
+        ).lower()  # Get vendor (Arista/Cisco)
 
         # Generate interfaces config
         if "interfaces" in device:
@@ -63,7 +65,9 @@ def generate_device_configs():
                         interfaces=device["interfaces"]
                     )
                 else:  # Default to Arista templates
-                    config += templates["interfaces"].render(interfaces=device["interfaces"])
+                    config += templates["interfaces"].render(
+                        interfaces=device["interfaces"]
+                    )
 
         # Generate VLAN configuration
         if "vlans" in device:
