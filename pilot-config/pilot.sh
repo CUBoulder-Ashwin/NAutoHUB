@@ -39,5 +39,4 @@ echo "Running NAutoHUB"
 python3 NSOT/GUI/flask_app/rcn.py
 
 
-
 echo "Setup complete!"
