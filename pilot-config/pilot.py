@@ -63,7 +63,7 @@ def main():
 Description=Device Password Update Service
 
 [Service]
-ExecStart={base_path}/venv/bin/python {base_path}/NSOT/python-files/password_update.py
+ExecStart={base_path}/venv/bin/python {base_path}/NSOT/python-files/password_reset.py
 WorkingDirectory={base_path}/NSOT/python-files/
 Restart=always
 User={service_user}
