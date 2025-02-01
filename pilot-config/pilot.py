@@ -93,7 +93,7 @@ After=network.target
 
 [Service]
 WorkingDirectory={base_path}/NSOT/python-files
-ExecStart=/bin/bash -c '{base_path}/venv/bin/python {base_path}/NSOT/python-files/health_check.py'
+ExecStart=/bin/bash -c '{base_path}/venv/bin/python {base_path}/NSOT/python-files/health_checks.py'
 Restart=on-failure
 User={service_user}
 
