@@ -5,39 +5,39 @@ topology:
   nodes:
     S1:
       kind: ceos
-      image: ceos:4.33.1F
+      image: ceos:4.33.2F
       startup-config: ~/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S1.cfg
     S2:
       kind: ceos
-      image: ceos:4.33.1F
+      image: ceos:4.33.2F
       startup-config: ~/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S2.cfg
     S3:
       kind: ceos
-      image: ceos:4.33.1F
+      image: ceos:4.33.2F
       startup-config: ~/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S3.cfg
     S4:
       kind: ceos
-      image: ceos:4.33.1F
+      image: ceos:4.33.2F
       startup-config: ~/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_S4.cfg
     R1:
       kind: ceos
-      image: ceos:4.33.1F
+      image: ceos:4.33.2F
       startup-config: ~/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R1.cfg
     R2:
       kind: ceos
-      image: ceos:4.33.1F
+      image: ceos:4.33.2F
       startup-config: ~/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R2.cfg
     R3:
       kind: ceos
-      image: ceos:4.33.1F
+      image: ceos:4.33.2F
       startup-config: ~/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R3.cfg
     R4:
       kind: ceos
-      image: ceos:4.33.1F
+      image: ceos:4.33.2F
       startup-config: ~/Desktop/Projects/Advanced-Netman/NSOT/golden_configs/goldenconfigs_R4.cfg
     R5:
       kind: ceos
-      image: ceos:4.33.1F
+      image: ceos:4.33.2F
       startup-config: ~/Desktop/Projects/Advanced-Netman/NSOT/configs/R5.cfg
     H1:
       kind: linux
