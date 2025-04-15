@@ -19,4 +19,4 @@ This guide will help you set up the environment for the NAutoHUB website and aut
    ```bash
    mkdir -p ~/projects
    cd ~/projects
-   git clone [<REPO_URL>](https://github.com/CUBoulder-Ashwin/NAutoHUB.git)
+   git clone https://github.com/CUBoulder-Ashwin/NAutoHUB.git
