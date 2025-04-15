@@ -4,13 +4,13 @@ import subprocess
 import getpass
 
 def find_base_path():
-    """Find the base path up to 'Advanced-Netman'."""
+    """Find the base path up to 'NAutoHUB'."""
     current_dir = pathlib.Path(__file__).parent.absolute()
     base_path = current_dir
-    while base_path.name != "Advanced-Netman" and base_path.parent != base_path:
+    while base_path.name != "NAutoHUB" and base_path.parent != base_path:
         base_path = base_path.parent
-    if base_path.name != "Advanced-Netman":
-        raise Exception("Could not find 'Advanced-Netman' in the path hierarchy")
+    if base_path.name != "NAutoHUB":
+        raise Exception("Could not find 'NAutoHUB' in the path hierarchy")
     return base_path
 
 def get_service_user():
@@ -63,7 +63,7 @@ def main():
 Description=Device Password Update Service
 
 [Service]
-ExecStart={base_path}/venv/bin/python {base_path}/NSOT/python-files/password_reset.py
+ExecStart={base_path}/pilot-config/venv/bin/python {base_path}/NSOT/python-files/password_reset.py
 WorkingDirectory={base_path}/NSOT/python-files/
 Restart=always
 User={service_user}
@@ -93,7 +93,7 @@ After=network.target
 
 [Service]
 WorkingDirectory={base_path}/NSOT/python-files
-ExecStart=/bin/bash -c '{base_path}/venv/bin/python {base_path}/NSOT/python-files/health_checks.py'
+ExecStart=/bin/bash -c '{base_path}/pilot-config/venv/bin/python {base_path}/NSOT/python-files/health_checks.py'
 Restart=on-failure
 User={service_user}
 
@@ -108,7 +108,7 @@ Description=IPAM Python Service
 After=network.target
 
 [Service]
-ExecStart={base_path}/venv/bin/python {base_path}/NSOT/python-files/ipam.py
+ExecStart={base_path}/pilot-config/venv/bin/python {base_path}/NSOT/python-files/ipam.py
 WorkingDirectory={base_path}/NSOT
 Restart=always
 User={service_user}
