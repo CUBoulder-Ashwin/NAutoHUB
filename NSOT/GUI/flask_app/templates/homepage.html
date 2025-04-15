@@ -8,6 +8,14 @@
         <div class="tile">
             <a href="{{ url_for('add_device') }}">
                 <div class="tile-content">
+                    <h2>Build Topology</h2>
+                    <p>Create an initial topology</p>
+                </div>
+            </a>
+        </div>
+        <div class="tile">
+            <a href="{{ url_for('add_device') }}">
+                <div class="tile-content">
                     <h2>Add Device</h2>
                     <p>Add a new device to the network</p>
                 </div>
@@ -91,10 +99,10 @@ body {
 /* Row Styling */
 .category-container-row {
     position: relative;
-    border: 2px solid #00d1b2;
+    border: 2px solid #232946;
     border-radius: 15px;
     margin: 30px auto;
-    max-width: 750px;
+    max-width: 900px; /* modify the width of the container */
     height: 250px;
     box-shadow: 0 0 20px rgba(0, 209, 178, 0.2);
     overflow: hidden;
@@ -112,7 +120,7 @@ body {
     background-color: rgba(0, 209, 178, 0.1);
     width: 100%;
     text-align: center;
-    padding: 80px 0;
+    padding: 100px 0;
     position: absolute;
     z-index: 1;
     opacity: 1;
@@ -137,9 +145,10 @@ body {
 
 .tile-container {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
-    gap: 20px;
+    gap: 30px;
+
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
@@ -171,7 +180,7 @@ body {
 }
 
 .tile-content h2 {
-    color: #00d1b2;
+    color: #f4f4f9;
     font-size: 1.5em;
     margin-bottom: 10px;
 }
