@@ -26,7 +26,7 @@ This guide will help you set up the environment for the NAutoHUB website and aut
    ```bash
    cd ~/projects/NAutoHUB/pilot-config
    
-3. **Make the setup script executable and run it:**
+3. **Make the requirements script executable and run it:**
 
    ```bash
    chmod +x requirements.sh
