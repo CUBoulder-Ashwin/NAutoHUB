@@ -1,10 +1,22 @@
-- 👋 Hi, I’m @CUBoulder-Ashwin
-- 👀 I’m interested in Computer Networking
-- 🌱 I’m currently learning Datacenter Networks and Advanced Netman
-- 📫 How to reach me - cuboulder.ashwin@gmail.com
+# 🚀 NAutoHUB Setup Guide
 
+This guide will help you set up the environment for the NAutoHUB website and automation stack.
 
-<!---
-CUBoulder-Ashwin/CUBoulder-Ashwin is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-You can click the Preview link to take a look at your changes.
---->
+---
+
+## 📦 Prerequisites
+
+- Ubuntu (20.04 or later)
+- `git` installed
+- Internet access for downloading packages
+
+---
+
+## 🛠️ Installation Steps
+
+1. **Create a `projects` folder and clone the repo:**
+
+   ```bash
+   mkdir -p ~/projects
+   cd ~/projects
+   git clone <REPO_URL>
