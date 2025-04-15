@@ -37,3 +37,12 @@ This guide will help you set up the environment for the NAutoHUB website and aut
    ```bash
    chmod +x pilot.sh
    ./pilot.sh
+
+---
+
+## ✅ Notes
+
+- Make sure you run all commands from a terminal (Ubuntu or WSL).
+- `requirements.sh` sets up everything: Docker, Containerlab, InfluxDB, Grafana, Ngrok, Jenkins, Java, SNMP tools, and Python dependencies.
+- `pilot.sh` initializes your project environment.
+- If you get permission errors, try prefixing commands with `sudo`.
