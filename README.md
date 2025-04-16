@@ -43,11 +43,10 @@ This guide will help you set up the environment for the NAutoHUB website and aut
    - Push this project to your git
    - Copy the ngrok URL from the `/NAutoHub/ngrok.log`
    - Open your github repository --> settings --> Webhooks
-   - Paste the URL with `/github-webhook/` appended at the end
+   - Append the URL with `/github-webhook/` and save
 
      ```bash
      example: https://e1ea-198-11-21-104.ngrok-free.app/github-webhook/
-   - Save Webhook
 
 ---
 
