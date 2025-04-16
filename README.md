@@ -27,8 +27,6 @@ git clone https://github.com/CUBoulder-Ashwin/NAutoHUB.git
 ```bash
 cd NAutoHUB/pilot-config
 chmod +x requirements.sh pilot.sh
-./requirements.sh
-./pilot.sh
 ```
 
 3. `requirements.sh` installs Docker, Containerlab, InfluxDB, Grafana, Ngrok, Java, Jenkins and Python packages like snmp-mibs, easysnmp, netmiko, flask etc.
