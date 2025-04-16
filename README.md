@@ -10,6 +10,7 @@ This guide will help you set up the environment for the NAutoHUB website and aut
 - `git` installed
 - Internet access for downloading packages
 
+
 ---
 
 
@@ -31,7 +32,9 @@ This guide will help you set up the environment for the NAutoHUB website and aut
           addr: 8080
           proto: http
 
+
 ---
+
 
 ## Automated setup
 
@@ -59,7 +62,9 @@ This guide will help you set up the environment for the NAutoHUB website and aut
    chmod +x pilot.sh
    ./pilot.sh
 
+
 ---
+
 
 ## ✅ Notes
 
