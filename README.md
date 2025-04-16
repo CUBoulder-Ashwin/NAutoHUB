@@ -16,7 +16,7 @@ This guide will help you set up the environment for the NAutoHUB website and aut
 
 ## Manual setup
 
-1. **GitHub webhook for jenkins pipeline**
+1. **Jenkins initial setup**
    - `pilot.sh` creates and starts a service called `ngrok.service`
    - For this service to run properly, you need an auth token added to the `/NAutoHUB/ngrok_config.yml`
    - You can get this token by simply accessing this link [ngrok dashboard](https://dashboard.ngrok.com/get-started/your-authtoken) and creating an account.
@@ -32,6 +32,21 @@ This guide will help you set up the environment for the NAutoHUB website and aut
           addr: 8080
           proto: http
 
+   - After running the automated setup, copy the `initial password` for jenkins setup
+      ```bash
+      sudo cat var/lib/jenkins/secrets/initialAdminPassword
+      
+   - Your `/NAutoHub/ngrok.log` file should contain a URL like ending with `.ngrok-free-app`. Open it in a browser and paste the initial password copied from the previous step
+   - Install plugins, run as admin and voila !! Your Jenkins is up.
+  
+2. **GitHub webhook for jenkins pipeline**
+   - Push this project to your git
+   - Copy the ngrok URL from the `/NAutoHub/ngrok.log`
+   - Open your github repository --> settings --> Webhooks
+   - Paste the URL with `/github-webhook/` appended at the end
+
+     ```bash
+     example
 
 ---
 
