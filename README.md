@@ -53,7 +53,7 @@ https://<your-ngrok>.ngrok-free.app/github-webhook/
 
 ---
 
-## ⚙️ Automated Setup
+## 🤖 Automated Setup
 
 1. Clone the repo:
 
