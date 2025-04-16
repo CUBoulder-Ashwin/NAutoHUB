@@ -16,7 +16,7 @@ sudo netplan apply
 
 # Deploy the clab topo.yml file
 echo "Deploying container lab topology..."
-sudo clab deploy -t topo.yml
+sudo clab deploy -t ceos-example.yaml
 
 # Run pilot.py
 echo "Running pilot.py..."

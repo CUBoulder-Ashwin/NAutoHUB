@@ -1,0 +1,66 @@
+---
+name: Arista_example
+
+topology:
+  nodes:
+    mgmt:
+      kind: ceos
+      image: ceos:4.33.2F
+    R1:
+      kind: ceos
+      image: ceos:4.33.2F
+    R2:
+      kind: ceos
+      image: ceos:4.33.2F
+    R3:
+      kind: ceos
+      image: ceos:4.33.2F
+    R4:
+      kind: ceos
+      image: ceos:4.33.2F
+    R5:
+      kind: ceos
+      image: ceos:4.33.2F
+    R6:
+      kind: ceos
+      image: ceos:4.33.2F
+    R7:
+      kind: ceos
+      image: ceos:4.33.2F
+    H1:
+      kind: linux
+      image: hosts:latest
+      exec:
+        - ip route del default via 172.20.20.1 dev eth0
+        - dhclient eth1
+    H2:
+      kind: linux
+      image: hosts:latest
+      exec:
+        - ip route del default via 172.20.20.1 dev eth0
+        - dhclient eth1
+
+  links:
+    - endpoints: [mgmt:eth1, R1:eth1]
+    - endpoints: [mgmt:eth2, R2:eth1]
+    - endpoints: [mgmt:eth3, R3:eth1]
+    - endpoints: [mgmt:eth4, R4:eth1]
+    - endpoints: [mgmt:eth5, R5:eth1]
+    - endpoints: [mgmt:eth6, R6:eth1]
+    - endpoints: [mgmt:eth7, R7:eth1]
+    - endpoints: [mgmt:eth8, host:eth0]
+    - endpoints: [R1:eth2, R2:eth2]
+    - endpoints: [R1:eth3, R3:eth3]
+    - endpoints: [R1:eth4, H1:eth1]
+    - endpoints: [R2:eth4, R3:eth4]
+    - endpoints: [R2:eth5, R3:eth5]
+    - endpoints: [R2:eth6, R5:eth6]
+    - endpoints: [R2:eth7, R6:eth7]
+    - endpoints: [R2:eth8, R7:eth8]
+    - endpoints: [R3:eth9, R5:eth9]
+    - endpoints: [R3:eth10, R6:eth10]
+    - endpoints: [R3:eth11, R7:eth11]
+    - endpoints: [R4:eth2, R5:eth2]
+    - endpoints: [R4:eth3, R6:eth3]
+    - endpoints: [R4:eth4, R7:eth4]
+    - endpoints: [R4:eth5, H2:eth1]
