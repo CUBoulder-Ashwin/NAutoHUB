@@ -18,7 +18,7 @@ This guide will help you set up the environment for the NAutoHUB website and aut
 1. **GitHub webhook for jenkins pipeline**
    - `pilot.sh` creates and starts a service called `ngrok.service`
    - For this service to run properly, you need an auth token added to the `/NAutoHUB/ngrok_config.yml`
-   - You can get this token by simply accessing this link `https://dashboard.ngrok.com/get-started/your-authtoken` and creating an account.
+   - You can get this token by simply accessing this link [ngrok dashboard](https://dashboard.ngrok.com/get-started/your-authtoken) and creating an account.
    - Copy the token and paste it in the yaml
      
      ```bash
