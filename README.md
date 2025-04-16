@@ -1,88 +1,78 @@
 # 🚀 NAutoHUB Setup Guide
 
-This guide will help you set up the environment for the NAutoHUB website and automation stack.
+This guide walks you through setting up the NAutoHUB environment — both manually and automatically.
 
 ---
 
 ## 📦 Prerequisites
 
-- Ubuntu (20.04 or later)
-- `git` installed
-- Internet access for downloading packages
-
-
----
-
-
-## Manual setup
-
-1. **Jenkins initial setup**
-   - `/NAutoHUB/pilot-config/pilot.sh` creates and starts a service called `ngrok.service`
-   - For this service to run properly, you need an auth token added to the `/NAutoHUB/ngrok_config.yml`
-   - You can get this token by simply accessing this link [ngrok dashboard](https://dashboard.ngrok.com/get-started/your-authtoken) and creating an account.
-   - Copy the token and paste it in the yaml
-     
-     ```bash
-      ---
-      version: "2"
-      authtoken:  -------> paste here
-      region: us
-      tunnels:
-        jenkins:
-          addr: 8080
-          proto: http
-
-   - After running the automated setup, copy the `initial password` for jenkins setup
-      ```bash
-      sudo cat var/lib/jenkins/secrets/initialAdminPassword
-      
-   - Your `/NAutoHub/ngrok.log` file should contain a URL like ending with `.ngrok-free-app`. Open it in a browser and paste the initial password copied from the previous step
-   - Install plugins, run as admin and voila !! Your Jenkins is up.
-  
-2. **GitHub webhook for jenkins pipeline**
-   - Push this project to your git
-   - Copy the ngrok URL from the `/NAutoHub/ngrok.log`
-   - Open your github repository --> settings --> Webhooks
-   - Append the URL with `/github-webhook/` and save
-
-     ```bash
-     example: https://e1ea-198-11-21-104.ngrok-free.app/github-webhook/
+- Ubuntu 20.04+
+- Git installed
+- Internet connection
 
 ---
 
+## 🛠️ Manual Setup
 
-## Automated setup
+### 1. Jenkins & Ngrok Configuration
 
-1. **Create a `projects` folder and clone the repo:**
+- Run `/NAutoHUB/pilot-config/pilot.sh` to start `ngrok.service`.
+- Get your [Ngrok auth token](https://dashboard.ngrok.com/get-started/your-authtoken) and paste it into `/NAutoHUB/ngrok_config.yml`:
 
-   ```bash
-   mkdir -p ~/projects
-   cd ~/projects
-   git clone https://github.com/CUBoulder-Ashwin/NAutoHUB.git
+```yaml
+version: "2"
+agent:
+  authtoken: <your_token>
+  region: us
+tunnels:
+  jenkins:
+    addr: 8080
+    proto: http
+```
 
-2. **Navigate to the setup directory:**
+- Start Jenkins and retrieve the initial admin password:
 
-   ```bash
-   cd ~/projects/NAutoHUB/pilot-config
-   
-3. **Make the requirements script executable and run it:**
+```bash
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+```
 
-   ```bash
-   chmod +x requirements.sh
-   ./requirements.sh
+- Access the Ngrok URL from `/NAutoHUB/ngrok.log`, complete Jenkins setup in browser.
 
-4. **Make the pilot script executable and run it:**
+### 2. GitHub Webhook
 
-   ```bash
-   chmod +x pilot.sh
-   ./pilot.sh
+- Push this repo to GitHub.
+- Go to GitHub → **Settings > Webhooks**
+- Use your Ngrok URL + `/github-webhook/`:
+
+```text
+https://<your-ngrok>.ngrok-free.app/github-webhook/
+```
 
 ---
 
+## 🤖 Automated Setup
+
+1. Clone the repo:
+
+```bash
+mkdir -p ~/projects
+cd ~/projects
+git clone https://github.com/CUBoulder-Ashwin/NAutoHUB.git
+```
+
+2. Run setup scripts:
+
+```bash
+cd NAutoHUB/pilot-config
+chmod +x requirements.sh pilot.sh
+./requirements.sh
+./pilot.sh
+```
+
+---
 
 ## ✅ Notes
 
-- Make sure you run all commands from a terminal (Ubuntu or WSL).
-- `requirements.sh` sets up everything: Docker, Containerlab, InfluxDB, Grafana, Ngrok, Jenkins, Java, SNMP tools, and Python dependencies.
-- `pilot.sh` initializes your project environment. This runs an example topo.yaml file present in the `NAutoHUB/pilot-config`.
-- If you get permission errors, try prefixing commands with `sudo`.
+- `requirements.sh` installs Docker, Containerlab, Jenkins, Ngrok, InfluxDB, SNMP, Grafana, Java, Python packages, etc.
+- `pilot.sh` deploys the initial topology with Containerlab.
+- If you hit permission issues, use `sudo`.
