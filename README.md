@@ -40,7 +40,7 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 
 ### 2. GitHub Webhook
 
-- Push this repo to GitHub.
+- Push this repo to your GitHub.
 - Go to GitHub → **Settings > Webhooks**
 - Use your Ngrok URL + `/github-webhook/`:
 
