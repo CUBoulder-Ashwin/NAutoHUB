@@ -1,6 +1,6 @@
 # 🚀 NAutoHUB Setup Guide
 
-This guide walks you through setting up the NAutoHUB environment — both manually and automatically.
+This guide walks you through setting up the NAutoHUB
 
 ---
 
