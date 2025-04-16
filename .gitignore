@@ -8,4 +8,4 @@ NSOT/logs/fetch_current_state.err
 NSOT/logs/fetch_current_state.log
 NSOT/IPAM/hosts.csv
 NSOT/python-files/__pycache__/
-NSOT/pilot-config/clab-Arista_example/
+pilot-config/clab-Arista_example/
