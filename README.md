@@ -77,7 +77,6 @@ This guide will help you set up the environment for the NAutoHUB website and aut
    chmod +x pilot.sh
    ./pilot.sh
 
-
 ---
 
 
