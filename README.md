@@ -12,7 +12,27 @@ This guide will help you set up the environment for the NAutoHUB website and aut
 
 ---
 
-## 🛠️ Installation Steps
+
+## Manual setup
+
+1. **GitHub webhook for jenkins pipeline**
+   - `pilot.sh` creates and starts a service called `ngrok.service`
+   - For this service to run properly, you need an auth token added to the `/NAutoHUB/ngrok_config.yml`
+   - You can get this token by simply accessing this link `https://dashboard.ngrok.com/get-started/your-authtoken` and creating an account.
+   - Copy the token and paste it in the yaml
+     ```bash
+           ---
+      version: "2"
+      authtoken: 2o5BtZemUpatdb4qKUNE4twXCJo_2XqZKbd3BTKJ7aK96VWjk -------> paste here
+      region: us
+      tunnels:
+        jenkins:
+          addr: 8080
+          proto: http
+
+---
+
+## Automated setup
 
 1. **Create a `projects` folder and clone the repo:**
 
@@ -44,5 +64,5 @@ This guide will help you set up the environment for the NAutoHUB website and aut
 
 - Make sure you run all commands from a terminal (Ubuntu or WSL).
 - `requirements.sh` sets up everything: Docker, Containerlab, InfluxDB, Grafana, Ngrok, Jenkins, Java, SNMP tools, and Python dependencies.
-- `pilot.sh` initializes your project environment.
+- `pilot.sh` initializes your project environment. This runs an example topo.yaml file present in the `NAutoHUB/pilot-config`.
 - If you get permission errors, try prefixing commands with `sudo`.
