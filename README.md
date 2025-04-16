@@ -12,11 +12,14 @@ This guide walks you through setting up the NAutoHUB environment — both manual
 
 ---
 
+> ⚠️ **Before running `pilot.sh`, make sure to complete the following steps to ensure the service works properly:**
+
+---
+
 ## 🛠️ Manual Setup
 
 ### 1. Jenkins & Ngrok Configuration
 
-- Run `/NAutoHUB/pilot-config/pilot.sh` to start `ngrok.service`.
 - Get your [Ngrok auth token](https://dashboard.ngrok.com/get-started/your-authtoken) and paste it into `/NAutoHUB/ngrok_config.yml`:
 
 ```yaml
@@ -40,7 +43,7 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 
 ### 2. GitHub Webhook
 
-- Push this repo to your GitHub.
+- Push this repo to GitHub.
 - Go to GitHub → **Settings > Webhooks**
 - Use your Ngrok URL + `/github-webhook/`:
 
@@ -50,7 +53,7 @@ https://<your-ngrok>.ngrok-free.app/github-webhook/
 
 ---
 
-## 🤖 Automated Setup
+## ⚙️ Automated Setup
 
 1. Clone the repo:
 
