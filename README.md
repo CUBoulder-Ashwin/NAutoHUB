@@ -22,7 +22,7 @@ cd ~/projects
 git clone https://github.com/CUBoulder-Ashwin/NAutoHUB.git
 ```
 
-2. Run setup scripts:
+2. Create executables:
 
 ```bash
 cd NAutoHUB/pilot-config
@@ -31,9 +31,26 @@ chmod +x requirements.sh pilot.sh
 ./pilot.sh
 ```
 
+3. `requirements.sh` installs Docker, Containerlab, InfluxDB, Grafana, Ngrok, Java, Jenkins and Python packages like snmp-mibs, easysnmp, netmiko, flask etc.
+
+```bash
+./requirements.sh
+```
+
+4. `pilot.sh`,
+   - creates docker images necessary
+   - creates managment network interfaces and add routes for the containerlabs
+   - runs an example containerlab topology
+   - creates crafted services like ipam, snmp, ngrok, device health checks, etc
+
+```bash
+./pilot.sh
+```
+
+
 ---
 
-## 🛠️ Manual Setup (Optional)
+## 🛠️ Manual Setup (Optional) 
 
 ### 1. Jenkins & Ngrok Configuration
 
@@ -76,6 +93,4 @@ https://<your-ngrok>.ngrok-free.app/github-webhook/
 
 ## ✅ Notes
 
-- `requirements.sh` installs Docker, Containerlab, Jenkins, Ngrok, InfluxDB, SNMP, Grafana, Java, Python packages, etc.
-- `pilot.sh` deploys the initial topology with Containerlab.
 - If you hit permission issues, use `sudo`.
