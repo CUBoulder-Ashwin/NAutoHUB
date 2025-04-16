@@ -12,7 +12,7 @@ This guide walks you through setting up the NAutoHUB environment — both manual
 
 ---
 
-> ⚠️ **Before running `pilot.sh`, make sure to complete the following steps to ensure the service works properly:**
+> ⚠️ **Before running `pilot.sh`, make sure to complete the following manual setup to ensure the service works properly:**
 
 ---
 
