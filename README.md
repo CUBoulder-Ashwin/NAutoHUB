@@ -21,7 +21,7 @@ This guide will help you set up the environment for the NAutoHUB website and aut
    - You can get this token by simply accessing this link `https://dashboard.ngrok.com/get-started/your-authtoken` and creating an account.
    - Copy the token and paste it in the yaml
      ```bash
-           ---
+      ---
       version: "2"
       authtoken: 2o5BtZemUpatdb4qKUNE4twXCJo_2XqZKbd3BTKJ7aK96VWjk -------> paste here
       region: us
