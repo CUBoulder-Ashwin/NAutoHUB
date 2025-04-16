@@ -24,7 +24,7 @@ This guide will help you set up the environment for the NAutoHUB website and aut
      ```bash
       ---
       version: "2"
-      authtoken: 2o5BtZemUpatdb4qKUNE4twXCJo_2XqZKbd3BTKJ7aK96VWjk -------> paste here
+      authtoken:  -------> paste here
       region: us
       tunnels:
         jenkins:
