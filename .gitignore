@@ -6,6 +6,5 @@ NSOT/device_health_check.log
 NSOT/IPAM/ipam_output.csv
 NSOT/logs/fetch_current_state.err
 NSOT/logs/fetch_current_state.log
-NSOT/IPAM/hosts.csv
 NSOT/python-files/__pycache__/
 pilot-config/clab-Arista_example/
