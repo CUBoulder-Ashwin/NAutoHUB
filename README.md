@@ -46,7 +46,8 @@ This guide will help you set up the environment for the NAutoHUB website and aut
    - Paste the URL with `/github-webhook/` appended at the end
 
      ```bash
-     example
+     example: https://e1ea-198-11-21-104.ngrok-free.app/github-webhook/
+   - Save Webhook
 
 ---
 
