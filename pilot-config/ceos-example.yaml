@@ -6,27 +6,35 @@ topology:
     mgmt:
       kind: ceos
       image: ceos:4.33.2F
+      startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_mgmt.cfg
     R1:
       kind: ceos
       image: ceos:4.33.2F
+      startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R1.cfg
     R2:
       kind: ceos
       image: ceos:4.33.2F
+      startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R2.cfg
     R3:
       kind: ceos
       image: ceos:4.33.2F
+      startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R3.cfg
     R4:
       kind: ceos
       image: ceos:4.33.2F
+      startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R4.cfg
     R5:
       kind: ceos
       image: ceos:4.33.2F
+      startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R5.cfg
     R6:
       kind: ceos
       image: ceos:4.33.2F
+      startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R6.cfg
     R7:
       kind: ceos
       image: ceos:4.33.2F
+      startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R7.cfg
     H1:
       kind: linux
       image: hosts:latest

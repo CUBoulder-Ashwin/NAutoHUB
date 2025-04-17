@@ -11,44 +11,54 @@ hosts_csv = os.path.join(ipam_dir, "hosts.csv")
 output_csv = os.path.join(ipam_dir, "ipam_output.csv")
 check_interval = 300  # in seconds (5 minutes)
 
-# SNMP OIDs for interface name, IP, and subnet
-OID_IF_NAME = "1.3.6.1.2.1.2.2.1.2"
-OID_IF_IP = "1.3.6.1.2.1.4.20.1.1"
-OID_IF_SUBNET = "1.3.6.1.2.1.4.20.1.3"
+# SNMP OIDs
+OID_IP = "1.3.6.1.2.1.4.20.1.1"
+OID_SUBNET = "1.3.6.1.2.1.4.20.1.3"
+OID_IFINDEX = "1.3.6.1.2.1.4.34.1.3.1.4"
+OID_IFNAME_BASE = "1.3.6.1.2.1.2.2.1.2."
 
 
 def collect_device_info(device_name, management_ip):
-    """Collects interface information from a device using SNMP."""
-    community = "public"  # Set the appropriate SNMP community string
+    """Collects interface info using SNMP."""
+    community = "public"
     device_info = []
 
     try:
-        # Establish an SNMP session
         session = Session(hostname=management_ip, community=community, version=2)
 
-        # Fetch data using SNMP
-        interface_names = session.walk(OID_IF_NAME)
-        ip_addresses = session.walk(OID_IF_IP)
-        subnet_masks = session.walk(OID_IF_SUBNET)
+        # Step 1: Get IP → Subnet Mask
+        ip_to_mask = {entry.oid_index: entry.value for entry in session.walk(OID_SUBNET)}
 
-        # Generate timestamp
+        # Step 2: Get IP → ifIndex
+        ip_to_ifindex = {}
+        for entry in session.walk(OID_IFINDEX):
+            oid_parts = entry.oid_index.split(".")
+            if len(oid_parts) >= 5:
+                ip = ".".join(oid_parts[4:])
+                ip_to_ifindex[ip] = entry.value
+
+        # Step 3: For each IP, get ifIndex → Interface Name
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        # Compile device information
-        for i in range(len(interface_names)):
-            device_info.append(
-                {
-                    "Timestamp": timestamp,
-                    "Device Name": device_name,
-                    "Interface Name": interface_names[i].value,
-                    "IP Address": (
-                        ip_addresses[i].value if i < len(ip_addresses) else "N/A"
-                    ),
-                    "Subnet Mask": (
-                        subnet_masks[i].value if i < len(subnet_masks) else "N/A"
-                    ),
-                }
-            )
+        for ip, ifindex in ip_to_ifindex.items():
+            try:
+                if_name_oid = OID_IFNAME_BASE + str(ifindex)
+                iface_entry = session.get(if_name_oid)
+                iface_name = iface_entry.value
+            except Exception as e:
+                iface_name = f"ifIndex {ifindex}"
+                print(f"Warning: Could not get interface name for {ifindex}: {e}")
+
+            subnet_mask = ip_to_mask.get(ip, "N/A")
+
+            device_info.append({
+                "Timestamp": timestamp,
+                "Device Name": device_name,
+                "Interface Name": iface_name,
+                "IP Address": ip,
+                "Subnet Mask": subnet_mask,
+            })
+
     except Exception as e:
         print(f"Error fetching data for {device_name} ({management_ip}): {e}")
 
@@ -56,11 +66,9 @@ def collect_device_info(device_name, management_ip):
 
 
 def main():
-    """Main function to repeatedly collect and store device info."""
+    """Main function to collect and store device info."""
     while True:
-        with open(hosts_csv, mode="r") as infile, open(
-            output_csv, mode="w", newline=""
-        ) as outfile:
+        with open(hosts_csv, mode="r") as infile, open(output_csv, mode="w", newline="") as outfile:
             reader = csv.DictReader(infile)
             fieldnames = [
                 "Timestamp",
@@ -73,13 +81,19 @@ def main():
             writer.writeheader()
 
             for row in reader:
-                device_name = row["hostname"]
-                management_ip = row["management_ip"]
-                device_data = collect_device_info(device_name, management_ip)
-                if device_data:
-                    writer.writerows(device_data)
+                device_name = row.get("hostname")
+                management_ip = row.get("management_ip")
 
-        print("CSV updated. Waiting for next interval.")
+                if not device_name or not management_ip:
+                    print(f"Skipping row with missing data: {row}")
+                    continue
+
+                print(f"\nCollecting data from {device_name} ({management_ip})...")
+                data = collect_device_info(device_name, management_ip)
+                if data:
+                    writer.writerows(data)
+
+        print(f"\n✅ IPAM CSV updated at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         time.sleep(check_interval)
 
 
