@@ -10,12 +10,13 @@
         <form method="POST" class="form-container">
             <label for="device">Enter Device Name:</label>
             <input type="text" name="device" id="device-name" class="form-input-small"><br>
-
+            <br>
             <div class="checkbox-container">
-                <label for="select-all" class="checkbox-label">Select All Devices from IPAM:</label>
+                <label for="select-all" class="checkbox-label">Select All Devices from IPAM:
                 <input type="checkbox" id="select-all" name="select_all" onclick="toggleInputFields()" class="switchport">
+                </label>
             </div>
-
+            <br>
             <div class="form-group text-center">
                 <button type="submit" class="form-button small">Generate Config</button>
             </div>
@@ -37,8 +38,8 @@
                 {% for device in devices %}
                 <option value="{{ device }}">{{ device }}</option>
                 {% endfor %}
-            </select><br>
-
+            </select>
+            <br></br>
             <label for="command-category">Select Show Command:</label>
             <div class="command-dropdowns">
                 <select id="routing-dropdown" class="dropdown-button small" onchange="updateCommandField(this.value)">
@@ -60,7 +61,7 @@
                     <option value="show ip interface brief">IP Interface Brief</option>
                 </select>
             </div>
-
+            <br>
             <label for="custom-command">Or Enter Custom Command:</label>
             <input type="text" id="custom-command" name="command" placeholder="e.g., show version" class="form-input-small"><br>
 
@@ -70,25 +71,22 @@
         </form>
     </div>
 
-    <!-- Row Break -->
-    <div class="tile-break"></div>
-
     <!-- Ping Test Tile -->
     <div class="tool-tile">
         <h3>Ping Test</h3>
         <form method="POST" class="form-container">
             <label for="source">Enter Source IP:</label>
-            <input type="text" name="source" required class="form-input-small"><br>
-
+            <input type="text" name="source" required class="form-input-small">
+            <br></br>
             <label for="destination">Enter Destination IP:</label>
-            <input type="text" name="destination" required class="form-input-small"><br>
-
+            <input type="text" name="destination" required class="form-input-small">
+            <br></br>
             <label for="username">SSH Username (for remote ping):</label>
-            <input type="text" name="username" placeholder="root" class="form-input-small"><br>
-
+            <input type="text" name="username" placeholder="root" class="form-input-small">
+            <br></br>
             <label for="password">SSH Password (for remote ping):</label>
-            <input type="password" name="password" class="form-input-small"><br>
-
+            <input type="password" name="password" class="form-input-small">
+            <br></br>
             <div class="form-group text-center">
                 <button type="submit" class="form-button small">Ping</button>
             </div>
@@ -99,19 +97,9 @@
         </div>
         {% endif %}
     </div>
-
-    <!-- Difference Comparator Tile -->
-    <div class="tool-tile tool-tile-large">
-        <h3>Difference Comparator</h3>
-        <p>Paste two sets of configurations to compare:</p>
-        <div class="comparator-boxes">
-            <textarea name="config1" placeholder="Paste first config here" class="textarea-box"></textarea>
-            <textarea name="config2" placeholder="Paste second config here" class="textarea-box"></textarea>
-        </div>
-        <div class="form-group text-center" style="margin-top: 15px;">
-            <button type="submit" class="form-button small">Compare</button>
-        </div>
-    </div>
+    
+    <!-- Row Break
+    <div class="tile-break"></div> -->
 </div>
 
 <script>
@@ -153,7 +141,7 @@ body {
     justify-content: center;
     gap: 30px;
     margin: 40px auto;
-    max-width: 1000px;
+    max-width: 1500px;
 }
 
 /* Individual Tool Tile Styling */

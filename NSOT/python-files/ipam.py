@@ -9,74 +9,61 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 ipam_dir = os.path.join(script_dir, "..", "IPAM")
 hosts_csv = os.path.join(ipam_dir, "hosts.csv")
 output_csv = os.path.join(ipam_dir, "ipam_output.csv")
-check_interval = 300  # in seconds (5 minutes)
+check_interval = 300  # seconds
 
 # SNMP OIDs
 OID_IP = "1.3.6.1.2.1.4.20.1.1"
-OID_SUBNET = "1.3.6.1.2.1.4.20.1.3"
-OID_IFINDEX = "1.3.6.1.2.1.4.34.1.3.1.4"
+OID_SUBNET = "1.3.6.1.2.1.4.20.1.3."
+OID_IFINDEX = "1.3.6.1.2.1.4.34.1.3.1.4."
 OID_IFNAME_BASE = "1.3.6.1.2.1.2.2.1.2."
 
 
 def collect_device_info(device_name, management_ip):
-    """Collects interface info using SNMP."""
+    """Collects IP, subnet mask, and interface name from a device via SNMP."""
     community = "public"
     device_info = []
 
     try:
         session = Session(hostname=management_ip, community=community, version=2)
-
-        # Step 1: Get IP → Subnet Mask
-        ip_to_mask = {entry.oid_index: entry.value for entry in session.walk(OID_SUBNET)}
-
-        # Step 2: Get IP → ifIndex
-        ip_to_ifindex = {}
-        for entry in session.walk(OID_IFINDEX):
-            oid_parts = entry.oid_index.split(".")
-            if len(oid_parts) >= 5:
-                ip = ".".join(oid_parts[4:])
-                ip_to_ifindex[ip] = entry.value
-
-        # Step 3: For each IP, get ifIndex → Interface Name
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        for ip, ifindex in ip_to_ifindex.items():
+        for ip_entry in session.walk(OID_IP):
+            ip = ip_entry.value
             try:
-                if_name_oid = OID_IFNAME_BASE + str(ifindex)
-                iface_entry = session.get(if_name_oid)
-                iface_name = iface_entry.value
-            except Exception as e:
-                iface_name = f"ifIndex {ifindex}"
-                print(f"Warning: Could not get interface name for {ifindex}: {e}")
+                subnet_entry = session.get(OID_SUBNET + ip)
+                subnet = subnet_entry.value
 
-            subnet_mask = ip_to_mask.get(ip, "N/A")
+                ifindex_entry = session.get(OID_IFINDEX + ip)
+                ifindex = ifindex_entry.value
+
+                iface_entry = session.get(OID_IFNAME_BASE + str(ifindex))
+                iface_name = iface_entry.value
+
+            except Exception as e:
+                subnet = "N/A"
+                iface_name = "N/A"
+                print(f"⚠️  Could not get full info for {ip} on {device_name}: {e}")
 
             device_info.append({
                 "Timestamp": timestamp,
                 "Device Name": device_name,
                 "Interface Name": iface_name,
                 "IP Address": ip,
-                "Subnet Mask": subnet_mask,
+                "Subnet Mask": subnet,
             })
 
     except Exception as e:
-        print(f"Error fetching data for {device_name} ({management_ip}): {e}")
+        print(f"❌ Error fetching data from {device_name} ({management_ip}): {e}")
 
     return device_info
 
 
 def main():
-    """Main function to collect and store device info."""
+    """Main function to read hosts.csv, collect SNMP data, and write to output CSV."""
     while True:
         with open(hosts_csv, mode="r") as infile, open(output_csv, mode="w", newline="") as outfile:
             reader = csv.DictReader(infile)
-            fieldnames = [
-                "Timestamp",
-                "Device Name",
-                "Interface Name",
-                "IP Address",
-                "Subnet Mask",
-            ]
+            fieldnames = ["Timestamp", "Device Name", "Interface Name", "IP Address", "Subnet Mask"]
             writer = csv.DictWriter(outfile, fieldnames=fieldnames)
             writer.writeheader()
 
@@ -85,12 +72,15 @@ def main():
                 management_ip = row.get("management_ip")
 
                 if not device_name or not management_ip:
-                    print(f"Skipping row with missing data: {row}")
+                    print(f"⚠️  Skipping row with missing data: {row}")
                     continue
 
-                print(f"\nCollecting data from {device_name} ({management_ip})...")
+                print(f"\n🔄 Collecting data from {device_name} ({management_ip})...")
                 data = collect_device_info(device_name, management_ip)
+
                 if data:
+                    for entry in data:
+                        print(f"{entry['Device Name']} | {entry['Interface Name']} | {entry['IP Address']} | {entry['Subnet Mask']}")
                     writer.writerows(data)
 
         print(f"\n✅ IPAM CSV updated at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
