@@ -1,0 +1,34 @@
+username: admin
+password: admin
+insecure: true
+port: 6030
+
+targets:
+  10.0.101.1:
+    name: R1
+    address: 10.0.101.1
+
+subscriptions:
+  interface:
+    paths:
+      - /interfaces/interface/state/oper-status
+    sample_interval: 10s
+
+  cpu:
+    paths:
+      - /components/component/cpu
+    sample_interval: 1s
+
+  
+
+outputs:
+  influxdb:
+    type: influxdb
+    address: http://localhost:8086
+    org: NAutoHUB
+    bucket: gnmi
+    token: 78prwCSyFfiHh7DMe1a4wiBz77_3eQaiOoc1opJg2MqYi2ZF0tCP4xTX4HcuqaPE-S0nV6RiPKthPUwsRX9hyQ==
+    override-timestamps: false
+    timestamp-precision: s
+    health-check-period: 30s
+    debug: true
