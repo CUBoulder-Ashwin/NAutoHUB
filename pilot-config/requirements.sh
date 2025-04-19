@@ -63,6 +63,8 @@ sudo apt-get update
 sudo apt-get install -y libsnmp-dev snmp snmpd snmptrapd snmp-mibs-downloader gcc python3-dev syslog-ng
 sudo add-apt-repository universe -y
 sudo download-mibs
+sudo apt install telegraf
+sudo apt install gnmic
 sudo apt install -y python3-pip
 pip install easysnmp netmiko flask requests
 
