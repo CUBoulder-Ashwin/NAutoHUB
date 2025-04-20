@@ -9,7 +9,7 @@
             <a href="{{ url_for('add_hosts') }}">
                 <div class="tile-content">
                     <h2>Add Hosts</h2>
-                    <p>Create a CSV file with host information</p>
+                    <p>Build or append data to hosts.csv</p>
                 </div>
             </a>
         </div>
@@ -17,7 +17,7 @@
             <a href="{{ url_for('add_device') }}">
                 <div class="tile-content">
                     <h2>Build Topology</h2>
-                    <p>Create YAML topology file for containerlab</p>
+                    <p>Build YAML topology</p>
                 </div>
             </a>
         </div>
@@ -32,7 +32,7 @@
             <a href="{{ url_for('add_device') }}">
                 <div class="tile-content">
                     <h2>Add Device</h2>
-                    <p>Add a new device to an existing network</p>
+                    <p>Configure YAML topology to add new device</p>
                 </div>
             </a>
         </div>
@@ -40,7 +40,7 @@
             <a href="{{ url_for('configure_device') }}">
                 <div class="tile-content">
                     <h2>Configure Device</h2>
-                    <p>Configure a device in an existing network</p>
+                    <p>Configure a device in the network</p>
                 </div>
             </a>
         </div>
@@ -181,8 +181,10 @@ body.dark-mode .category-container-row {
 
 .tile-content p {
     color: #6d4c41;
-    font-size: 1em;
+    font-size: 0.85em;
+    margin-top: 6px;
 }
+
 
 .tile:hover {
     transform: scale(1.05);
@@ -213,7 +215,10 @@ body.dark-mode .tile-content h2 {
 
 body.dark-mode .tile-content p {
     color: #cccccc;
+    font-size: 0.85em;
+    margin-top: 6px;
 }
+
 
 body.dark-mode .tile:hover h2 {
     color: #ffb74d;
