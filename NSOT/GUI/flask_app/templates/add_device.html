@@ -51,7 +51,7 @@
         <label for="relay_toggle" class="checkbox-label">
             <input type="checkbox" id="relay_toggle" name="relay_toggle" class="switchport"> Make Connected Device a DHCP Relay
         </label>
-    </div> 
+    </div>
 
     <div id="dhcp_fields" class="hidden">
         <div class="form-group">
@@ -94,7 +94,7 @@
     </div>
 
     <div class="form-group text-center">
-        <button type="submit" class="form-button">Add Device</button>
+        <button type="submit" class="form-button csv-button">Add Device</button>
     </div>
 </form>
 
@@ -129,7 +129,6 @@ body.dark-mode {
     color: #e0e0e0;
 }
 
-/* General Styling */
 .page-title {
     text-align: center;
     color: var(--dark-accent);
@@ -139,15 +138,15 @@ body.dark-mode {
 
 .form-container {
     max-width: 500px;
-    margin: 20px auto;
+    margin: 30px auto;
     background-color: inherit;
-    padding: 20px;
+    padding: 25px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(212, 163, 115, 0.2);
 }
 
 .form-group {
-    margin-bottom: 12px;
+    margin-bottom: 18px;
 }
 
 .form-label {
@@ -155,7 +154,7 @@ body.dark-mode {
     color: var(--dark-accent);
     font-size: 1em;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 }
 
 body.light-mode .form-label {
@@ -164,7 +163,7 @@ body.light-mode .form-label {
 
 .form-input-small {
     width: 95%;
-    padding: 8px;
+    padding: 10px;
     border: 1px solid var(--dark-accent);
     border-radius: 5px;
     background-color: #1a1a1a;
@@ -189,7 +188,6 @@ body.light-mode .form-input-small:focus {
     box-shadow: 0 0 5px var(--light-hover);
 }
 
-/* Select Dropdown Styling */
 select.form-input-small {
     background-color: #1a1a1a;
     color: #ffffff;
@@ -202,27 +200,29 @@ body.light-mode select.form-input-small {
     border-color: var(--light-accent);
 }
 
-.form-button {
-    padding: 10px 20px;
-    font-size: 14px;
+.form-button.csv-button {
+    margin-top: 10px;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: bold;
     border-radius: 8px;
-    background-color: var(--dark-accent);
-    color: #ffffff;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
+    background-color: var(--dark-accent);
+    color: #000;
 }
 
-body.light-mode .form-button {
+body.light-mode .form-button.csv-button {
     background-color: var(--light-accent);
-    color: #000000;
+    color: #fff;
 }
 
-.form-button:hover {
+.form-button.csv-button:hover {
     background-color: var(--dark-hover);
 }
 
-body.light-mode .form-button:hover {
+body.light-mode .form-button.csv-button:hover {
     background-color: var(--light-hover);
 }
 
