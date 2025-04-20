@@ -151,6 +151,28 @@
         .container {
             padding: 30px;
         }
+
+        .back-button {
+            font-size: 1.5em;
+            text-decoration: none;
+            margin-right: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode .back-button {
+            color: var(--dark-accent);
+        }
+        .dark-mode .back-button:hover {
+            color: var(--dark-hover);
+        }
+
+        .light-mode .back-button {
+            color: #ffffff;
+        }
+        .light-mode .back-button:hover {
+            color: var(--light-hover);
+        }
+
     </style>
     <script>
         function toggleHamburgerMenu() {
@@ -182,6 +204,9 @@
 <body>
     <nav class="navbar">
         <div class="navbar-left">
+            {% if request.endpoint != 'homepage' %}
+            <a href="{{ url_for('homepage') }}" class="back-button" title="Back to Homepage">←</a>
+            {% endif %}
             <button id="darkModeToggle" onclick="toggleDarkMode()">🌜</button>
         </div>
         <div class="navbar-center">
