@@ -4,19 +4,17 @@
 <h2 class="page-title">Tools</h2>
 
 <div class="tile-container">
-    <!-- Golden Config Generator Tile -->
     <div class="tool-tile">
         <h3>Golden Config Generator</h3>
         <form method="POST" class="form-container">
             <label for="device">Enter Device Name:</label>
-            <input type="text" name="device" id="device-name" class="form-input-small"><br>
-            <br>
+            <input type="text" name="device" id="device-name" class="form-input-small"><br><br>
             <div class="checkbox-container">
-                <label for="select-all" class="checkbox-label">Select All Devices from IPAM:
-                <input type="checkbox" id="select-all" name="select_all" onclick="toggleInputFields()" class="switchport">
+                <label for="select-all" class="checkbox-label">
+                    Select All Devices from IPAM:
+                    <input type="checkbox" id="select-all" name="select_all" onclick="toggleInputFields()" class="switchport">
                 </label>
-            </div>
-            <br>
+            </div><br>
             <div class="form-group text-center">
                 <button type="submit" class="form-button small">Generate Config</button>
             </div>
@@ -28,18 +26,17 @@
         {% endif %}
     </div>
 
-    <!-- Show Configs Tile -->
     <div class="tool-tile">
         <h3>Show Configs</h3>
         <form method="POST" class="form-container">
             <label for="device-select">Select Device:</label>
-            <select name="device" id="device-select" class="form-input-small">
+            <select name="selected_device" id="device-select" class="form-input-small">
                 <option value="" disabled selected>Select Device</option>
                 {% for device in devices %}
                 <option value="{{ device }}">{{ device }}</option>
                 {% endfor %}
             </select>
-            <br></br>
+            <br><br>
             <label for="command-category">Select Show Command:</label>
             <div class="command-dropdowns">
                 <select id="routing-dropdown" class="dropdown-button small" onchange="updateCommandField(this.value)">
@@ -64,29 +61,23 @@
             <br>
             <label for="custom-command">Or Enter Custom Command:</label>
             <input type="text" id="custom-command" name="command" placeholder="e.g., show version" class="form-input-small"><br>
-
             <div class="form-group text-center" style="margin-top: 15px;">
                 <button type="submit" class="form-button small">Show Config</button>
             </div>
         </form>
     </div>
 
-    <!-- Ping Test Tile -->
     <div class="tool-tile">
         <h3>Ping Test</h3>
         <form method="POST" class="form-container">
             <label for="source">Enter Source IP:</label>
-            <input type="text" name="source" placeholder="localhost" required class="form-input-small">
-            <br></br>
+            <input type="text" name="source" placeholder="localhost" required class="form-input-small"><br><br>
             <label for="destination">Enter Destination IP:</label>
-            <input type="text" name="destination" required class="form-input-small">
-            <br></br>
+            <input type="text" name="destination" required class="form-input-small"><br><br>
             <label for="username">SSH Username (for remote ping):</label>
-            <input type="text" name="username" placeholder="root" class="form-input-small">
-            <br></br>
+            <input type="text" name="username" placeholder="root" class="form-input-small"><br><br>
             <label for="password">SSH Password (for remote ping):</label>
-            <input type="password" name="password" class="form-input-small">
-            <br></br>
+            <input type="password" name="password" class="form-input-small"><br><br>
             <div class="form-group text-center">
                 <button type="submit" class="form-button small">Ping</button>
             </div>
@@ -97,44 +88,47 @@
         </div>
         {% endif %}
     </div>
-    
-    <!-- Row Break
-    <div class="tile-break"></div> -->
 </div>
 
-<script>
-    function toggleInputFields() {
-        const selectAll = document.getElementById('select-all');
-        const deviceName = document.getElementById('device-name');
-        if (selectAll.checked) {
-            deviceName.disabled = true;
-        } else {
-            deviceName.disabled = false;
-        }
-    }
+{% if show_result %}
+<div class="output-row">
+    <div class="output-tile">
+        <pre>{{ show_result|safe }}</pre>
+    </div>
+</div>
+{% endif %}
 
-    function updateCommandField(value) {
-        const customCommandField = document.getElementById('custom-command');
-        customCommandField.value = value; // Set the selected command in the text field
-    }
+<script>
+function toggleInputFields() {
+    const selectAll = document.getElementById('select-all');
+    const deviceName = document.getElementById('device-name');
+    deviceName.disabled = selectAll.checked;
+}
+function updateCommandField(value) {
+    document.getElementById('custom-command').value = value;
+}
 </script>
 
 <style>
-/* General Styling */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #1a1a2e;
-    color: #ffffff;
+body.dark-mode {
+    background-color: #0d0d0d;
+    color: #f0e6d2;
 }
-
+body.light-mode {
+    background-color: #fdf6e3;
+    color: #2e2e2e;
+}
 .page-title {
     text-align: center;
-    color: #00d1b2;
     font-family: 'Arial Black', sans-serif;
     margin-bottom: 20px;
 }
-
-/* Tile Container Styling */
+body.dark-mode .page-title {
+    color: #d4a373;
+}
+body.light-mode .page-title {
+    color: #8b5e3c;
+}
 .tile-container {
     display: flex;
     flex-wrap: wrap;
@@ -143,95 +137,127 @@ body {
     margin: 40px auto;
     max-width: 1500px;
 }
-
-/* Individual Tool Tile Styling */
 .tool-tile {
     width: 300px;
-    background-color: #0d0d15;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 209, 178, 0.3);
     padding: 20px;
     transition: transform 0.3s, box-shadow 0.3s;
     overflow: hidden;
 }
-
-.tool-tile-large {
-    width: 540px;
+body.dark-mode .tool-tile {
+    background-color: #0d0d0d;
+    box-shadow: 0 0 20px rgba(212, 163, 115, 0.2);
 }
-
+body.light-mode .tool-tile {
+    background-color: #fffdf5;
+    box-shadow: 0 0 20px rgba(139, 94, 60, 0.2);
+}
 .tool-tile h3 {
-    color: #00d1b2;
     font-size: 1.5em;
     margin-bottom: 15px;
     text-align: center;
 }
-
-.tool-tile form label {
-    color: #00d1b2;
-    font-size: 1em;
-    margin-bottom: 5px;
-    display: block;
+body.dark-mode .tool-tile h3,
+body.dark-mode label,
+body.dark-mode .checkbox-label {
+    color: #d4a373;
 }
-
-.tool-tile form .form-input-small {
+body.light-mode .tool-tile h3,
+body.light-mode label,
+body.light-mode .checkbox-label {
+    color: #8b5e3c;
+}
+.form-input-small {
     width: 95%;
     padding: 8px;
-    border: 1px solid #00d1b2;
     border-radius: 5px;
-    background-color: #0d0d15;
-    color: #ffffff;
     outline: none;
 }
-
-.tool-tile form .form-button.small {
+body.dark-mode .form-input-small {
+    border: 1px solid #d4a373;
+    background-color: #0d0d0d;
+    color: #ffffff;
+}
+body.light-mode .form-input-small {
+    border: 1px solid #8b5e3c;
+    background-color: #fffaf0;
+    color: #2e2e2e;
+}
+.form-button.small {
     padding: 10px 20px;
     font-size: 14px;
     border-radius: 8px;
-    background-color: #00d1b2;
-    color: #ffffff;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
 }
-
-.tool-tile form .form-button.small:hover {
-    background-color: #00a793;
+body.dark-mode .form-button.small {
+    background-color: #d4a373;
+    color: #0d0d0d;
 }
-
+body.dark-mode .form-button.small:hover {
+    background-color: #eec68d;
+}
+body.light-mode .form-button.small {
+    background-color: #8b5e3c;
+    color: #ffffff;
+}
+body.light-mode .form-button.small:hover {
+    background-color: #b07c59;
+}
 .command-dropdowns {
     display: flex;
     gap: 10px;
     justify-content: center;
     margin-bottom: 15px;
 }
-
 .dropdown-button.small {
     width: 100%;
     padding: 8px 15px;
-    background-color: #00d1b2;
-    color: #ffffff;
-    border: none;
     border-radius: 5px;
-    cursor: pointer;
     font-size: 12px;
     transition: background-color 0.3s;
 }
-
-.dropdown-button.small:hover {
-    background-color: #00a793;
+body.dark-mode .dropdown-button.small {
+    background-color: #d4a373;
+    color: #0d0d0d;
 }
-
-.comparator-boxes {
+body.dark-mode .dropdown-button.small:hover {
+    background-color: #eec68d;
+}
+body.light-mode .dropdown-button.small {
+    background-color: #8b5e3c;
+    color: #ffffff;
+}
+body.light-mode .dropdown-button.small:hover {
+    background-color: #b07c59;
+}
+.output-row {
+    width: 100%;
     display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 15px;
+    justify-content: center;
+    margin-top: 30px;
 }
-
-.text-center {
-    text-align: center;
+.output-tile {
+    width: 90%;
+    max-width: 1000px;
+    border-radius: 10px;
+    padding: 20px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: auto;
 }
-
+body.dark-mode .output-tile {
+    background-color: #0d0d0d;
+    color: #d4a373;
+    box-shadow: 0 0 20px rgba(212, 163, 115, 0.3);
+}
+body.light-mode .output-tile {
+    background-color: #fffdf0;
+    color: #8b5e3c;
+    box-shadow: 0 0 20px rgba(139, 94, 60, 0.2);
+}
 </style>
 
 {% endblock %}

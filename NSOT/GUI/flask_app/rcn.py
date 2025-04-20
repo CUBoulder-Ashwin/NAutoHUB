@@ -20,6 +20,7 @@ sys.path.append(os.path.abspath(python_files_dir))
 # Import your custom modules from 'python-files'
 from ping import ping_local, ping_remote
 from goldenConfig import generate_configs
+from show_commands import execute_show_command
 from generate_yaml import create_yaml_from_form_data
 from config_Gen import conf_gen  # Updated import for config generation
 from update_topo import update_topology
@@ -327,6 +328,7 @@ def push_config():
 def tools():
     ping_result = None
     config_result = None
+    show_result = None
 
     # Fetch devices dynamically
     devices = hosts_reader.get_devices()
@@ -372,9 +374,38 @@ def tools():
                 config_result += f"<li>{file}</li>"
             config_result += "</ul>"
 
+    if request.method == "POST" and (
+        "selected_device" in request.form and (
+            any(key.endswith("-dropdown") for key in request.form) or "command" in request.form
+        )
+    ):
+        
+        hostname = request.form.get("selected_device")
+        selected_command = request.form.get("command", "")
+
+        if not selected_command:
+            for key in request.form:
+                if key.endswith("-dropdown"):
+                    selected_command = request.form[key]
+                    break
+
+        success, result = execute_show_command(hostname, selected_command)
+        print(result)
+        show_result = (
+            f"<h3>Command Output:</h3><pre>{result}</pre>" if success else
+            f'<span style="color:red;">Command failed: {result}</span>'
+        )
+
     return render_template(
-        "tools.html", ping_result=ping_result, config_result=config_result, devices=devices
+        "tools.html",
+        ping_result=ping_result,
+        config_result=config_result,
+        devices=devices,
+        show_result=show_result
     )
+
+   
+
 
 @app.route("/ipam")
 def ipam():

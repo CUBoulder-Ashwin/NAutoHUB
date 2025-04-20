@@ -79,45 +79,32 @@
 </div>
 
 <style>
-/* General Styling */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #1a1a2e;
-    color: #ffffff;
-    margin: 0;
-    padding: 0;
-}
-
-.homepage-header h1 {
-    text-align: center;
-    color: #00d1b2;
-    font-size: 2.5em;
-    margin: 20px 0;
-    font-family: 'Arial Black', sans-serif;
-}
-
-/* Row Styling */
 .category-container-row {
     position: relative;
-    border: 2px solid #232946;
+    border: 2px solid #4a3728;
     border-radius: 15px;
     margin: 30px auto;
-    max-width: 900px; /* modify the width of the container */
+    max-width: 1100px;
     height: 250px;
-    box-shadow: 0 0 20px rgba(0, 209, 178, 0.2);
+    box-shadow: 0 0 15px rgba(80, 50, 20, 0.3);
+    background-color: rgba(240, 222, 200, 0.25);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 209, 178, 0.05);
+}
+
+body.dark-mode .category-container-row {
+    background-color: #0a0a0a;
+    border-color: #2b2b2b;
 }
 
 .category-title {
     font-size: 3em;
     font-weight: bold;
-    color: #00d1b2;
-    background-color: rgba(0, 209, 178, 0.1);
+    color: #734c24;
+    background-color: transparent;
     width: 100%;
     text-align: center;
     padding: 100px 0;
@@ -133,14 +120,8 @@ body {
 }
 
 @keyframes fade-out {
-    0% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    100% {
-        opacity: 0;
-        transform: scale(1.1);
-    }
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.1); }
 }
 
 .tile-container {
@@ -148,7 +129,6 @@ body {
     flex-wrap: nowrap;
     justify-content: center;
     gap: 30px;
-
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
@@ -162,17 +142,16 @@ body {
     pointer-events: all;
 }
 
-/* Tile Styling */
 .tile {
     width: 250px;
-    background-color: #0d0d15;
+    background-color: #fff6eb;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 209, 178, 0.3);
+    box-shadow: 0 0 12px rgba(120, 80, 40, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .tile a {
-    color: #ffffff;
+    color: #4e342e;
     text-decoration: none;
     display: block;
     padding: 20px;
@@ -180,29 +159,54 @@ body {
 }
 
 .tile-content h2 {
-    color: #f4f4f9;
+    color: #5d4037;
     font-size: 1.5em;
     margin-bottom: 10px;
 }
 
 .tile-content p {
-    color: #a0a0a0;
+    color: #6d4c41;
     font-size: 1em;
 }
 
 .tile:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 30px rgba(0, 209, 178, 0.5);
+    box-shadow: 0 0 25px rgba(120, 80, 40, 0.4);
 }
 
 .tile:hover h2 {
-    color: #00ffcc;
+    color: #8d6e63;
 }
 
 .tile:hover p {
-    color: #b3f0e6;
+    color: #a1887f;
 }
 
+/* Dark Mode */
+body.dark-mode .tile {
+    background-color: #121212;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .tile a {
+    color: #eeeeee;
+}
+
+body.dark-mode .tile-content h2 {
+    color: #fafafa;
+}
+
+body.dark-mode .tile-content p {
+    color: #cccccc;
+}
+
+body.dark-mode .tile:hover h2 {
+    color: #ffb74d;
+}
+
+body.dark-mode .tile:hover p {
+    color: #ffe0b2;
+}
 </style>
 
 {% endblock %}

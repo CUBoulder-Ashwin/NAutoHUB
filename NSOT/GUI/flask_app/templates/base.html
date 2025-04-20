@@ -1,117 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Network Dashboard</title>
     <style>
-        /* Base Styling */
+        :root {
+            --dark-bg: #0d0d0d;
+            --dark-accent: #d4a373;
+            --dark-hover: #eec68d;
+            --light-bg: #fdf6e3;
+            --light-accent: #8b5e3c;
+            --light-hover: #b07c59;
+        }
+
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: #f0e6d2;
+        }
+
+        body.light-mode {
+            background-color: var(--light-bg);
+            color: #2e2e2e;
+        }
+
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f983;
+            font-family: Arial, sans-serif;
+            background-color: inherit;
+            color: inherit;
             transition: background-color 0.3s, color 0.3s;
         }
 
-        .dark-mode {
-            background-color: #03032e;
-            color: #e0e0e0;
-        }
-
-        .dark-mode .navbar {
-            background-color: #0d0d15;
-            color: #00d1b2;
-            box-shadow: 0 0 20px rgba(0, 209, 178, 0.3);
-        }
-
-        .dark-mode .navbar-logo,
-        .dark-mode #darkModeToggle,
-        .dark-mode .profile-button {
-            color: #f4f4f9; /* Accent color for highlights */
-        }
-
-        /* Light Mode */
-        .light-mode {
-            background-color: #f4f4f983;
-            color: #232946; /* Dark teal font color */
-        }
-
-        /* Navbar Adjustments for Light Mode */
-        .light-mode .navbar {
-            background-color: #0d0d15f6;
-            color: #00d1b2;
-            box-shadow: 0 0 20px rgba(0, 209, 178, 0.3);
-        }
-
-        .light-mode .navbar-logo,
-        .light-mode #darkModeToggle,
-        .light-mode .profile-button {
-            color: #ffffff; /* White font color for better contrast */
-        }
-
-
-        /* Navbar */
         .navbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 15px 30px;
-            background-color: #232946;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease-in-out;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .navbar-left {
-            flex: 1;
-            display: flex;
-            justify-content: flex-start;
+        .dark-mode .navbar {
+            background-color: var(--dark-bg);
+            border-bottom: 1px solid #333;
         }
 
-        .navbar-center {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            text-align: center;
+        .light-mode .navbar {
+            background-color: var(--light-accent);
         }
 
-        .navbar-right {
+        .navbar-left, .navbar-center, .navbar-right {
             flex: 1;
             display: flex;
-            justify-content: flex-end;
+            align-items: center;
         }
+
+        .navbar-left { justify-content: flex-start; }
+        .navbar-center { justify-content: center; }
+        .navbar-right { justify-content: flex-end; }
 
         .navbar-logo {
             font-size: 1.5em;
-            color: #ffffff;
             text-decoration: none;
             font-weight: bold;
         }
 
-        #darkModeToggle {
+        .dark-mode .navbar-logo {
+            color: var(--dark-accent);
+        }
+
+        .light-mode .navbar-logo {
+            color: #ffffff;
+        }
+
+        #darkModeToggle, .profile-button {
             background: none;
             border: none;
             font-size: 1.5em;
             cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode #darkModeToggle,
+        .dark-mode .profile-button {
+            color: var(--dark-accent);
+        }
+
+        .light-mode #darkModeToggle,
+        .light-mode .profile-button {
             color: #ffffff;
-            transition: color 0.3s;
         }
 
-        #darkModeToggle:hover {
-            color: #ffeb3b;
+        .dark-mode #darkModeToggle:hover,
+        .dark-mode .profile-button:hover {
+            color: var(--dark-hover);
         }
 
-        /* Hamburger Menu */
-        .profile-dropdown {
-            position: relative;
-        }
-
-        .profile-button {
-            background: none;
-            border: none;
-            font-size: 1.5em;
-            cursor: pointer;
-            color: #ffffff;
+        .light-mode #darkModeToggle:hover,
+        .light-mode .profile-button:hover {
+            color: var(--light-hover);
         }
 
         .hamburger-menu {
@@ -120,13 +108,21 @@
             right: 0;
             width: 300px;
             height: 100%;
-            background-color: #0d0d15;
-            color: #ffffff;
             box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
             overflow-y: auto;
             transform: translateX(100%);
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: transform 0.4s ease;
             z-index: 1000;
+        }
+
+        .dark-mode .hamburger-menu {
+            background-color: var(--dark-bg);
+            color: #ffffff;
+        }
+
+        .light-mode .hamburger-menu {
+            background-color: var(--light-accent);
+            color: #ffffff;
         }
 
         .hamburger-menu.open {
@@ -137,10 +133,7 @@
             font-size: 1.5em;
             cursor: pointer;
             padding: 10px;
-            display: block;
             text-align: right;
-            color: #ffffff;
-            transition: color 0.2s ease-in-out;
         }
 
         .hamburger-menu a {
@@ -148,61 +141,45 @@
             padding: 15px 20px;
             text-decoration: none;
             color: #ffffff;
-            border-bottom: 1px solid #333333;
-            transition: background-color 0.3s ease-in-out, transform 0.2s;
+            border-bottom: 1px solid #333;
         }
 
         .hamburger-menu a:hover {
-            background-color: #ffffff;
-            transform: translateX(10px);
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
+        .container {
+            padding: 30px;
+        }
     </style>
     <script>
         function toggleHamburgerMenu() {
-            const menu = document.querySelector('.hamburger-menu');
-            menu.classList.toggle('open');
+            document.querySelector('.hamburger-menu').classList.toggle('open');
         }
 
         function toggleDarkMode() {
             const body = document.body;
-            const isLightMode = body.classList.contains('light-mode');
-
-            // Toggle between light and dark modes
-            body.classList.toggle('dark-mode', isLightMode);
-            body.classList.toggle('light-mode', !isLightMode);
-
-            // Update the dark mode button icon and save preference
             const toggleButton = document.getElementById('darkModeToggle');
-            if (isLightMode) {
-                toggleButton.textContent = '🌞'; // Dark mode icon
-                localStorage.setItem('theme', 'dark-mode');
-            } else {
-                toggleButton.textContent = '🌜'; // Light mode icon
+            if (body.classList.contains('dark-mode')) {
+                body.classList.replace('dark-mode', 'light-mode');
+                toggleButton.textContent = '🌜';
                 localStorage.setItem('theme', 'light-mode');
+            } else {
+                body.classList.replace('light-mode', 'dark-mode');
+                toggleButton.textContent = '🌞';
+                localStorage.setItem('theme', 'dark-mode');
             }
         }
 
-        // Apply the saved theme on page load
-        window.onload = function () {
-            const savedTheme = localStorage.getItem('theme');
-            const body = document.body;
-            const toggleButton = document.getElementById('darkModeToggle');
-
-            if (savedTheme) {
-                body.classList.add(savedTheme);
-                toggleButton.textContent = savedTheme === 'dark-mode' ? '🌞' : '🌜';
-            } else {
-                // Default to light mode if no preference is saved
-                body.classList.add('light-mode');
-                toggleButton.textContent = '🌜';
-            }
+        window.onload = () => {
+            const savedTheme = localStorage.getItem('theme') || 'light-mode';
+            document.body.classList.add(savedTheme);
+            document.getElementById('darkModeToggle').textContent =
+                savedTheme === 'dark-mode' ? '🌞' : '🌜';
         };
-
     </script>
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-left">
             <button id="darkModeToggle" onclick="toggleDarkMode()">🌜</button>
@@ -211,30 +188,20 @@
             <a class="navbar-logo" href="{{ url_for('homepage') }}">NAutoHUB</a>
         </div>
         <div class="navbar-right">
-            <div class="profile-dropdown">
-                <button class="profile-button" onclick="toggleHamburgerMenu()">
-                    <span class="hamburger-icon">&#x2630;</span>
-                </button>
-            </div>
+            <button class="profile-button" onclick="toggleHamburgerMenu()">☰</button>
         </div>
     </nav>
 
-    <!-- Hamburger Menu -->
     <div class="hamburger-menu">
-        <span class="hamburger-close" onclick="toggleHamburgerMenu()">&#x2715;</span>
-        <a href="/add-device">Add Device</a>
-        <a href="/configure-device">Configure Device</a>
-        <a href="/tools">Tools</a>
-        <a href="/ipam">IPAM</a>
-        <a href="/dashboard">Dashboard</a>
-        <a href="#">Toplogy</a>
-        
-        
-        <a href="#">Account</a>
-        <a href="#">Settings</a>
+        <span class="hamburger-close" onclick="toggleHamburgerMenu()">✕</span>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('add_device') }}">Add Device</a>
+        <a href="{{ url_for('configure_device') }}">Configure Device</a>
+        <a href="{{ url_for('tools') }}">Tools</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('contact') }}">Contact</a>
     </div>
 
-    <!-- Content -->
     <div class="container">
         {% block content %}{% endblock %}
     </div>
