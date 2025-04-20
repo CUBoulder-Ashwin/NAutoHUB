@@ -3,21 +3,36 @@
 
 <!-- First Row -->
 <div class="category-container-row">
-    <div class="category-title">Configure</div>
+    <div class="category-title">Build</div>
     <div class="tile-container">
         <div class="tile">
-            <a href="{{ url_for('add_device') }}">
+            <a href="{{ url_for('add_hosts') }}">
                 <div class="tile-content">
-                    <h2>Build Topology</h2>
-                    <p>Create an initial topology</p>
+                    <h2>Add Hosts</h2>
+                    <p>Create a CSV file with host information</p>
                 </div>
             </a>
         </div>
         <div class="tile">
             <a href="{{ url_for('add_device') }}">
                 <div class="tile-content">
+                    <h2>Build Topology</h2>
+                    <p>Create YAML topology file for containerlab</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- First Row -->
+<div class="category-container-row">
+    <div class="category-title">Configure</div>
+    <div class="tile-container">
+        <div class="tile">
+            <a href="{{ url_for('add_device') }}">
+                <div class="tile-content">
                     <h2>Add Device</h2>
-                    <p>Add a new device to the network</p>
+                    <p>Add a new device to an existing network</p>
                 </div>
             </a>
         </div>
@@ -25,7 +40,7 @@
             <a href="{{ url_for('configure_device') }}">
                 <div class="tile-content">
                     <h2>Configure Device</h2>
-                    <p>Set up and configure existing devices</p>
+                    <p>Configure a device in an existing network</p>
                 </div>
             </a>
         </div>

@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="page-title">Add Hosts</h2>
+
+<div class="tile-container">
+    <form method="POST" class="form-container" id="hosts-form">
+        <div class="form-group">
+            <label class="form-label">Save Mode:</label>
+            <select name="save_mode" class="form-input" required>
+                <option value="append">Append to Existing File</option>
+                <option value="new">Create New File</option>
+            </select>
+        </div>
+
+        <div id="device-form-list">
+            <div class="device-form form-group grouped-form">
+                <div class="device-fields">
+                    <label class="form-label">Hostname:</label>
+                    <input type="text" name="hostname[]" class="form-input" required>
+
+                    <label class="form-label">Username:</label>
+                    <input type="text" name="username[]" class="form-input" required>
+
+                    <label class="form-label">Password:</label>
+                    <input type="text" name="password[]" class="form-input" required>
+
+                    <label class="form-label">Management IP:</label>
+                    <input type="text" name="management_ip[]" class="form-input" required>
+                </div>
+            </div>
+        </div>
+
+        {% if message %}
+            <div class="form-group text-center" style="margin-top: 15px; margin-bottom: -10px;">
+                <p class="message-text">{{ message }}</p>
+            </div>
+        {% endif %}
+
+        <div class="form-group text-center button-group">
+            <button type="button" class="transparent-button" onclick="addDeviceForm()">+  Add Host</button>
+            <button type="submit" class="form-button csv-button">Save hosts.csv</button>
+        </div>
+    </form>
+</div>
+
+<script>
+function addDeviceForm() {
+    const deviceForm = document.createElement('div');
+    deviceForm.classList.add('device-form', 'form-group', 'grouped-form');
+    deviceForm.innerHTML = `
+        <div class="device-fields">
+            <label class="form-label">Hostname:</label>
+            <input type="text" name="hostname[]" class="form-input" required>
+
+            <label class="form-label">Username:</label>
+            <input type="text" name="username[]" class="form-input" required>
+
+            <label class="form-label">Password:</label>
+            <input type="text" name="password[]" class="form-input" required>
+
+            <label class="form-label">Management IP:</label>
+            <input type="text" name="management_ip[]" class="form-input" required>
+        </div>
+        <div class="delete-button-wrapper">
+            <button type="button" class="transparent-button" onclick="this.closest('.device-form').remove()">-  Delete Host</button>
+        </div>
+    `;
+    document.getElementById('device-form-list').appendChild(deviceForm);
+}
+</script>
+
+<style>
+:root {
+    --dark-bg: #0d0d0d;
+    --dark-accent: #d4a373;
+    --dark-hover: #eec68d;
+    --light-bg: #fdf6e3;
+    --light-accent: #8b5e3c;
+    --light-hover: #b07c59;
+}
+
+.page-title {
+    text-align: center;
+    font-family: 'Arial Black', sans-serif;
+    margin: 20px 0;
+}
+
+.form-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    background-color: inherit;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Device Form Block */
+.grouped-form {
+    border: 1px solid;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    position: relative;
+    transition: box-shadow 0.3s ease;
+}
+
+.grouped-form:hover {
+    box-shadow: 0 0 10px rgba(255,255,255,0.05);
+}
+
+.device-fields {
+    padding: 20px 40px 20px 20px;
+}
+
+
+.device-fields > * {
+    margin-bottom: 14px;
+}
+
+
+/* Compact Inputs */
+.form-input,
+select.form-input {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid;
+    background-color: inherit;
+    color: inherit;
+    transition: border-color 0.3s;
+    font-size: 14px;
+}
+
+.form-input:focus,
+select.form-input:focus {
+    outline: none;
+    box-shadow: 0 0 5px;
+}
+
+/* Labels */
+.form-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+/* Buttons */
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.transparent-button {
+    background-color: transparent;
+    color: inherit;
+    font-size: 14px;
+    padding: 6px 14px;
+    font-weight: bold;
+    border: 1px solid;
+    border-radius: 6px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.transparent-button:hover {
+    background-color: var(--dark-hover);
+    color: #000;
+}
+
+body.light-mode .transparent-button:hover {
+    background-color: var(--light-hover);
+    color: #fff;
+}
+
+.form-button.csv-button {
+    margin-top: 10px;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Light Theme */
+body.light-mode .page-title,
+body.light-mode .form-label {
+    color: var(--light-accent);
+}
+body.light-mode .form-container {
+    background-color: var(--light-bg);
+}
+body.light-mode .form-input,
+body.light-mode select.form-input {
+    border-color: var(--light-accent);
+    background-color: #fff;
+    color: #2e2e2e;
+}
+body.light-mode .form-button {
+    background-color: var(--light-accent);
+    color: #fff;
+}
+body.light-mode .form-button:hover {
+    background-color: var(--light-hover);
+}
+body.light-mode .grouped-form {
+    border-color: var(--light-accent);
+}
+
+/* Dark Theme */
+body.dark-mode .page-title,
+body.dark-mode .form-label {
+    color: var(--dark-accent);
+}
+body.dark-mode .form-container {
+    background-color: var(--dark-bg);
+}
+body.dark-mode .form-input,
+body.dark-mode select.form-input {
+    border-color: var(--dark-accent);
+    background-color: #0f0f0f;
+    color: #f0e6d2;
+}
+body.dark-mode .form-button {
+    background-color: var(--dark-accent);
+    color: #000;
+}
+body.dark-mode .form-button:hover {
+    background-color: var(--dark-hover);
+}
+body.dark-mode .grouped-form {
+    border-color: var(--dark-accent);
+}
+.tile-container {
+    max-width: 700px;
+    margin: 30px auto;
+    background-color: inherit;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(212, 163, 115, 0.25);
+    transition: box-shadow 0.3s ease;
+}
+
+body.light-mode .tile-container {
+    box-shadow: 0 0 20px rgba(139, 94, 60, 0.25);
+}
+
+.message-text {
+    font-weight: bold;
+    text-align: center;
+    color: var(--dark-accent);
+}
+
+body.light-mode .message-text {
+    color: var(--light-accent);
+}
+
+
+</style>
+
+{% endblock %}

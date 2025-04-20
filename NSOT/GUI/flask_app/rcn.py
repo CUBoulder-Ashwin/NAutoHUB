@@ -18,6 +18,7 @@ python_files_dir = os.path.join(current_dir, "..", "..", "python-files")
 sys.path.append(os.path.abspath(python_files_dir))
 
 # Import your custom modules from 'python-files'
+from create_hosts import write_hosts_csv
 from ping import ping_local, ping_remote
 from goldenConfig import generate_configs
 from show_commands import execute_show_command
@@ -49,6 +50,36 @@ env = Environment(loader=FileSystemLoader(templates_dir))
 @app.route("/")
 def homepage():
     return render_template("homepage.html")
+
+@app.route("/add-hosts", methods=["GET", "POST"])
+def add_hosts():
+    message = None
+    if request.method == "POST":
+        hostnames = request.form.getlist("hostname[]")
+        usernames = request.form.getlist("username[]")
+        passwords = request.form.getlist("password[]")
+        management_ips = request.form.getlist("management_ip[]")
+        save_mode = request.form.get("save_mode", "new")
+
+        rows = []
+        for i in range(len(hostnames)):
+            if hostnames[i] and usernames[i] and passwords[i] and management_ips[i]:
+                rows.append([
+                    hostnames[i],
+                    usernames[i],
+                    passwords[i],
+                    management_ips[i]
+                ])
+
+        if rows:
+            path = write_hosts_csv(rows, append=(save_mode == "append"))
+            mode_label = "Appended to" if save_mode == "append" else "Created"
+            message = f"✅ {mode_label} hosts.csv with {len(rows)} new device(s)."
+        else:
+            message = "⚠️ No valid entries to save."
+
+    return render_template("add_hosts.html", message=message)
+
 
 
 @app.route("/dashboard")
