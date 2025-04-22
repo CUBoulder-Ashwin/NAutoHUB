@@ -1,5 +1,6 @@
 import os
 import sys
+import docker
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from jinja2 import Environment, FileSystemLoader
 import subprocess
@@ -31,6 +32,8 @@ from git_jenkins import push_and_monitor_jenkins
 from push_config import push_configuration
 from read_IPAM import IPAMReader 
 from read_hosts import HostsReader
+from clab_builder import build_clab_topology
+
 
 # File path for IPAM CSV file
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -80,6 +83,49 @@ def add_hosts():
 
     return render_template("add_hosts.html", message=message)
 
+@app.route("/build-topology", methods=["GET", "POST"])
+def build_topology():
+    if request.method == "POST":
+        topo_name = request.form.get("topo_name", "custom_topo")
+        devices = []
+        links = []
+
+        # Parse devices
+        count = int(request.form.get("device_count", 0))
+        for i in range(count):
+            name = request.form.get(f"device_name_{i}")
+            kind = request.form.get(f"device_kind_{i}")
+            image = request.form.get(f"device_image_{i}")
+            config = request.form.get(f"device_config_{i}")
+            exec_lines = request.form.getlist(f"device_exec_{i}[]")
+
+            devices.append({
+                "name": name,
+                "kind": kind,
+                "image": image,
+                "config": config,
+                "exec": exec_lines
+            })
+
+        # Parse links
+        link_count = int(request.form.get("link_count", 0))
+        for i in range(link_count):
+            dev1 = request.form.get(f"link_dev1_{i}")
+            dev2 = request.form.get(f"link_dev2_{i}")
+            links.append((dev1, dev2))
+
+        # Build YAML using helper
+        output_path = build_clab_topology(topo_name, devices, links)
+        message = f"✅ topo.yml generated at: <code>{output_path}</code>"
+        client = docker.from_env()
+        images = [tag for img in client.images.list() for tag in img.tags if ":" in tag]
+        return render_template("build_topology.html", docker_images=images, message=message)
+
+
+    # GET mode — provide list of Docker images
+    client = docker.from_env()
+    images = [tag for img in client.images.list() for tag in img.tags if ":" in tag]
+    return render_template("build_topology.html", docker_images=images)
 
 
 @app.route("/dashboard")

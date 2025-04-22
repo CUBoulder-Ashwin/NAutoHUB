@@ -64,14 +64,13 @@
             font-size: 1.5em;
             text-decoration: none;
             font-weight: bold;
+            color: #d4a373;
+            text-shadow: 0 0 6px rgba(212, 163, 115, 0.5);
+            transition: text-shadow 0.3s ease;
         }
 
-        .dark-mode .navbar-logo {
-            color: var(--dark-accent);
-        }
-
-        .light-mode .navbar-logo {
-            color: #ffffff;
+        .navbar-logo:hover {
+            text-shadow: 0 0 12px rgba(212, 163, 115, 0.9);
         }
 
         #darkModeToggle, .profile-button {
@@ -134,18 +133,22 @@
             cursor: pointer;
             padding: 10px;
             text-align: right;
+            color: #d4a373;
         }
 
         .hamburger-menu a {
             display: block;
             padding: 15px 20px;
             text-decoration: none;
-            color: #ffffff;
-            border-bottom: 1px solid #333;
+            color: #d4a373;
+            font-weight: bold;
+            border-bottom: 1px solid #444;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         .hamburger-menu a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(212, 163, 115, 0.1);
+            color: #eec68d;
         }
 
         .container {
@@ -156,23 +159,13 @@
             font-size: 1.5em;
             text-decoration: none;
             margin-right: 15px;
+            color: #d4a373;
             transition: color 0.3s ease;
         }
 
-        .dark-mode .back-button {
-            color: var(--dark-accent);
+        .back-button:hover {
+            color: #eec68d;
         }
-        .dark-mode .back-button:hover {
-            color: var(--dark-hover);
-        }
-
-        .light-mode .back-button {
-            color: #ffffff;
-        }
-        .light-mode .back-button:hover {
-            color: var(--light-hover);
-        }
-
     </style>
     <script>
         function toggleHamburgerMenu() {
