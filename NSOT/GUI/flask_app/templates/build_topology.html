@@ -26,28 +26,38 @@
       </div>
     </div>
 
+    <div id="loading-overlay" style="display:none;">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Processing... Please wait</p>
+    </div>
+
     {% if message %}
       <div class="form-group text-center" style="margin-top: 20px;">
         <p class="message-text">{{ message|safe }}</p>
       </div>
     {% endif %}
-
-    <div class="form-group text-center button-group" style="margin-top: 30px;">
-      <button type="submit" class="form-button csv-button">Generate YAML</button>
-    </div>
-
+    
+    <!-- Hidden inputs (inside the main form) -->
     <input type="hidden" name="link_dev1_json" id="link-dev1-json">
     <input type="hidden" name="link_dev2_json" id="link-dev2-json">
-  </form>
+    </form> <!-- CLOSE main form here -->
 
-  <!-- Build Topology Button Outside the Form -->
-  {% if message %}
-  <form method="POST" action="{{ url_for('deploy_topology_route') }}">
-    <div class="form-group text-center button-group" style="margin-top: 10px;">
-      <button type="submit" class="form-button csv-button" formnovalidate>Build Topology</button>
-    </div>
-  </form>
-  {% endif %}
+    <!-- Buttons BELOW the form -->
+    <div class="form-group text-center button-group" style="margin-top: 30px;">
+      <!-- Generate YAML (uses closed form above) -->
+      <button type="submit" form="topology-form" class="form-button csv-button" name="generate">Generate YAML</button>
+
+      <!-- Build Topology (separate form) -->
+      <form method="POST" action="{{ url_for('deploy_topology_route') }}" style="display: inline;">
+        <button type="submit" class="form-button csv-button" formnovalidate>Build Topology</button>
+      </form>
+
+      <!-- Delete Topology (separate form) -->
+      <form method="POST" action="{{ url_for('delete_topology_route') }}" style="display: inline;">
+        <button type="submit" class="form-button csv-button" formnovalidate>Delete Topology</button>
+      </form>
+</div>
+
 </div>
 
 <script>
@@ -151,10 +161,18 @@ function syncLinkJSON() {
   document.getElementById("link-dev1-json").value = JSON.stringify(dev1List);
   document.getElementById("link-dev2-json").value = JSON.stringify(dev2List);
 }
+
+document.querySelectorAll('form[action="{{ url_for("deploy_topology_route") }}"], form[action="{{ url_for("delete_topology_route") }}"]').forEach(form => {
+  form.addEventListener("submit", () => {
+    document.getElementById("loading-overlay").style.display = "flex";
+  });
+});
+
+
 </script>
 
 <style>
-  /* -- same styles as add_hosts.html -- */
+
   :root {
     --dark-bg: #0d0d0d;
     --dark-accent: #d4a373;
@@ -363,6 +381,36 @@ body.light-mode .device-title {
   color: var(--light-accent);
 }
 
+#loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #ccc;
+  border-top-color: #d4a373;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
   </style>
   
 {% endblock %}

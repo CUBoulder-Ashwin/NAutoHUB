@@ -87,17 +87,17 @@ def add_hosts():
 
 @app.route("/build-topology", methods=["GET", "POST"])
 def build_topology():
-    if request.method == "POST":
+    if request.method == "POST" and "generate" in request.form:
         topo_name = request.form.get("topo_name", "custom_topo")
         devices = []
         links = []
 
-        # Parse devices
         count_str = request.form.get("device_count", "0")
         try:
-            count = int(count_str) if count_str.strip() else 0
+            count = int(count_str.strip())
         except ValueError:
             count = 0
+
         for i in range(count):
             name = request.form.get(f"device_name_{i}")
             kind = request.form.get(f"device_kind_{i}")
@@ -113,40 +113,71 @@ def build_topology():
                 "exec": exec_lines
             })
 
-        # Parse links from hidden JSON inputs
+        # Parse links
         link_dev1_list = request.form.get("link_dev1_json")
         link_dev2_list = request.form.get("link_dev2_json")
-
         if link_dev1_list and link_dev2_list:
             dev1_list = json.loads(link_dev1_list)
             dev2_list = json.loads(link_dev2_list)
             links = list(zip(dev1_list, dev2_list))
 
-        print(f"[DEBUG] Parsed links: {links}")  # Debug log
-
+        print("[INFO] Generating topology YAML...")
         output_path = build_clab_topology(topo_name, devices, links)
+        print(f"[✔] YAML saved at: {output_path}")
+
         message = f"✅ topo.yml generated at: <code>{output_path}</code>"
         client = docker.from_env()
         images = [tag for img in client.images.list() for tag in img.tags if ":" in tag]
         return render_template("build_topology.html", docker_images=images, message=message)
 
+    # GET request fallback
     client = docker.from_env()
     images = [tag for img in client.images.list() for tag in img.tags if ":" in tag]
     return render_template("build_topology.html", docker_images=images)
 
 
-@app.route("/deploy-topology", methods=["POST"])
+@app.route("/deploy-topology", methods=["POST"], endpoint="deploy_topology_route")
 def deploy_topology_route():
     yaml_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "pilot-config", "topo.yml"))
-    success, output = deploy_topology(yaml_path)
+    print("[INFO] Destroying old topology...")
+    try:
+        destroy_output = subprocess.check_output(f"containerlab destroy -t {yaml_path}", shell=True, stderr=subprocess.STDOUT, text=True)
+        print("[✔] Destroy output:")
+        print(destroy_output)
+    except subprocess.CalledProcessError as e:
+        print("[ERROR] Failed to destroy old topology:")
+        print(e.output)
 
-    # Print full containerlab output to the terminal for debugging
-    print("[Containerlab Output]")
-    print(output)
+    print("[INFO] Deploying new topology...")
+    try:
+        deploy_output = subprocess.check_output(f"containerlab deploy -t {yaml_path}", shell=True, stderr=subprocess.STDOUT, text=True)
+        print("[✔] Deploy output:")
+        print(deploy_output)
+        message = "✅ Containerlab topology deployed successfully."
+    except subprocess.CalledProcessError as e:
+        print("[ERROR] Deployment failed:")
+        print(e.output)
+        message = f"❌ Failed to deploy topology:<br><pre>{e.output}</pre>"
 
-    # Only show a short message on the HTML page
-    message = "✅ Containerlab topology deployed successfully." if success else "❌ Failed to deploy topology."
     return render_template("build_topology.html", docker_images=get_docker_images(), message=message)
+
+
+@app.route("/delete-topology", methods=["POST"], endpoint="delete_topology_route")
+def delete_topology_route():
+    yaml_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "pilot-config", "topo.yml"))
+    print("[INFO] Deleting topology...")
+    try:
+        delete_output = subprocess.check_output(f"containerlab destroy -t {yaml_path}", shell=True, stderr=subprocess.STDOUT, text=True)
+        print("[✔] Delete output:")
+        print(delete_output)
+        message = "✅ Topology deleted successfully."
+    except subprocess.CalledProcessError as e:
+        print("[ERROR] Delete failed:")
+        print(e.output)
+        message = f"❌ Failed to delete topology:<br><pre>{e.output}</pre>"
+
+    return render_template("build_topology.html", docker_images=get_docker_images(), message=message)
+
 
 
 @app.route("/dashboard")
@@ -524,4 +555,4 @@ def contact():
 if __name__ == "__main__":
     thread = Thread(target=ipam_reader.read_ipam_file, daemon=True)
     thread.start()
-    app.run(host="0.0.0.0", port=5555, debug=True)
+    app.run(host="0.0.0.0", port=5050, debug=True)
