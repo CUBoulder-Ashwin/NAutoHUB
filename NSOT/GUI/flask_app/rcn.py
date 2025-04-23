@@ -1,6 +1,7 @@
 import os
 import sys
 import docker
+import json
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from jinja2 import Environment, FileSystemLoader
 import subprocess
@@ -33,6 +34,7 @@ from push_config import push_configuration
 from read_IPAM import IPAMReader 
 from read_hosts import HostsReader
 from clab_builder import build_clab_topology
+from clab_push import deploy_topology, get_docker_images
 
 
 # File path for IPAM CSV file
@@ -91,7 +93,11 @@ def build_topology():
         links = []
 
         # Parse devices
-        count = int(request.form.get("device_count", 0))
+        count_str = request.form.get("device_count", "0")
+        try:
+            count = int(count_str) if count_str.strip() else 0
+        except ValueError:
+            count = 0
         for i in range(count):
             name = request.form.get(f"device_name_{i}")
             kind = request.form.get(f"device_kind_{i}")
@@ -107,25 +113,40 @@ def build_topology():
                 "exec": exec_lines
             })
 
-        # Parse links
-        link_count = int(request.form.get("link_count", 0))
-        for i in range(link_count):
-            dev1 = request.form.get(f"link_dev1_{i}")
-            dev2 = request.form.get(f"link_dev2_{i}")
-            links.append((dev1, dev2))
+        # Parse links from hidden JSON inputs
+        link_dev1_list = request.form.get("link_dev1_json")
+        link_dev2_list = request.form.get("link_dev2_json")
 
-        # Build YAML using helper
+        if link_dev1_list and link_dev2_list:
+            dev1_list = json.loads(link_dev1_list)
+            dev2_list = json.loads(link_dev2_list)
+            links = list(zip(dev1_list, dev2_list))
+
+        print(f"[DEBUG] Parsed links: {links}")  # Debug log
+
         output_path = build_clab_topology(topo_name, devices, links)
         message = f"✅ topo.yml generated at: <code>{output_path}</code>"
         client = docker.from_env()
         images = [tag for img in client.images.list() for tag in img.tags if ":" in tag]
         return render_template("build_topology.html", docker_images=images, message=message)
 
-
-    # GET mode — provide list of Docker images
     client = docker.from_env()
     images = [tag for img in client.images.list() for tag in img.tags if ":" in tag]
     return render_template("build_topology.html", docker_images=images)
+
+
+@app.route("/deploy-topology", methods=["POST"])
+def deploy_topology_route():
+    yaml_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "pilot-config", "topo.yml"))
+    success, output = deploy_topology(yaml_path)
+
+    # Print full containerlab output to the terminal for debugging
+    print("[Containerlab Output]")
+    print(output)
+
+    # Only show a short message on the HTML page
+    message = "✅ Containerlab topology deployed successfully." if success else "❌ Failed to deploy topology."
+    return render_template("build_topology.html", docker_images=get_docker_images(), message=message)
 
 
 @app.route("/dashboard")

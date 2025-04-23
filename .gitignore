@@ -11,3 +11,4 @@ NSOT/python-files/__pycache__/
 NSOT/GUI/flask_app/__pycache__/
 pilot-config/clab-Arista_example/
 pilot-config/.ceos-example.yaml.bak
+pilot-config/.topo.yml.bak

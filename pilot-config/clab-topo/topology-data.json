@@ -1,0 +1,100 @@
+{
+  "name": "topo",
+  "type": "clab",
+  "clab": {
+    "config": {
+      "prefix": "clab",
+      "mgmt": {
+        "network": "clab",
+        "bridge": "br-b67703e68059",
+        "ipv4-subnet": "172.20.20.0/24",
+        "ipv4-gw": "172.20.20.1",
+        "ipv6-subnet": "3fff:172:20:20::/64",
+        "ipv6-gw": "3fff:172:20:20::1",
+        "mtu": 1500,
+        "external-access": true
+      }
+    }
+  },
+  "ssh-pub-keys": ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKhm9MQJlWroG01jQZkamn1cCsKeyky8nsIBbpGbHieu"],
+  "nodes": {
+    "R1": {
+      "index": "0",
+      "shortname": "R1",
+      "longname": "clab-topo-R1",
+      "fqdn": "R1.topo.io",
+      "group": "",
+      "labdir": "/home/ashwin/projects/NAutoHUB/pilot-config/clab-topo/R1",
+      "kind": "ceos",
+      "image": "ceos:4.33.2F",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.2",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::2",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:21:81:05",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-b67703e68059",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/ashwin/projects/NAutoHUB/pilot-config/clab-topo/R1",
+        "clab-node-longname": "clab-topo-R1",
+        "clab-node-name": "R1",
+        "clab-node-type": "",
+        "clab-owner": "ashwin",
+        "clab-topo-file": "/home/ashwin/projects/NAutoHUB/pilot-config/topo.yml",
+        "containerlab": "topo"
+      },
+      "port-bindings": [
+      ]
+    },
+    "R2": {
+      "index": "1",
+      "shortname": "R2",
+      "longname": "clab-topo-R2",
+      "fqdn": "R2.topo.io",
+      "group": "",
+      "labdir": "/home/ashwin/projects/NAutoHUB/pilot-config/clab-topo/R2",
+      "kind": "ceos",
+      "image": "ceos:4.33.2F",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.3",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::3",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:22:68:d5",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-b67703e68059",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/ashwin/projects/NAutoHUB/pilot-config/clab-topo/R2",
+        "clab-node-longname": "clab-topo-R2",
+        "clab-node-name": "R2",
+        "clab-node-type": "",
+        "clab-owner": "ashwin",
+        "clab-topo-file": "/home/ashwin/projects/NAutoHUB/pilot-config/topo.yml",
+        "containerlab": "topo"
+      },
+      "port-bindings": [
+      ]
+    }
+  },
+  "links": [
+    {
+      "a": {
+        "node": "R1",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:3b:f2:10",
+        "peer": "z"
+      },
+      "z": {
+        "node": "R2",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:1b:63:38",
+        "peer": "a"
+      }
+    }
+  ]
+}
