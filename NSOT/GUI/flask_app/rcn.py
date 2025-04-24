@@ -308,151 +308,155 @@ def add_device():
 
 @app.route("/configure-device", methods=["GET", "POST"])
 def configure_device():
-    jenkins_result = None
-    device_id = None
+    try:
+        if request.method == "POST":
+            device_id = request.form["device_id"]
+            device_vendor = request.form["device_vendor"]
 
-    if request.method == "POST":
-        device_id = request.form["device_id"]
-        device_vendor = request.form["device_vendor"]
+            # Interfaces
+            interfaces = []
+            for i_type, i_num, ip, mask, sp in zip(
+                request.form.getlist("interface_type[]"),
+                request.form.getlist("interface_number[]"),
+                request.form.getlist("interface_ip[]"),
+                request.form.getlist("interface_mask[]"),
+                request.form.getlist("switchport[]"),
+            ):
+                interfaces.append({
+                    "type": i_type,
+                    "number": i_num,
+                    "ip": ip if sp != "yes" else None,
+                    "mask": mask if sp != "yes" else None,
+                    "switchport": sp == "yes"
+                })
 
-        # Interfaces
-        interfaces = []
-        for i_type, i_num, ip, mask, sp in zip(
-            request.form.getlist("interface_type[]"),
-            request.form.getlist("interface_number[]"),
-            request.form.getlist("interface_ip[]"),
-            request.form.getlist("interface_mask[]"),
-            request.form.getlist("switchport[]"),
-        ):
-            interfaces.append({
-                "type": i_type,
-                "number": i_num,
-                "ip": ip if sp != "yes" else None,
-                "mask": mask if sp != "yes" else None,
-                "switchport": sp == "yes"
-            })
+            # Subinterfaces
+            subinterfaces = []
+            for parent, sid, vlan, ip, mask in zip(
+                request.form.getlist("subinterface_parent[]"),
+                request.form.getlist("subinterface_id[]"),
+                request.form.getlist("subinterface_vlan[]"),
+                request.form.getlist("subinterface_ip[]"),
+                request.form.getlist("subinterface_mask[]"),
+            ):
+                subinterfaces.append({
+                    "parent": parent,
+                    "id": sid,
+                    "vlan": vlan,
+                    "ip": ip,
+                    "mask": mask
+                })
 
-        # Subinterfaces
-        subinterfaces = []
-        for parent, sid, vlan, ip, mask in zip(
-            request.form.getlist("subinterface_parent[]"),
-            request.form.getlist("subinterface_id[]"),
-            request.form.getlist("subinterface_vlan[]"),
-            request.form.getlist("subinterface_ip[]"),
-            request.form.getlist("subinterface_mask[]"),
-        ):
-            subinterfaces.append({
-                "parent": parent,
-                "id": sid,
-                "vlan": vlan,
-                "ip": ip,
-                "mask": mask
-            })
+            # VLANs
+            vlans = []
+            for vlan_id, vlan_name in zip(
+                request.form.getlist("vlan_id[]"),
+                request.form.getlist("vlan_name[]"),
+            ):
+                vlans.append({"id": vlan_id, "name": vlan_name})
 
-        # VLANs
-        vlans = []
-        for vlan_id, vlan_name in zip(
-            request.form.getlist("vlan_id[]"),
-            request.form.getlist("vlan_name[]"),
-        ):
-            vlans.append({"id": vlan_id, "name": vlan_name})
+            # RIP
+            rip = None
+            rip_versions = request.form.getlist("rip_version[]")
+            rip_networks = request.form.getlist("rip_network[]")
+            rip_redistribute_selected = request.form.get("rip_redistribute")
+            rip_bgp_as = request.form.getlist("rip_bgp_as[]")
+            rip_bgp_metric = request.form.getlist("rip_bgp_metric[]")
 
-        # RIP
-        rip = None
-        rip_versions = request.form.getlist("rip_version[]")
-        rip_networks = request.form.getlist("rip_network[]")
-        rip_redistribute_selected = request.form.get("rip_redistribute")
-        rip_bgp_as = request.form.getlist("rip_bgp_as[]")
-        rip_bgp_metric = request.form.getlist("rip_bgp_metric[]")
+            if rip_versions:
+                rip = {
+                    "version": rip_versions[0],
+                    "networks": [{"ip": net} for net in rip_networks if net]
+                }
 
-        if rip_versions:
-            rip = {
-                "version": rip_versions[0],
-                "networks": [{"ip": net} for net in rip_networks if net]
-            }
+                if rip_redistribute_selected:
+                    redistribute = {}
+                    if rip_bgp_as and rip_bgp_as[0]:
+                        redistribute["as_number"] = rip_bgp_as[0]
+                    if rip_bgp_metric and rip_bgp_metric[0]:
+                        redistribute["metric"] = int(rip_bgp_metric[0])
+                    if redistribute:
+                        rip["redistribute"] = redistribute
 
-            if rip_redistribute_selected:
-                redistribute = {}
-                if rip_bgp_as and rip_bgp_as[0]:
-                    redistribute["as_number"] = rip_bgp_as[0]
-                if rip_bgp_metric and rip_bgp_metric[0]:
-                    redistribute["metric"] = int(rip_bgp_metric[0])
-                if redistribute:
-                    rip["redistribute"] = redistribute
+            # OSPF
+            ospf = None
+            ospf_process_ids = request.form.getlist("ospf_process_id[]")
+            ospf_networks = request.form.getlist("ospf_network[]")
+            ospf_wildcards = request.form.getlist("ospf_wildcard[]")
+            ospf_areas = request.form.getlist("ospf_area[]")
+            ospf_redistribute_connected = request.form.getlist("ospf_redistribute_connected[]")
+            ospf_redistribute_bgp = request.form.getlist("ospf_redistribute_bgp[]")
 
-        # OSPF
-        ospf = None
-        ospf_process_ids = request.form.getlist("ospf_process_id[]")
-        ospf_networks = request.form.getlist("ospf_network[]")
-        ospf_wildcards = request.form.getlist("ospf_wildcard[]")
-        ospf_areas = request.form.getlist("ospf_area[]")
-        ospf_redistribute_connected = request.form.getlist("ospf_redistribute_connected[]")
-        ospf_redistribute_bgp = request.form.getlist("ospf_redistribute_bgp[]")
+            if ospf_process_ids:
+                ospf = {
+                    "process_id": ospf_process_ids[0],
+                    "networks": [
+                        {
+                            "ip": ospf_networks[i],
+                            "wildcard": ospf_wildcards[i],
+                            "area": ospf_areas[i],
+                        }
+                        for i in range(len(ospf_networks))
+                    ],
+                    "redistribute_connected": len(ospf_redistribute_connected) > 0,
+                    "redistribute_bgp": len(ospf_redistribute_bgp) > 0,
+                }
 
-        if ospf_process_ids:
-            ospf = {
-                "process_id": ospf_process_ids[0],
-                "networks": [
-                    {
-                        "ip": ospf_networks[i],
-                        "wildcard": ospf_wildcards[i],
-                        "area": ospf_areas[i],
-                    }
-                    for i in range(len(ospf_networks))
-                ],
-                "redistribute_connected": len(ospf_redistribute_connected) > 0,
-                "redistribute_bgp": len(ospf_redistribute_bgp) > 0,
-            }
+            # BGP
+            bgp = None
+            bgp_asns = request.form.getlist("bgp_asn[]")
+            bgp_networks = request.form.getlist("bgp_network[]")
+            bgp_masks = request.form.getlist("bgp_mask[]")
+            bgp_neighbors = request.form.getlist("bgp_neighbor[]")
+            bgp_remote_as = request.form.getlist("bgp_remote_as[]")
+            bgp_address_families = request.form.getlist("bgp_address_family[]")
 
-        # BGP
-        bgp = None
-        bgp_asns = request.form.getlist("bgp_asn[]")
-        bgp_networks = request.form.getlist("bgp_network[]")
-        bgp_masks = request.form.getlist("bgp_mask[]")
-        bgp_neighbors = request.form.getlist("bgp_neighbor[]")
-        bgp_remote_as = request.form.getlist("bgp_remote_as[]")
-        bgp_address_families = request.form.getlist("bgp_address_family[]")
+            if bgp_asns:
+                bgp = {
+                    "as_number": bgp_asns[0],
+                    "neighbors": [
+                        {"ip": ip, "remote_as": remote_as}
+                        for ip, remote_as in zip(bgp_neighbors, bgp_remote_as)
+                        if ip and remote_as
+                    ],
+                    "address_families": [
+                        {
+                            "type": af,
+                            "networks": [
+                                {"ip": net, "mask": mask}
+                                for net, mask in zip(bgp_networks, bgp_masks)
+                                if net and mask
+                            ]
+                        }
+                        for af in bgp_address_families if af
+                    ]
+                }
 
-        if bgp_asns:
-            bgp = {
-                "as_number": bgp_asns[0],
-                "neighbors": [
-                    {"ip": ip, "remote_as": remote_as}
-                    for ip, remote_as in zip(bgp_neighbors, bgp_remote_as)
-                    if ip and remote_as
-                ],
-                "address_families": [
-                    {
-                        "type": af,
-                        "networks": [
-                            {"ip": net, "mask": mask}
-                            for net, mask in zip(bgp_networks, bgp_masks)
-                            if net and mask
-                        ]
-                    }
-                    for af in bgp_address_families if af
-                ]
-            }
+            create_yaml_from_form_data(
+                device_id=device_id,
+                device_vendor=device_vendor,
+                interfaces=interfaces,
+                subinterfaces=subinterfaces,
+                vlans=vlans,
+                rip=rip,
+                ospf=ospf,
+                bgp=bgp,
+            )
 
-        # Final YAML generation and config push step
-        create_yaml_from_form_data(
-            device_id=device_id,
-            device_vendor=device_vendor,
-            interfaces=interfaces,
-            subinterfaces=subinterfaces,
-            vlans=vlans,
-            rip=rip,
-            ospf=ospf,
-            bgp=bgp,
-        )
+            conf_gen()
+            jenkins_result = push_and_monitor_jenkins()
 
-        conf_gen()
-        jenkins_result = push_and_monitor_jenkins()
+            if jenkins_result == "SUCCESS":
+                return render_template("configure_device.html", jenkins_result="jenkins_success", device_id=device_id)
+            else:
+                return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id=device_id)
 
-        if jenkins_result == "SUCCESS":
-            return render_template("configure_device.html", jenkins_result="jenkins_success", device_id=device_id)
-        else:
-            return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id=device_id)
+        # GET request fallback
+        return render_template("configure_device.html", jenkins_result=None)
+
+    except Exception as e:
+        print(f"Error in /configure-device: {e}")
+        return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id="unknown")
 
 
 
