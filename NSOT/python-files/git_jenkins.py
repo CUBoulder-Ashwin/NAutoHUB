@@ -19,7 +19,7 @@ def git_push():
         return False
 
     try:
-        subprocess.run(["git", "add", "-A"], check=True)
+        subprocess.run(["git", "add", f"configs/"], check=True)
         subprocess.run(["git", "commit", "-m", "Auto-config push"], check=True)
         subprocess.run(["git", "push"], check=True)
         print("Changes pushed to Git successfully.")

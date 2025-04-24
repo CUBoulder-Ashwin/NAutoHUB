@@ -376,6 +376,14 @@ body.dark-mode select.form-input option {
     background-color: #0f0f0f;
     color: #f0e6d2;
 }
+
+body.dark-mode .form-input:focus,
+body.dark-mode select.form-input:focus {
+    outline: none;
+    border-color: var(--dark-accent); /* bronze/golden glow */
+    box-shadow: 0 0 8px var(--dark-accent);
+}
+
 </style>
 
 {% endblock %}
