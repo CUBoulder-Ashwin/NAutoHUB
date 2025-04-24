@@ -449,7 +449,11 @@ def configure_device():
         conf_gen()
         jenkins_result = push_and_monitor_jenkins()
 
-    return render_template("configure_device.html", jenkins_result="jenkins_success", device_id=device_id)
+        if jenkins_result == "SUCCESS":
+            return render_template("configure_device.html", jenkins_result="jenkins_success", device_id=device_id)
+        else:
+            return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id=device_id)
+
 
 
 

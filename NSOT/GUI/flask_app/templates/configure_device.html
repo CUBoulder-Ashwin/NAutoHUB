@@ -41,33 +41,70 @@
 </div>
 
 <script>
-const phrases = [
+    const terms = [
     "Routing BGP packets to Valhalla...",
     "Spinning up Layer 3 magic...",
-    "Summoning OSPF daemons...",
+    "Injecting routes into the Matrix...",
+    "Summoning OSPF daemons... ",
     "Crafting VLAN potions...",
+    "Talking to network oracles...",
+    "Negotiating with DHCP spirits...",
+    "Sniffing packets from the astral plane...",
     "Tunneling through hyperspace...",
+    "Enabling port-channel wizardry...",
+    "Building bridges with STP spells...",
+    "Balancing traffic on the tightrope of ECMP...",
+    "Fragmenting datagrams with care...",
+    "Conjuring MAC addresses...",
+    "Programming the P4 gods...",
+    "Pinging the void... ",
+    "Announcing routes like a prophet...",
+    "Weaving MPLS labels into destiny...",
     "Encoding bits of truth...",
-    "Blessing interfaces with zero drops...",
-    "Pinging the void...",
-    "Rebooting layer zero...",
+    "Assembling TCP handshakes...",
+    "Peering with interdimensional routers...",
+    "Binding interfaces with eldritch configs...",
+    "Casting 'show run' scrolls... ",
     "Parsing YANGs of destiny...",
-];
-phrases.sort(() => Math.random() - 0.5);
-let phraseIndex = 0;
-
-function rotateLoadingText() {
-    const el = document.getElementById("loading-text");
-    el.style.opacity = 0;
-    setTimeout(() => {
-        el.innerText = phrases[phraseIndex];
-        el.style.opacity = 1;
-        phraseIndex = (phraseIndex + 1) % phrases.length;
-    }, 500);
-}
-setInterval(rotateLoadingText, 5000);
-
-document.getElementById("config-form").addEventListener("submit", async function (e) {
+    "Bridging subnets across galaxies...",
+    "Extracting SNMP secrets from the vault...",
+    "Interfacing with quantum NICs...",
+    "Configuring routers with dark magic...",
+    "Recabling cables with thoughts alone...",
+    "Blessing interfaces with zero drops...",
+    "Summoning Ceos spirits from the cloud... ",
+    "Resurrecting containers from the abyss...",
+    "Defragmenting reality into packets...",
+    "Rebooting layer zero... ",
+    "Beaming bits through wormholes...",
+    "Unrolling IPv6 prophecies...",
+    "Hacking the mainframe of the underlay...",
+    "Teleporting configs into flash...",
+    ];
+    phrases.sort(() => Math.random() - 0.5);
+    let phraseIndex = 0;
+    let phraseInterval = null;
+    
+    function startPhraseRotation() {
+        rotateLoadingText(); // First message instantly
+        phraseInterval = setInterval(rotateLoadingText, 5000); // Cycle every 5s
+    }
+    
+    function stopPhraseRotation() {
+        clearInterval(phraseInterval);
+    }
+    
+    function rotateLoadingText() {
+        const el = document.getElementById("loading-text");
+        el.style.opacity = 0;
+        setTimeout(() => {
+            el.innerText = phrases[phraseIndex];
+            el.style.opacity = 1;
+            phraseIndex = (phraseIndex + 1) % phrases.length;
+        }, 300);
+    }
+    
+    document.getElementById("config-form").addEventListener("submit", async function (e) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
@@ -77,22 +114,25 @@ document.getElementById("config-form").addEventListener("submit", async function
 
     overlay.style.display = "flex";
     message.textContent = "Generating YAML...";
+    startPhraseRotation();
 
     const response = await fetch("/configure-device", {
         method: "POST",
         body: formData
     });
 
-    const result = await response.text();
+    const result = await response.text().then(t => t.trim());
 
-    if (result.includes("jenkins_success")) {
+    if (result === "jenkins_success") {
         message.textContent = "Running Jenkins Pipeline...";
         setTimeout(() => {
+            stopPhraseRotation();
             overlay.style.display = "none";
             pushWrapper.style.display = "flex";
         }, 3000);
     } else {
         message.textContent = "An error occurred. Please check logs.";
+        stopPhraseRotation();
         setTimeout(() => {
             overlay.style.display = "none";
             pushWrapper.style.display = "none";
@@ -100,23 +140,23 @@ document.getElementById("config-form").addEventListener("submit", async function
     }
 });
 
-async function pushConfig() {
-    const deviceId = document.querySelector("input[name='device_id']").value;
-    const response = await fetch("/push-config", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ device_id: deviceId })
-    });
-
-    const result = await response.json();
-    if (result.status === "success") {
-        alert("Configuration pushed successfully!");
-    } else {
-        alert("Push failed: " + result.message);
+    
+    async function pushConfig() {
+        const deviceId = document.querySelector("input[name='device_id']").value;
+        const response = await fetch("/push-config", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ device_id: deviceId })
+        });
+    
+        const result = await response.json();
+        if (result.status === "success") {
+            alert("Configuration pushed successfully!");
+        } else {
+            alert("Push failed: " + result.message);
+        }
     }
-}
-</script>
-
+    </script>
 <style>
 .page-title {
     color: #734c24;
