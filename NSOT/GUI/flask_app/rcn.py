@@ -155,7 +155,7 @@ def deploy_topology_route():
     try:
         deploy_output = subprocess.check_output(f"containerlab deploy -t {yaml_path}", shell=True, stderr=subprocess.STDOUT, text=True)
         time.sleep(2)
-        subprocess.run(["sudo", "systemctl", "restart", "ipam.service"], shell=True, check=True)
+        subprocess.run(["sudo", "systemctl", "restart", "ipam.service"], check=True)
         print("[✔] Deploy output:")
         print(deploy_output)
         message = "✅ Containerlab topology deployed successfully."
@@ -286,7 +286,7 @@ def add_device():
 
             deploy_output = subprocess.check_output(f"containerlab deploy -t {topo_path}", shell=True, stderr=subprocess.STDOUT, text=True)
             time.sleep(2)
-            subprocess.run(["sudo", "systemctl", "restart", "ipam.service"], shell=True, check=True)
+            subprocess.run(["sudo", "systemctl", "restart", "ipam.service"], check=True)
             print("[✔] Deploy output:")
             print(deploy_output)
 

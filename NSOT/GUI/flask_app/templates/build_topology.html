@@ -26,9 +26,10 @@
       </div>
     </div>
 
+    <!-- LOADING OVERLAY -->
     <div id="loading-overlay" style="display:none;">
       <div class="loading-spinner"></div>
-      <p class="loading-text">Processing... Please wait</p>
+      <p class="loading-text" id="loading-text">Initializing...</p>
     </div>
 
     {% if message %}
@@ -44,11 +45,11 @@
   <div class="form-group text-center button-group" style="margin-top: 30px;">
     <button type="submit" form="topology-form" class="form-button csv-button" name="generate">Generate YAML</button>
 
-    <form method="POST" action="{{ url_for('deploy_topology_route') }}" style="display: inline;">
+    <form method="POST" action="{{ url_for('deploy_topology_route') }}" style="display: inline;" onsubmit="showLoading()">
       <button type="submit" class="form-button csv-button" formnovalidate>Build Topology</button>
     </form>
 
-    <form method="POST" action="{{ url_for('delete_topology_route') }}" style="display: inline;">
+    <form method="POST" action="{{ url_for('delete_topology_route') }}" style="display: inline;" onsubmit="showLoading()">
       <button type="submit" class="form-button csv-button" formnovalidate>Delete Topology</button>
     </form>
   </div>
@@ -169,11 +170,70 @@ function syncLinkJSON() {
   document.getElementById("link-dev2-json").value = JSON.stringify(dev2List);
 }
 
-document.querySelectorAll('form[action="{{ url_for("deploy_topology_route") }}"], form[action="{{ url_for("delete_topology_route") }}"]').forEach(form => {
-  form.addEventListener("submit", () => {
-    document.getElementById("loading-overlay").style.display = "flex";
-  });
-});
+let rotateInterval;
+let index = 0;
+
+const terms = [
+  "Routing BGP packets to Valhalla...",
+  "Spinning up Layer 3 magic...",
+  "Injecting routes into the Matrix...",
+  "Summoning OSPF daemons... ",
+  "Crafting VLAN potions...",
+  "Talking to network oracles...",
+  "Negotiating with DHCP spirits...",
+  "Sniffing packets from the astral plane...",
+  "Tunneling through hyperspace...",
+  "Enabling port-channel wizardry...",
+  "Building bridges with STP spells...",
+  "Balancing traffic on the tightrope of ECMP...",
+  "Fragmenting datagrams with care...",
+  "Conjuring MAC addresses...",
+  "Programming the P4 gods...",
+  "Pinging the void...",
+  "Announcing routes like a prophet...",
+  "Weaving MPLS labels into destiny...",
+  "Encoding bits of truth...",
+  "Assembling TCP handshakes...",
+  "Peering with interdimensional routers...",
+  "Binding interfaces with eldritch configs...",
+  "Casting 'show run' scrolls...",
+  "Parsing YANGs of destiny...",
+  "Bridging subnets across galaxies...",
+  "Extracting SNMP secrets from the vault...",
+  "Interfacing with quantum NICs...",
+  "Configuring routers with dark magic...",
+  "Recabling cables with thoughts alone...",
+  "Blessing interfaces with zero drops...",
+  "Summoning Ceos spirits from the cloud...",
+  "Resurrecting containers from the abyss...",
+  "Defragmenting reality into packets...",
+  "Rebooting layer zero...",
+  "Beaming bits through wormholes...",
+  "Unrolling IPv6 prophecies...",
+  "Hacking the mainframe of the underlay...",
+  "Teleporting configs into flash..."
+];
+
+
+// Shuffle once
+terms.sort(() => Math.random() - 0.5);
+
+function rotateTerms() {
+  const el = document.getElementById("loading-text");
+  el.style.opacity = 0;
+  setTimeout(() => {
+    el.innerText = terms[index];
+    el.style.opacity = 1;
+    index = (index + 1) % terms.length;
+  }, 500);
+}
+
+function showLoading() {
+  const overlay = document.getElementById("loading-overlay");
+  overlay.style.display = "flex";
+  rotateTerms(); // show first term instantly
+  rotateInterval = setInterval(rotateTerms, 7000);
+}
 </script>
 
 <style>
@@ -387,34 +447,33 @@ body.light-mode .device-title {
 }
 
 #loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-  font-size: 20px;
-  font-weight: bold;
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    width: 100vw;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
 }
-
 .loading-spinner {
-  width: 60px;
-  height: 60px;
-  border: 6px solid #ccc;
-  border-top-color: #d4a373;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
+    width: 60px;
+    height: 60px;
+    border: 6px solid #ccc;
+    border-top-color: #d4a373;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
 }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+#loading-text {
+  transition: opacity 0.5s ease-in-out;
 }
   </style>
   
