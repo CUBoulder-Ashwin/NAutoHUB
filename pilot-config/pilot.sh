@@ -25,7 +25,7 @@ python3 pilot.py
 #Running NAutoHUB
 echo "Running NAutoHUB"
 source venv/bin/activate
-python3 ~/projects/NAutoHUB/NSOT/GUI/flask_app/rcn.py
+sudo python3 ~/projects/NAutoHUB/NSOT/GUI/flask_app/rcn.py
 
 
 echo "Setup complete!"
