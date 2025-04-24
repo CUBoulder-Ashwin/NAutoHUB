@@ -26,7 +26,7 @@ from goldenConfig import generate_configs
 from show_commands import execute_show_command
 from generate_yaml import create_yaml_from_form_data
 from config_Gen import conf_gen  # Updated import for config generation
-from update_topo import update_topology
+from update_topo import update_topology, get_hosts_from_csv
 from dhcp_updates import configure_dhcp_relay, configure_dhcp_server
 from update_hosts import update_hosts_csv
 from git_jenkins import push_and_monitor_jenkins
@@ -34,7 +34,7 @@ from push_config import push_configuration
 from read_IPAM import IPAMReader 
 from read_hosts import HostsReader
 from clab_builder import build_clab_topology
-from clab_push import deploy_topology, get_docker_images
+from clab_push import get_docker_images
 
 
 # File path for IPAM CSV file
@@ -219,76 +219,75 @@ def run_deployment_and_relay_config(
             ip_address,
         )
 
-
 @app.route("/add-device", methods=["GET", "POST"])
 def add_device():
+    message = None
+
     if request.method == "POST":
         device_name = request.form["device_name"]
-        device_type = request.form["device_type"]
-        device_interface = request.form["device_interface"]
-        connected_device = request.form["connected_device"]
-        connected_interface = request.form["connected_interface"]
-        mac_address = request.form["mac_address"]
-        sudo_password = request.form["sudo_password"]
+        kind = request.form["kind"]
+        image = request.form["image"]
+        config = request.form.get("config", "")
+        exec_lines = request.form.getlist("exec[]")
+        mac_address = request.form.get("mac_address", "")
+        ip_with_subnet = request.form.get("ip_address", "")
+        ip_address = ip_with_subnet.split("/")[0]
+        connection_count = int(request.form.get("connection_count", "0"))
 
-        # DHCP Relay related information
+        # Optional DHCP relay values
         relay_toggle = request.form.get("relay_toggle")
         connected_ip = request.form.get("connected_ip")
         helper_ip = request.form.get("helper_ip")
         dhcp_server = request.form.get("dhcp_server")
         new_subnet = request.form.get("new_subnet")
-        ip_address = request.form.get("ip_address")
         range_lower = request.form.get("range_lower")
         range_upper = request.form.get("range_upper")
         default_gateway = request.form.get("default_gateway")
 
-        # Define the path to topo.yml dynamically
-        topo_path = os.path.join(
-            os.path.dirname(__file__), "../../../pilot-config/topo.yml"
-        )
+        connect_to = [
+            request.form.get(f"connect_to_{i}") for i in range(connection_count)
+            if request.form.get(f"connect_to_{i}")
+        ]
 
-        if device_type == "router" or device_type == "switch":
-            update_hosts_csv(device_name, ip_address)
+        topo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../pilot-config/topo.yml"))
+        print("[INFO] Destroying old topology before update...")
+        os.system(f"containerlab destroy -t {topo_path} || true")
 
-        # Update topology
-        update_topology(
-            topo_path,
-            device_name,
-            device_type,
-            device_interface,
-            connected_device,
-            connected_interface,
-            mac_address,
-        )
+        try:
+            update_topology(
+                topo_path=topo_path,
+                device_name=device_name,
+                kind=kind,
+                image=image,
+                config=config,
+                exec_lines=exec_lines,
+                mac=mac_address,
+                connect_to_list=connect_to,
+                mgmt_ip=ip_with_subnet
+            )
 
-        # Prepare the deploy command
-        deploy_command = (
-            f"echo {sudo_password} | sudo -S containerlab destroy --all || true && "
-            f"echo {sudo_password} | sudo -S containerlab deploy -t {topo_path}"
-        )
+            if kind == "ceos":
+                update_hosts_csv(device_name, ip_address)
 
-        # Start the deployment and relay config in a new thread
-        thread = threading.Thread(
-            target=run_deployment_and_relay_config,
-            args=(
-                deploy_command,
-                relay_toggle,
-                connected_device,
-                connected_interface,
-                connected_ip,
-                helper_ip,
-                mac_address,
-                dhcp_server,
-                new_subnet,
-                range_lower,
-                range_upper,
-                default_gateway,
-                ip_address,
-            ),
-        )
-        thread.start()
+            print("[INFO] Deploying new topology...")
+            deploy_output = subprocess.check_output(f"containerlab deploy -t {topo_path}", shell=True, stderr=subprocess.STDOUT, text=True)
+            print("[✔] Deploy output:")
+            print(deploy_output)
 
-    return render_template("add_device.html")
+            # Optionally run DHCP relay config if enabled
+            if relay_toggle:
+                configure_dhcp_relay(connected_device=connect_to[0] if connect_to else "", connected_interface="eth1", connected_ip=connected_ip, helper_ip=helper_ip)
+                configure_dhcp_server(mac_address, dhcp_server, new_subnet, range_lower, range_upper, default_gateway, ip_address)
+
+            message = "✅ Topology deployed successfully."
+
+        except subprocess.CalledProcessError as e:
+            print("[ERROR] Deployment failed:")
+            print(e.output)
+            message = f"❌ Deployment failed:<br><pre>{e.output}</pre>"
+
+    docker_images = [tag for img in docker.from_env().images.list() for tag in img.tags if ":" in tag]
+    return render_template("add_device.html", docker_images=docker_images, available_hosts=get_hosts_from_csv(), message=message)
 
 
 @app.route("/configure-device", methods=["GET", "POST"])
@@ -555,4 +554,4 @@ def contact():
 if __name__ == "__main__":
     thread = Thread(target=ipam_reader.read_ipam_file, daemon=True)
     thread.start()
-    app.run(host="0.0.0.0", port=5050, debug=True)
+    app.run(host="0.0.0.0", port=5555, debug=True)

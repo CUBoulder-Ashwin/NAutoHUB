@@ -1,6 +1,4 @@
----
-name: Arista_example
-
+name: example
 topology:
   nodes:
     mgmt:
@@ -15,23 +13,14 @@ topology:
       kind: ceos
       image: ceos:4.33.2F
       startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R2.cfg
-    H1:
-      kind: linux
-      image: hosts:latest
-      exec:
-        - ip route del default via 172.20.20.1 dev eth0
-        - dhclient eth1
-    H2:
-      kind: linux
-      image: hosts:latest
-      exec:
-        - ip route del default via 172.20.20.1 dev eth0
-        - dhclient eth1
-
+    R3:
+      kind: ceos
+      image: ceos:4.33.2F
+      startup-config: /home/ashwin/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R3.cfg
   links:
-    - endpoints: [mgmt:eth1, R1:eth1]
-    - endpoints: [mgmt:eth2, R2:eth1]
-    - endpoints: [mgmt:eth8, host:eth0]
-    - endpoints: [R1:eth2, R2:eth2]
-    - endpoints: [R1:eth3, H1:eth1]
-    - endpoints: [R2:eth3, H2:eth1]
+  - endpoints: ['mgmt:eth1', 'R1:eth1']
+  - endpoints: ['mgmt:eth2', 'R2:eth1']
+  - endpoints: ['mgmt:eth8', 'host:eth0']
+  - endpoints: ['R1:eth2', 'R2:eth2']
+  - endpoints: ['mgmt:eth3', 'R3:eth1']
+  - endpoints: ['R3:eth2', 'R1:eth3']

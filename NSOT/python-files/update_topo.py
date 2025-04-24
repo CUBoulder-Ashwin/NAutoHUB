@@ -1,92 +1,99 @@
+import yaml
 import os
+import csv
+from collections import defaultdict
+from jinja2 import Environment, FileSystemLoader
+
+# Paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CSV_PATH = os.path.abspath(os.path.join(BASE_DIR, "..", "IPAM", "hosts.csv"))
+TEMPLATE_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "templates"))
+CONFIG_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "golden_configs"))
+
+def get_hosts_from_csv():
+    hosts = []
+    if os.path.exists(CSV_PATH):
+        with open(CSV_PATH, "r") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                hosts.append(row["hostname"])
+    return hosts
+
+def get_next_eth(used):
+    i = 1
+    while f"eth{i}" in used:
+        i += 1
+    return f"eth{i}"
+
+class CompactListDumper(yaml.SafeDumper):
+    def represent_sequence(self, tag, sequence, flow_style=None):
+        if tag == 'tag:yaml.org,2002:seq' and all(isinstance(i, str) for i in sequence):
+            return super().represent_sequence(tag, sequence, flow_style=True)
+        return super().represent_sequence(tag, sequence, flow_style)
+
+CompactListDumper.add_representer(
+    list,
+    lambda self, data: CompactListDumper.represent_sequence(self, 'tag:yaml.org,2002:seq', data)
+)
 
 
-def update_topology(
-    topo_path,
-    device_name,
-    device_type,
-    device_interface,
-    connected_device,
-    connected_interface,
-    mac_address,
-):
-    try:
-        # Read the existing file content
-        with open(topo_path, "r") as file:
-            lines = file.readlines()
+def generate_day0_config(device_name, mgmt_ip):
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+    template = env.get_template("day0_config.j2")
+    rendered = template.render(device_name=device_name, mgmt_ip=mgmt_ip)
 
-        # Prepare the new node entry
-        if device_type == "router" or device_type == "switch":
-            new_node_entry = (
-                f"    {device_name}:\n"
-                f"      kind: ceos\n"
-                f"      image: ceos:4.32.2F\n"
-                f"      startup-config: /home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs/{device_name}.cfg\n"
-                f"      exec:\n"
-                f"        - sudo dhclient {device_interface}\n"
-            )
-        else:
-            new_node_entry = (
-                f"    {device_name}:\n"
-                f"      kind: linux\n"
-                f"      image: ubu_hosts:latest\n"
-                f"      exec:\n"
-                f"        - ip route del default via 172.20.20.1 dev eth0\n"
-                f"        - sudo dhclient {device_interface}\n"
-            )
+    os.makedirs(CONFIG_DIR, exist_ok=True)
+    config_path = os.path.join(CONFIG_DIR, f"goldenconfigs_{device_name}.cfg")
+    with open(config_path, "w") as f:
+        f.write(rendered)
+    return config_path
 
-        # Prepare the new link entry
-        new_link_entry = f'    - endpoints: ["{device_name}:{device_interface}", "{connected_device}:{connected_interface}"]\n'
+def update_topology(topo_path, device_name, kind, image, config, exec_lines, mac, connect_to_list, mgmt_ip=None):
+    with open(topo_path, "r") as f:
+        data = yaml.safe_load(f)
 
-        # Insert the new node if not present
-        if f"    {device_name}:\n" not in lines:
-            nodes_index = lines.index("  nodes:\n") + 1
-            while lines[nodes_index].startswith("    "):
-                nodes_index += 1
-            lines.insert(nodes_index, new_node_entry)
+    nodes = data["topology"]["nodes"]
+    links = data["topology"]["links"]
 
-        # Insert the new link at the end of the links section
-        if new_link_entry not in lines:
-            links_index = lines.index("  links:\n") + 1
-            while lines[links_index].startswith("  -"):
-                links_index += 1
-            lines.insert(links_index, new_link_entry)
+    if device_name in nodes:
+        print(f"[!] Device {device_name} already exists in topology.")
+        return
 
-        # Write back the updated content
-        with open(topo_path, "w") as file:
-            file.writelines(lines)
+    dev_if = defaultdict(int)
 
-        print(f"Updated topology with {device_name}, link added.")
+    # mgmt interface
+    used_eths = {link["endpoints"][0].split(":")[1] for link in links if link["endpoints"][0].startswith("mgmt")}
+    mgmt_eth = get_next_eth(used_eths)
 
-        # Create the base config file
-        create_base_config(device_name, device_interface, mac_address, device_type)
+    # auto generate config if CEOS
+    if kind == "ceos" and not config and mgmt_ip:
+        config = generate_day0_config(device_name, mgmt_ip)
 
-    except Exception as e:
-        print(f"Error updating topology: {e}")
+    node_entry = {"kind": kind, "image": image}
+    if kind == "ceos" and config:
+        node_entry["startup-config"] = config
+    elif kind == "linux" and exec_lines:
+        node_entry["exec"] = [cmd.strip() for cmd in exec_lines if cmd.strip()]
 
+    nodes[device_name] = node_entry
 
-def create_base_config(device_name, device_interface, mac_address, device_type):
-    try:
-        if device_type == "router" or device_type == "switch":
-            config_dir = (
-                "/home/student/Downloads/Advanced_Netman/CUBoulder-Ashwin/NSOT/configs"
-            )
-            os.makedirs(config_dir, exist_ok=True)
-            config_path = os.path.join(config_dir, f"{device_name}.cfg")
+    # mgmt link
+    dev_if[device_name] = 1
+    links.append({"endpoints": [f"mgmt:{mgmt_eth}", f"{device_name}:eth1"]})
 
-            config_content = (
-                f"hostname {device_name}\n"
-                "!\n"
-                "username admin privilege 15 role network-admin secret 0 admin\n"
-                "!\n"
-                f"interface {device_interface}\n"
-                f"   mac-address {mac_address}\n"
-                "    ip address dhcp"
-            )
+    # user links
+    for target in connect_to_list:
+        target_used = {
+            ep.split(":")[1]
+            for link in links for ep in link["endpoints"]
+            if ep.startswith(f"{target}:")
+        }
+        target_eth = get_next_eth(target_used)
+        dev_if[device_name] += 1
+        this_eth = f"eth{dev_if[device_name]}"
+        links.append({"endpoints": [f"{device_name}:{this_eth}", f"{target}:{target_eth}"]})
 
-            with open(config_path, "w") as config_file:
-                config_file.write(config_content)
+    with open(topo_path, "w") as f:
+        yaml.dump(data, f, sort_keys=False, Dumper=CompactListDumper)
 
-            print(f"Base config for {device_name} created at {config_path}.")
-    except Exception as e:
-        print(f"Error creating base config for {device_name}: {e}")
+    print(f"[+] Added {device_name} with mgmt:{mgmt_eth} and {len(connect_to_list)} links.")
