@@ -5,7 +5,7 @@ set -e  # Exit immediately if a command exits with a non-zero status
 # Import the hosts and webserver dockers
 echo "Building Docker images for hosts and webserver..."
 sudo docker build -f Dockerfile_Hosts -t hosts:latest .
-sudo docker build -f Dockerfile_WebServer -t server:latest .
+#sudo docker build -f Dockerfile_WebServer -t server:latest .
 
 # # Add the netcfg file to /etc/netplan and apply
 echo "Creating netplan configs..."
@@ -15,8 +15,8 @@ echo "Applying netplan..."
 sudo netplan apply
 
 # Deploy the clab topo.yml file
-echo "Deploying container lab topology..."
-sudo clab deploy -t ceos-example.yaml
+# echo "Deploying container lab topology..."
+# sudo clab deploy -t ceos-example.yaml
 
 # Run pilot.py
 echo "Running pilot.py..."

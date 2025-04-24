@@ -65,7 +65,7 @@ sudo add-apt-repository universe -y
 sudo download-mibs
 sudo apt install telegraf
 sudo apt install gnmic
-sudo apt install -y python3-pip
-pip install easysnmp netmiko flask requests
+sudo apt install -y python3-pip netplan.io
+pip install easysnmp netmiko flask requests docker
 
 echo "✅ All tools and packages have been successfully installed."
