@@ -5,8 +5,8 @@ import requests
 import os
 
 JENKINS_JOB_NAME = "NAutoHUB"
-JENKINS_USER = "admin"
-JENKINS_TOKEN = "admin"
+JENKINS_USER = "ashwin"
+JENKINS_TOKEN = "ashwin"
 
 # --- Git Push Functions ---
 
