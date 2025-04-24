@@ -84,65 +84,7 @@
 </div>
 
 <script>
-    const phrases = [
-    "Routing BGP packets to Valhalla...",
-    "Spinning up Layer 3 magic...",
-    "Summoning OSPF daemons...",
-    "Crafting VLAN potions...",
-    "Tunneling through hyperspace...",
-    "Encoding bits of truth...",
-    "Blessing interfaces with zero drops...",
-    "Pinging the void...",
-    "Rebooting layer zero...",
-    "Parsing YANGs of destiny...",
-];
-phrases.sort(() => Math.random() - 0.5);
-let phraseIndex = 0;
-
-function rotateLoadingText() {
-    const el = document.getElementById("loading-message");
-    el.style.opacity = 0;
-    setTimeout(() => {
-        el.innerText = phrases[phraseIndex];
-        el.style.opacity = 1;
-        phraseIndex = (phraseIndex + 1) % phrases.length;
-    }, 500);
-}
-setInterval(rotateLoadingText, 5000);
-
-document.getElementById("config-form").addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const form = e.target;
-    const formData = new FormData(form);
-    const loadingOverlay = document.getElementById("loading-overlay");
-    const loadingMessage = document.getElementById("loading-message");
-    const pushWrapper = document.getElementById("push-button-wrapper");
-
-    loadingMessage.textContent = "Generating YAML...";
-    loadingOverlay.style.display = "flex";
-
-    const response = await fetch("/configure-device", {
-        method: "POST",
-        body: formData
-    });
-
-    const result = await response.text();
-
-    if (result.includes("jenkins_success")) {
-        loadingMessage.textContent = "Running Jenkins Pipeline...";
-        setTimeout(() => {
-            loadingOverlay.style.display = "none";
-            pushWrapper.style.display = "flex";
-        }, 3000);
-    } else {
-        loadingMessage.textContent = "An error occurred.";
-        setTimeout(() => {
-            loadingOverlay.style.display = "none";
-            pushWrapper.style.display = "none";
-        }, 3000);
-    }
-});
+    
 function getInterfaceBlock() {
     return `
         <div class="device-fields">
