@@ -2,6 +2,7 @@ import re
 import subprocess
 import time
 import requests
+import os
 
 
 # Function to check if there are any changes to commit
@@ -85,9 +86,19 @@ def check_build_result(jenkins_base_url, latest_build_number, user, token):
         return None
 
 
-# Function to monitor the build status until completion
+def find_ngrok_log_file(search_root=os.path.expanduser("~/projects/NAutoHUB/NSOT/logs")):
+    for root, dirs, files in os.walk(search_root):
+        for file in files:
+            if file == "ngrok.log":
+                return os.path.join(root, file)
+    return None
+
 def monitor_jenkins_job():
-    log_file_path = "/home/student/Desktop/Advanced-Netman/ngrok.log"
+    log_file_path = find_ngrok_log_file()
+    if not log_file_path:
+        print("Unable to find ngrok.log file.")
+        return "Failed"
+
     jenkins_base_url = get_latest_ngrok_url(log_file_path)
     if not jenkins_base_url:
         print("Unable to retrieve ngrok URL for Jenkins.")
@@ -96,14 +107,12 @@ def monitor_jenkins_job():
     jenkins_user = "admin"
     jenkins_token = "admin"
 
-    # Fetch the latest build number
     latest_build_number = get_latest_build_number(
         jenkins_base_url, jenkins_user, jenkins_token
     )
     if not latest_build_number:
         return "Failed to retrieve the latest build number"
 
-    # Monitor build status until it completes
     while True:
         build_result = check_build_result(
             jenkins_base_url, latest_build_number, jenkins_user, jenkins_token

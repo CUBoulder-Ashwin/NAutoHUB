@@ -449,8 +449,7 @@ def configure_device():
         conf_gen()
         jenkins_result = push_and_monitor_jenkins()
 
-    return render_template("configure_device.html", jenkins_result=jenkins_result, device_id=device_id)
-
+    return render_template("configure_device.html", jenkins_result="jenkins_success", device_id=device_id)
 
 
 
@@ -546,8 +545,6 @@ def tools():
         devices=devices,
         show_result=show_result
     )
-
-   
 
 
 @app.route("/ipam")

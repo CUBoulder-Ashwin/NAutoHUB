@@ -126,7 +126,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/ngrok start --all --config={base_path}/ngrok_config.yml --log={base_path}/ngrok.log
+ExecStart=/usr/local/bin/ngrok start --all --config={base_path}/NSOT/misc/ngrok_config.yml --log={base_path}/NSOT/logs/ngrok.log
 WorkingDirectory={base_path}
 Restart=on-failure
 User={service_user}

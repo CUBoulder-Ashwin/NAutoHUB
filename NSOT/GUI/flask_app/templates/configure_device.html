@@ -74,6 +74,13 @@
             <button type="submit" class="form-button csv-button">Generate Configuration</button>
         </div>
     </form>
+    <div id="loading-overlay" style="display:none;">
+        <div class="loading-text" id="loading-message">Generating YAML...</div>
+    </div>
+    
+    <div class="form-group text-center button-group" id="push-button-wrapper" style="display: none;">
+        <button type="button" class="form-button csv-button" onclick="pushConfig()">Push Configuration</button>
+    </div>
 </div>
 
 <script>
@@ -212,6 +219,53 @@ function addOspf(sectionId) {
 }
 function addBgp(sectionId) {
     document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getBgpBlock());
+}
+document.getElementById("config-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const loadingOverlay = document.getElementById("loading-overlay");
+    const loadingMessage = document.getElementById("loading-message");
+    const pushWrapper = document.getElementById("push-button-wrapper");
+
+    loadingMessage.textContent = "Generating YAML...";
+    loadingOverlay.style.display = "flex";
+
+    const response = await fetch("/configure-device", {
+        method: "POST",
+        body: formData
+    });
+
+    const result = await response.text();
+    if (result.includes("jenkins_success")) {
+        loadingMessage.textContent = "Running Jenkins Pipeline...";
+
+        // Delay to simulate progress (optional)
+        setTimeout(() => {
+            loadingOverlay.style.display = "none";
+            pushWrapper.style.display = "flex";
+        }, 3000);
+    } else {
+        loadingMessage.textContent = "An error occurred.";
+        setTimeout(() => loadingOverlay.style.display = "none", 3000);
+    }
+});
+
+async function pushConfig() {
+    const deviceId = document.querySelector("input[name='device_id']").value;
+    const response = await fetch("/push-config", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ device_id: deviceId }),
+    });
+
+    const result = await response.json();
+    if (result.status === "success") {
+        alert("Configuration pushed successfully!");
+    } else {
+        alert("Push failed: " + result.message);
+    }
 }
 </script>
 
@@ -382,6 +436,24 @@ body.dark-mode select.form-input:focus {
     outline: none;
     border-color: var(--dark-accent); /* bronze/golden glow */
     box-shadow: 0 0 8px var(--dark-accent);
+}
+#loading-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.8);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-text {
+    color: #d4a373;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'Arial Black', sans-serif;
 }
 
 </style>
