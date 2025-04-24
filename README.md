@@ -8,7 +8,7 @@ This guide walks you through setting up the NAutoHUB
 
 - Ubuntu 20.04+
 - Git installed
-- Internet connection
+- Internet connection (LOL)
 
 ---
 
@@ -89,6 +89,13 @@ https://<your-ngrok>.ngrok-free.app/github-webhook/
 
 ---
 
-## ✅ Notes
+## ✅ Troubleshooting
 
-- If you hit permission issues, use `sudo`.
+- If you're running into permission errors or your WSL Ubuntu user can't run sudo, it likely means your user isn't in the sudoers group. 
+
+Run the following in Command Prompt or PowerShell as Administrator:
+
+```bash
+  wsl -u root
+  usermod -aG sudo <your_wsl_username>
+```
