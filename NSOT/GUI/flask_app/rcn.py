@@ -1,5 +1,7 @@
 import os
+import shutil
 import sys
+import time
 import docker
 import json
 from flask import Flask, render_template, request, redirect, url_for, jsonify
@@ -40,6 +42,7 @@ from clab_push import get_docker_images
 # File path for IPAM CSV file
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 IPAM_DIR = os.path.join(BASE_DIR, "..", "..", "IPAM")
+PILOT_DIR = os.path.join(BASE_DIR, "..", "..", "..", "pilot-config")
 ipam_file_path = os.path.join(IPAM_DIR, "ipam_output.csv")
 
 # Initialize
@@ -151,7 +154,8 @@ def deploy_topology_route():
     print("[INFO] Deploying new topology...")
     try:
         deploy_output = subprocess.check_output(f"containerlab deploy -t {yaml_path}", shell=True, stderr=subprocess.STDOUT, text=True)
-        subprocess.run("sudo systemctl restart ipam.service")
+        time.sleep(2)
+        subprocess.run(["sudo", "systemctl", "restart", "ipam.service"], shell=True, check=True)
         print("[✔] Deploy output:")
         print(deploy_output)
         message = "✅ Containerlab topology deployed successfully."
@@ -271,8 +275,18 @@ def add_device():
                 update_hosts_csv(device_name, ip_address)
 
             print("[INFO] Deploying new topology...")
+
+            clab_path = os.path.join(PILOT_DIR, "clab-example")
+
+            if os.path.exists(clab_path):
+                shutil.rmtree(clab_path)
+                print(f"✅ Removed: {clab_path}")
+            else:
+                print(f"⚠️ Path does not exist, skipping: {clab_path}")
+
             deploy_output = subprocess.check_output(f"containerlab deploy -t {topo_path}", shell=True, stderr=subprocess.STDOUT, text=True)
-            subprocess.run("sudo systemctl restart ipam.service")
+            time.sleep(2)
+            subprocess.run(["sudo", "systemctl", "restart", "ipam.service"], shell=True, check=True)
             print("[✔] Deploy output:")
             print(deploy_output)
 

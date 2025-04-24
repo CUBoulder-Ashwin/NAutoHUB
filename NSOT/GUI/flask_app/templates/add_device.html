@@ -64,7 +64,7 @@
 <!-- LOADING OVERLAY -->
 <div id="loading-overlay" style="display:none;">
     <div class="loading-spinner"></div>
-    <p class="loading-text">Summoning the networking gods... 🧙‍♂️</p>
+    <p class="loading-text" id="loading-text">Initializing...</p>
 </div>
 
 <script>
@@ -103,6 +103,45 @@ document.addEventListener("DOMContentLoaded", function () {
     toggleExecOrConfig();
     document.getElementById("connection-count").addEventListener("input", renderConnectionDropdowns);
 });
+const terms = [
+  "Routing BGP packets to Valhalla...",
+  "Spinning up Layer 3 magic...",
+  "Injecting routes into the Matrix...",
+  "Summoning OSPF daemons... 🐙",
+  "Crafting VLAN potions...",
+  "Talking to network oracles...",
+  "Negotiating with DHCP spirits...",
+  "Sniffing packets from the astral plane...",
+  "Tunneling through hyperspace...",
+  "Enabling port-channel wizardry...",
+  "Building bridges with STP spells...",
+  "Balancing traffic on the tightrope of ECMP...",
+  "Fragmenting datagrams with care...",
+  "Conjuring MAC addresses...",
+  "Programming the P4 gods...",
+  "Pinging the void...",
+  "Announcing routes like a prophet...",
+  "Weaving MPLS labels into destiny...",
+  "Encoding bits of truth...",
+  "Assembling TCP handshakes..."
+];
+
+let index = 0;
+
+function rotateTerms() {
+  const el = document.getElementById("loading-text");
+  el.style.opacity = 0;
+  setTimeout(() => {
+    el.innerText = terms[index];
+    el.style.opacity = 1;
+    index = (index + 1) % terms.length;
+  }, 500);
+}
+
+// Shuffle once to avoid repetition in each session
+terms.sort(() => Math.random() - 0.5);
+
+setInterval(rotateTerms, 5000); // every 2 seconds
 </script>
 
 <style>
@@ -318,6 +357,10 @@ body.light-mode .message-text {
     margin-bottom: 20px;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+#loading-text {
+  transition: opacity 0.5s ease-in-out;
+}
 </style>
 
 {% endblock %}
