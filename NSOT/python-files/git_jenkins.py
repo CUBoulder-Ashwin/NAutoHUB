@@ -65,6 +65,12 @@ def get_latest_build_number(jenkins_base_url, user, token):
         url = f"{jenkins_base_url}/job/{JENKINS_JOB_NAME}/api/json?tree=lastBuild[number]"
         print("Fetching latest build number from URL:", url)
         response = requests.get(url, auth=(user, token))
+
+        print("Status Code:", response.status_code)
+        print("Response Text:", response.text[:300])  # Only first 300 chars
+
+        response.raise_for_status()  # Raises HTTPError for bad status
+
         response_data = response.json()
         latest_build_number = response_data.get("lastBuild", {}).get("number")
         if latest_build_number:
@@ -76,6 +82,7 @@ def get_latest_build_number(jenkins_base_url, user, token):
     except Exception as e:
         print(f"Error fetching latest build number: {e}")
         return None
+
 
 def check_build_result(jenkins_base_url, latest_build_number, user, token):
     build_url = f"{jenkins_base_url}/job/{JENKINS_JOB_NAME}/{latest_build_number}/api/json"
