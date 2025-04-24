@@ -20,217 +20,63 @@
             </select>
         </div>
 
-        <div id="router-sections">
-            <fieldset class="grouped-form" id="interface-section">
-                <legend class="section-title">Interfaces</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addInterface('interface-section')">+ Add</button>
-                </div>
-            </fieldset>
-
-            <fieldset class="grouped-form" id="subinterface-section">
-                <legend class="section-title">Subinterfaces</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addSubinterface('subinterface-section')">+ Add</button>
-                </div>
-            </fieldset>
-
-            <fieldset class="grouped-form" id="vlan-section">
-                <legend class="section-title">VLAN Configuration</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addVlan('vlan-section')">+ Add</button>
-                </div>
-            </fieldset>
-
-            <fieldset class="grouped-form" id="rip-section">
-                <legend class="section-title">RIP Configuration</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addRip('rip-section')">+ Add</button>
-                </div>
-            </fieldset>
-
-            <fieldset class="grouped-form" id="ospf-section">
-                <legend class="section-title">OSPF Configuration</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addOspf('ospf-section')">+ Add</button>
-                </div>
-            </fieldset>
-
-            <fieldset class="grouped-form" id="bgp-section">
-                <legend class="section-title">BGP Configuration</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addBgp('bgp-section')">+ Add</button>
-                </div>
-            </fieldset>
-        </div>
+        <!-- Your router sections go here -->
+        <div id="router-sections"></div>
 
         <div class="form-group text-center button-group">
             <button type="submit" class="form-button csv-button">Generate Configuration</button>
         </div>
     </form>
-    <div id="loading-overlay" style="display:none;">
-        <div class="loading-text" id="loading-message">Generating YAML...</div>
-    </div>
-    
+
+    <!-- Push Button (hidden until Jenkins success) -->
     <div class="form-group text-center button-group" id="push-button-wrapper" style="display: none;">
         <button type="button" class="form-button csv-button" onclick="pushConfig()">Push Configuration</button>
+    </div>
+
+    <!-- LOADING OVERLAY -->
+    <div id="loading-overlay" style="display:none;">
+        <div class="loading-spinner"></div>
+        <p class="loading-text" id="loading-text">Generating YAML...</p>
     </div>
 </div>
 
 <script>
-function getInterfaceBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">Interface Type:</label>
-            <input type="text" name="interface_type[]" class="form-input short-input">
-            <label class="form-label">Interface Number:</label>
-            <input type="text" name="interface_number[]" class="form-input short-input">
-            <label class="form-label">IP Address:</label>
-            <input type="text" name="interface_ip[]" class="form-input short-input">
-            <label class="form-label">Subnet Mask:</label>
-            <input type="text" name="interface_mask[]" class="form-input short-input">
-            <label class="form-label">Switchport:</label>
-            <select name="switchport[]" class="form-input">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
-        </div>
-    `;
-}
+const phrases = [
+    "Routing BGP packets to Valhalla...",
+    "Spinning up Layer 3 magic...",
+    "Summoning OSPF daemons...",
+    "Crafting VLAN potions...",
+    "Tunneling through hyperspace...",
+    "Encoding bits of truth...",
+    "Blessing interfaces with zero drops...",
+    "Pinging the void...",
+    "Rebooting layer zero...",
+    "Parsing YANGs of destiny...",
+];
+phrases.sort(() => Math.random() - 0.5);
+let phraseIndex = 0;
 
-function getSubinterfaceBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">Parent Interface:</label>
-            <input type="text" name="subinterface_parent[]" class="form-input short-input">
-            <label class="form-label">Subinterface ID:</label>
-            <input type="text" name="subinterface_id[]" class="form-input short-input">
-            <label class="form-label">Encapsulation VLAN:</label>
-            <input type="text" name="subinterface_vlan[]" class="form-input short-input">
-            <label class="form-label">IP Address:</label>
-            <input type="text" name="subinterface_ip[]" class="form-input short-input">
-            <label class="form-label">Subnet Mask:</label>
-            <input type="text" name="subinterface_mask[]" class="form-input short-input">
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
-        </div>
-    `;
+function rotateLoadingText() {
+    const el = document.getElementById("loading-text");
+    el.style.opacity = 0;
+    setTimeout(() => {
+        el.innerText = phrases[phraseIndex];
+        el.style.opacity = 1;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+    }, 500);
 }
+setInterval(rotateLoadingText, 5000);
 
-function getVlanBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">VLAN ID:</label>
-            <input type="text" name="vlan_id[]" class="form-input short-input">
-            <label class="form-label">VLAN Name:</label>
-            <input type="text" name="vlan_name[]" class="form-input short-input">
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
-        </div>
-    `;
-}
-
-function getRipBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">RIP Version:</label>
-            <input type="text" name="rip_version[]" class="form-input short-input">
-            <label class="form-label">Network IP:</label>
-            <input type="text" name="rip_network[]" class="form-input short-input">
-            <label class="form-label">Redistribute BGP ASN:</label>
-            <input type="text" name="rip_bgp_as[]" class="form-input short-input">
-            <label class="form-label">Metric:</label>
-            <input type="text" name="rip_bgp_metric[]" class="form-input short-input">
-            <input type="checkbox" name="rip_redistribute" class="switchport"> <label class="form-label">Redistribute</label>
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
-        </div>
-    `;
-}
-
-function getOspfBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">Process ID:</label>
-            <input type="text" name="ospf_process_id[]" class="form-input short-input">
-            <label class="form-label">Network IP:</label>
-            <input type="text" name="ospf_network[]" class="form-input short-input">
-            <label class="form-label">Wildcard Mask:</label>
-            <input type="text" name="ospf_wildcard[]" class="form-input short-input">
-            <label class="form-label">Area:</label>
-            <input type="text" name="ospf_area[]" class="form-input short-input">
-            <input type="checkbox" name="ospf_redistribute_connected[]" class="switchport"> <label class="form-label">Redistribute Connected</label>
-            <input type="checkbox" name="ospf_redistribute_bgp[]" class="switchport"> <label class="form-label">Redistribute BGP</label>
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
-        </div>
-    `;
-}
-
-function getBgpBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">ASN:</label>
-            <input type="text" name="bgp_asn[]" class="form-input short-input">
-            <label class="form-label">Neighbor IP:</label>
-            <input type="text" name="bgp_neighbor[]" class="form-input short-input">
-            <label class="form-label">Remote ASN:</label>
-            <input type="text" name="bgp_remote_as[]" class="form-input short-input">
-            <label class="form-label">Address Family:</label>
-            <input type="text" name="bgp_address_family[]" class="form-input short-input">
-            <label class="form-label">Advertised Network:</label>
-            <input type="text" name="bgp_network[]" class="form-input short-input">
-            <label class="form-label">Subnet Mask:</label>
-            <input type="text" name="bgp_mask[]" class="form-input short-input">
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
-        </div>
-    `;
-}
-
-function addInterface(sectionId) {
-    document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getInterfaceBlock());
-}
-function addSubinterface(sectionId) {
-    document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getSubinterfaceBlock());
-}
-function addVlan(sectionId) {
-    document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getVlanBlock());
-}
-function addRip(sectionId) {
-    document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getRipBlock());
-}
-function addOspf(sectionId) {
-    document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getOspfBlock());
-}
-function addBgp(sectionId) {
-    document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getBgpBlock());
-}
 document.getElementById("config-form").addEventListener("submit", async function (e) {
     e.preventDefault();
-
     const form = e.target;
     const formData = new FormData(form);
-    const loadingOverlay = document.getElementById("loading-overlay");
-    const loadingMessage = document.getElementById("loading-message");
+    const overlay = document.getElementById("loading-overlay");
+    const message = document.getElementById("loading-text");
     const pushWrapper = document.getElementById("push-button-wrapper");
 
-    loadingMessage.textContent = "Generating YAML...";
-    loadingOverlay.style.display = "flex";
+    overlay.style.display = "flex";
+    message.textContent = "Generating YAML...";
 
     const response = await fetch("/configure-device", {
         method: "POST",
@@ -238,17 +84,19 @@ document.getElementById("config-form").addEventListener("submit", async function
     });
 
     const result = await response.text();
-    if (result.includes("jenkins_success")) {
-        loadingMessage.textContent = "Running Jenkins Pipeline...";
 
-        // Delay to simulate progress (optional)
+    if (result.includes("jenkins_success")) {
+        message.textContent = "Running Jenkins Pipeline...";
         setTimeout(() => {
-            loadingOverlay.style.display = "none";
+            overlay.style.display = "none";
             pushWrapper.style.display = "flex";
         }, 3000);
     } else {
-        loadingMessage.textContent = "An error occurred.";
-        setTimeout(() => loadingOverlay.style.display = "none", 3000);
+        message.textContent = "An error occurred. Please check logs.";
+        setTimeout(() => {
+            overlay.style.display = "none";
+            pushWrapper.style.display = "none";
+        }, 3000);
     }
 });
 
@@ -257,7 +105,7 @@ async function pushConfig() {
     const response = await fetch("/push-config", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ device_id: deviceId }),
+        body: JSON.stringify({ device_id: deviceId })
     });
 
     const result = await response.json();
@@ -442,18 +290,32 @@ body.dark-mode select.form-input:focus {
     top: 0; left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0,0,0,0.8);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    display: none;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
-
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #ccc;
+    border-top-color: #d4a373;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
 .loading-text {
     color: #d4a373;
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 22px;
     font-family: 'Arial Black', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    transition: opacity 0.5s ease-in-out;
 }
 
 </style>
