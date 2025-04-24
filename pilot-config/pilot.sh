@@ -5,6 +5,7 @@ set -e  # Exit on any error
 echo "Building Docker images for hosts..."
 sudo docker build -f Dockerfile_Hosts -t hosts:latest .
 
+sudo docker import ../disc_images/cEOS64-lab-4.33.2F.tar ceos.4.33.2F
 echo "Creating netplan configs..."
 sudo cp netcfg.yaml /etc/netplan/100-netcfg.yaml
 sudo chmod 600 /etc/netplan/100-netcfg.yaml
