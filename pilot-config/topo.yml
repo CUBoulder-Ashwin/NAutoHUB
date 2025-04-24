@@ -19,4 +19,3 @@ topology:
   - endpoints: ['mgmt:eth2', 'R2:eth1']
   - endpoints: ['mgmt:eth8', 'host:eth1']
   - endpoints: ['R1:eth2', 'R2:eth2']
-
