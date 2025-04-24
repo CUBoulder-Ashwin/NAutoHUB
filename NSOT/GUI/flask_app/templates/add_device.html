@@ -8,7 +8,7 @@
         <div class="device-form form-group grouped-form">
             <div class="device-fields">
                 <label class="form-label">Device Name:</label>
-                <input type="text" name="device_name" class="form-input" required>
+                <input type="text" name="device_name" class="form-input medium-input" required>
 
                 <label class="form-label">Kind:</label>
                 <select name="kind" id="kind-select" class="form-input" required onchange="toggleExecOrConfig()">
@@ -27,22 +27,22 @@
 
                 <div id="config-section" class="form-group" style="display: none;">
                     <label class="form-label">Config File Path:</label>
-                    <input type="text" name="config" class="form-input" placeholder="/path/to/config.cfg">
+                    <input type="text" name="config" class="form-input medium-input" placeholder="/path/to/config.cfg">
                 </div>
 
                 <div id="exec-section" class="form-group" style="display: none;">
                     <label class="form-label">Exec Commands (1 per line):</label>
-                    <textarea name="exec[]" rows="4" class="form-input" placeholder="ip link set eth1 up&#10;dhclient eth1"></textarea>
+                    <textarea name="exec[]" rows="4" class="form-input medium-input" placeholder="ip link set eth1 up&#10;dhclient eth1"></textarea>
                 </div>
 
                 <label class="form-label">MAC Address (optional):</label>
-                <input type="text" name="mac_address" class="form-input">
+                <input type="text" name="mac_address" class="form-input medium-input">
 
                 <label class="form-label">Management IP Address (with subnet):</label>
-                <input type="text" name="ip_address" class="form-input" placeholder="10.0.0.1/24" required>
+                <input type="text" name="ip_address" class="form-input medium-input" placeholder="10.0.0.1/24" required>
 
                 <label class="form-label">How many devices to connect to:</label>
-                <input type="number" name="connection_count" id="connection-count" class="form-input" min="0" max="10" value="0">
+                <input type="number" name="connection_count" id="connection-count" class="form-input medium-input" min="0" max="10" value="0">
 
                 <div id="connection-dropdowns" class="form-group"></div>
             </div>
@@ -379,6 +379,9 @@ body.light-mode .message-text {
 
 #loading-text {
   transition: opacity 0.5s ease-in-out;
+}
+.medium-input {
+    max-width: 525px;  /* Adjust this value as needed */
 }
 </style>
 

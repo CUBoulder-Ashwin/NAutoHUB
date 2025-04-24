@@ -7,12 +7,12 @@
   <form method="POST" id="topology-form" class="form-container">
     <div class="form-group">
       <label class="form-label">Topology Name:</label>
-      <input type="text" name="topo_name" class="form-input" required>
+      <input type="text" name="topo_name" class="form-input medium-input" required>
     </div>
 
     <div class="form-group">
       <label class="form-label">Number of Devices:</label>
-      <input type="number" name="device_count" id="device-count" class="form-input" min="0" value="0">
+      <input type="number" name="device_count" id="device-count" class="form-input medium-input" min="0" value="0">
     </div>
 
     <div id="device-form-list"></div>
@@ -82,7 +82,7 @@ function renderDeviceForms(count) {
       <div class="device-fields">
         <h4 class="device-title" style="margin-bottom: 15px;">Device ${i}</h4>
         <label class="form-label">Name:</label>
-        <input type="text" name="device_name_${i}" class="form-input" required>
+        <input type="text" name="device_name_${i}" class="form-input short-input" required>
 
         <label class="form-label">Kind:</label>
         <select name="device_kind_${i}" class="form-input" required onchange="toggleConfigExec(${i})" id="kind-${i}">
@@ -98,12 +98,12 @@ function renderDeviceForms(count) {
 
         <div id="config-section-${i}" class="form-group hidden">
           <label class="form-label">Config File (Optional):</label>
-          <input type="text" name="device_config_${i}" class="form-input" placeholder="Leave blank if not needed">
+          <input type="text" name="device_config_${i}" class="form-input short-input" placeholder="Leave blank if not needed">
         </div>
 
         <div id="exec-section-${i}" class="form-group hidden">
           <label class="form-label">Exec Commands (for linux):</label>
-          <textarea name="device_exec_${i}[]" class="form-input" rows="3" placeholder="One command per line"></textarea>
+          <textarea name="device_exec_${i}[]" class="form-input short-input" rows="3" placeholder="One command per line"></textarea>
         </div>
       </div>
     `;
@@ -325,7 +325,7 @@ function showLoading() {
   .form-label {
     display: block;
     font-weight: bold;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
     font-size: 14px;
   }
   
@@ -475,6 +475,12 @@ body.light-mode .device-title {
 #loading-text {
   transition: opacity 0.5s ease-in-out;
 }
+.medium-input {
+    max-width: 625px;  /* Adjust this value as needed */
+}
+.short-input {
+    max-width: 525px;  /* Adjust this value as needed */
+}
   </style>
-  
+
 {% endblock %}

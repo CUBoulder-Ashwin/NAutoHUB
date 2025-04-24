@@ -1,9 +1,8 @@
 ---
 devices:
 - hostname: R1
-  device_type: access
   vendor: arista
   clear_config: 'no'
   vlans:
-  - id: '500'
-    name: Tarun
+  - id: '100'
+    name: Ashwin

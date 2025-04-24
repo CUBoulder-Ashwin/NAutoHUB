@@ -308,69 +308,56 @@ def add_device():
 
 @app.route("/configure-device", methods=["GET", "POST"])
 def configure_device():
-    jenkins_result = None  # Default value if no job was run
-    device_id = None  # Initialize device_id to None
+    jenkins_result = None
+    device_id = None
 
     if request.method == "POST":
         device_id = request.form["device_id"]
-        router_type = request.form["router_type"]
         device_vendor = request.form["device_vendor"]
 
-        # Fetching interface configurations
+        # Interfaces
         interfaces = []
-        interface_types = request.form.getlist("interface_type[]")
-        interface_numbers = request.form.getlist("interface_number[]")
-        interface_ips = request.form.getlist("interface_ip[]")
-        interface_masks = request.form.getlist("interface_mask[]")
-        switchports = request.form.getlist("switchport[]")
+        for i_type, i_num, ip, mask, sp in zip(
+            request.form.getlist("interface_type[]"),
+            request.form.getlist("interface_number[]"),
+            request.form.getlist("interface_ip[]"),
+            request.form.getlist("interface_mask[]"),
+            request.form.getlist("switchport[]"),
+        ):
+            interfaces.append({
+                "type": i_type,
+                "number": i_num,
+                "ip": ip if sp != "yes" else None,
+                "mask": mask if sp != "yes" else None,
+                "switchport": sp == "yes"
+            })
 
-        max_len = max(
-            len(interface_types),
-            len(interface_numbers),
-            len(interface_ips),
-            len(interface_masks),
-            len(switchports),
-        )
+        # Subinterfaces
+        subinterfaces = []
+        for parent, sid, vlan, ip, mask in zip(
+            request.form.getlist("subinterface_parent[]"),
+            request.form.getlist("subinterface_id[]"),
+            request.form.getlist("subinterface_vlan[]"),
+            request.form.getlist("subinterface_ip[]"),
+            request.form.getlist("subinterface_mask[]"),
+        ):
+            subinterfaces.append({
+                "parent": parent,
+                "id": sid,
+                "vlan": vlan,
+                "ip": ip,
+                "mask": mask
+            })
 
-        interface_ips += [None] * (max_len - len(interface_ips))
-        interface_masks += [None] * (max_len - len(interface_masks))
-        switchports += [None] * (max_len - len(switchports))
+        # VLANs
+        vlans = []
+        for vlan_id, vlan_name in zip(
+            request.form.getlist("vlan_id[]"),
+            request.form.getlist("vlan_name[]"),
+        ):
+            vlans.append({"id": vlan_id, "name": vlan_name})
 
-        for i in range(max_len):
-            interfaces.append(
-                {
-                    "type": interface_types[i],
-                    "number": interface_numbers[i],
-                    "ip": interface_ips[i] if switchports[i] != "yes" else None,
-                    "mask": interface_masks[i] if switchports[i] != "yes" else None,
-                    "switchport": switchports[i] == "yes",
-                }
-            )
-
-        # Fetching OSPF configurations with wildcard masks
-        ospf = None
-        ospf_process_ids = request.form.getlist("ospf_process_id[]")
-        ospf_networks = request.form.getlist("ospf_network[]")
-        ospf_wildcards = request.form.getlist("ospf_wildcard[]")
-        ospf_areas = request.form.getlist("ospf_area[]")
-        ospf_redistribute_connected = request.form.getlist("ospf_redistribute_connected[]")
-        ospf_redistribute_bgp = request.form.getlist("ospf_redistribute_bgp[]")
-
-        ospf = {
-            "process_ids": ospf_process_ids,
-            "networks": [
-                {
-                    "ip": ospf_networks[i],
-                    "wildcard": ospf_wildcards[i],
-                    "area": ospf_areas[i],
-                }
-                for i in range(len(ospf_networks))
-            ],
-            "redistribute_connected": len(ospf_redistribute_connected) > 0,
-            "redistribute_bgp": len(ospf_redistribute_bgp) > 0,
-        }
-
-        # Fetching RIP configurations
+        # RIP
         rip = None
         rip_versions = request.form.getlist("rip_version[]")
         rip_networks = request.form.getlist("rip_network[]")
@@ -381,9 +368,7 @@ def configure_device():
         if rip_versions:
             rip = {
                 "version": rip_versions[0],
-                "networks": [
-                    {"ip": net} for net in rip_networks if net
-                ],
+                "networks": [{"ip": net} for net in rip_networks if net]
             }
 
             if rip_redistribute_selected:
@@ -392,22 +377,45 @@ def configure_device():
                     redistribute["as_number"] = rip_bgp_as[0]
                 if rip_bgp_metric and rip_bgp_metric[0]:
                     redistribute["metric"] = int(rip_bgp_metric[0])
-
                 if redistribute:
                     rip["redistribute"] = redistribute
 
-        # Fetching BGP configurations with network subnet and masks
+        # OSPF
+        ospf = None
+        ospf_process_ids = request.form.getlist("ospf_process_id[]")
+        ospf_networks = request.form.getlist("ospf_network[]")
+        ospf_wildcards = request.form.getlist("ospf_wildcard[]")
+        ospf_areas = request.form.getlist("ospf_area[]")
+        ospf_redistribute_connected = request.form.getlist("ospf_redistribute_connected[]")
+        ospf_redistribute_bgp = request.form.getlist("ospf_redistribute_bgp[]")
+
+        if ospf_process_ids:
+            ospf = {
+                "process_id": ospf_process_ids[0],
+                "networks": [
+                    {
+                        "ip": ospf_networks[i],
+                        "wildcard": ospf_wildcards[i],
+                        "area": ospf_areas[i],
+                    }
+                    for i in range(len(ospf_networks))
+                ],
+                "redistribute_connected": len(ospf_redistribute_connected) > 0,
+                "redistribute_bgp": len(ospf_redistribute_bgp) > 0,
+            }
+
+        # BGP
         bgp = None
         bgp_asns = request.form.getlist("bgp_asn[]")
         bgp_networks = request.form.getlist("bgp_network[]")
-        bgp_masks = request.form.getlist("bgp_mask[]")  # New mask input
+        bgp_masks = request.form.getlist("bgp_mask[]")
         bgp_neighbors = request.form.getlist("bgp_neighbor[]")
         bgp_remote_as = request.form.getlist("bgp_remote_as[]")
         bgp_address_families = request.form.getlist("bgp_address_family[]")
 
         if bgp_asns:
             bgp = {
-                "asn": bgp_asns[0],
+                "as_number": bgp_asns[0],
                 "neighbors": [
                     {"ip": ip, "remote_as": remote_as}
                     for ip, remote_as in zip(bgp_neighbors, bgp_remote_as)
@@ -415,44 +423,35 @@ def configure_device():
                 ],
                 "address_families": [
                     {
-                        "type": af_type,
+                        "type": af,
                         "networks": [
-                            {"ip": net, "mask": mask}  # Include both IP and mask
+                            {"ip": net, "mask": mask}
                             for net, mask in zip(bgp_networks, bgp_masks)
-                            if net and mask  # Ensure both IP and mask are provided
-                        ],
+                            if net and mask
+                        ]
                     }
-                    for af_type in bgp_address_families
-                    if af_type
-                ],
+                    for af in bgp_address_families if af
+                ]
             }
 
-
-        # Fetching VLAN configurations
-        vlans = []
-        vlan_ids = request.form.getlist("vlan_id[]")
-        vlan_names = request.form.getlist("vlan_name[]")
-
-        for i in range(len(vlan_ids)):
-            vlans.append({"id": vlan_ids[i], "name": vlan_names[i]})
-
-        # Create the YAML file with collected data
+        # Final YAML generation and config push step
         create_yaml_from_form_data(
             device_id=device_id,
-            router_type=router_type,
             device_vendor=device_vendor,
             interfaces=interfaces,
-            ospf=ospf,
-            bgp=bgp,
+            subinterfaces=subinterfaces,
             vlans=vlans,
             rip=rip,
+            ospf=ospf,
+            bgp=bgp,
         )
-        conf_gen()
 
-        # Run the Git push and Jenkins monitoring
+        conf_gen()
         jenkins_result = push_and_monitor_jenkins()
 
     return render_template("configure_device.html", jenkins_result=jenkins_result, device_id=device_id)
+
+
 
 
 @app.route("/push-config", methods=["POST"])

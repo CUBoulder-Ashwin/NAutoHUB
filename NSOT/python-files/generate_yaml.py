@@ -1,7 +1,6 @@
 import os
 import yaml
 
-
 def clean_empty(data):
     """Recursively remove empty lists, dictionaries, and None values from the data."""
     if isinstance(data, dict):
@@ -10,18 +9,15 @@ def clean_empty(data):
         return [clean_empty(v) for v in data if v not in [None, {}, []]]
     return data
 
-
 def create_yaml_from_form(device_data, filename="devices_config.yml"):
     """Creates a YAML file from the provided device data."""
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     yaml_file_path = os.path.join(base_dir, "templates", filename)
 
-    # Clean up device_data by removing empty values
     cleaned_data = clean_empty({"devices": [device_data]})
 
-    # Write cleaned data to YAML
     with open(yaml_file_path, "w") as yaml_file:
-        yaml_file.write("---\n")  # Add document start
+        yaml_file.write("---\n")
         yaml.dump(
             cleaned_data,
             yaml_file,
@@ -30,12 +26,11 @@ def create_yaml_from_form(device_data, filename="devices_config.yml"):
         )
     print(f"YAML file saved: {yaml_file_path}")
 
-
 def build_device_data(
     device_id,
-    router_type,
     device_vendor,
     interfaces,
+    subinterfaces=None,  # ✅ Added
     ospf=None,
     bgp=None,
     vlans=None,
@@ -45,8 +40,7 @@ def build_device_data(
     """Builds device data structure with only non-empty fields."""
     device_data = {
         "hostname": device_id,
-        "device_type": router_type,
-        "vendor": device_vendor,  # Add vendor information
+        "vendor": device_vendor,
         "clear_config": "no",
     }
 
@@ -59,6 +53,19 @@ def build_device_data(
             }
             for iface in interfaces
             if iface.get("ip") and iface.get("mask")
+        ]
+
+    if subinterfaces:
+        device_data["subinterfaces"] = [
+            {
+                "parent": sub["parent"],
+                "id": sub["id"],
+                "vlan": sub["vlan"],
+                "ip": sub["ip"],
+                "mask": sub["mask"],
+            }
+            for sub in subinterfaces
+            if sub.get("parent") and sub.get("id") and sub.get("vlan") and sub.get("ip") and sub.get("mask")
         ]
 
     if vlans:
@@ -93,10 +100,9 @@ def build_device_data(
                 {
                     "type": family["type"],
                     "networks": [
-                        {"ip": net["ip"], "mask": net.get("mask")}  # Include mask
+                        {"ip": net["ip"], "mask": net.get("mask")}
                         for net in family.get("networks", [])
-                        if net.get("ip")
-                        and net.get("mask")  # Ensure both IP and mask exist
+                        if net.get("ip") and net.get("mask")
                     ],
                 }
                 for family in bgp.get("address_families", [])
@@ -124,12 +130,11 @@ def build_device_data(
 
     return device_data
 
-
 def create_yaml_from_form_data(
     device_id,
-    router_type,
-    device_vendor,  # Add vendor as a parameter
+    device_vendor,
     interfaces,
+    subinterfaces=None,  # ✅ Added here too
     ospf=None,
     bgp=None,
     vlans=None,
@@ -139,9 +144,9 @@ def create_yaml_from_form_data(
     """Generates YAML configuration file from form data."""
     device_data = build_device_data(
         device_id,
-        router_type,
-        device_vendor,  # Include vendor in device data
+        device_vendor,
         interfaces,
+        subinterfaces,  # ✅ Pass subinterfaces
         ospf,
         bgp,
         vlans,
