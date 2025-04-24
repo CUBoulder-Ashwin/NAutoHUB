@@ -4,40 +4,47 @@ import time
 import requests
 import os
 
+JENKINS_JOB_NAME = "NAutoHUB"
+JENKINS_USER = "admin"
+JENKINS_TOKEN = "admin"
 
-# Function to check if there are any changes to commit
+# --- Git Push Functions ---
+
 def has_changes_to_commit():
-    result = subprocess.run(
-        ["git", "status", "--porcelain"], capture_output=True, text=True
-    )
+    result = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
     return bool(result.stdout.strip())
 
-
-# Function to push to Git
 def git_push():
     if not has_changes_to_commit():
         print("No changes to commit.")
         return False
-
     try:
+        # subprocess.run(["git", "add", f"configs/{device_id}.cfg"], check=True)  # Optional: limit to one file
         subprocess.run(["git", "add", "-A"], check=True)
         subprocess.run(["git", "commit", "-m", "Auto-config push"], check=True)
         subprocess.run(["git", "push"], check=True)
         print("Changes pushed to Git successfully.")
-        time.sleep(10)  # Wait longer to give Jenkins time to start the build
+        time.sleep(10)
         return True
     except subprocess.CalledProcessError as e:
         print(f"Git push failed: {e}")
         return False
 
+# --- Ngrok URL Fetcher ---
 
-# Function to get the latest ngrok URL from the log file
+def find_ngrok_log_file(search_root=os.path.expanduser("~/projects/NAutoHUB/NSOT/logs")):
+    for root, dirs, files in os.walk(search_root):
+        for file in files:
+            if file == "ngrok.log":
+                return os.path.join(root, file)
+    return None
+
 def get_latest_ngrok_url(log_file_path):
     try:
         with open(log_file_path, "r") as file:
             lines = file.readlines()
         for line in reversed(lines):
-            match = re.search(r"url=(https://[a-zA-Z0-9-]+\.ngrok-free\.app)", line)
+            match = re.search(r"url=(https://[a-zA-Z0-9\-]+\.ngrok-free\.app)", line)
             if match:
                 ngrok_url = match.group(1)
                 print("Ngrok URL found:", ngrok_url)
@@ -51,11 +58,11 @@ def get_latest_ngrok_url(log_file_path):
         print(f"An error occurred: {e}")
         return None
 
+# --- Jenkins Build Checks ---
 
-# Function to get the latest build number using Jenkins API
 def get_latest_build_number(jenkins_base_url, user, token):
     try:
-        url = f"{jenkins_base_url}/job/robocontrol/api/json?tree=lastBuild%5Bnumber%5D"
+        url = f"{jenkins_base_url}/job/{JENKINS_JOB_NAME}/api/json?tree=lastBuild[number]"
         print("Fetching latest build number from URL:", url)
         response = requests.get(url, auth=(user, token))
         response_data = response.json()
@@ -70,10 +77,8 @@ def get_latest_build_number(jenkins_base_url, user, token):
         print(f"Error fetching latest build number: {e}")
         return None
 
-
-# Function to check build result for the latest build
 def check_build_result(jenkins_base_url, latest_build_number, user, token):
-    build_url = f"{jenkins_base_url}/job/robocontrol/{latest_build_number}/api/json"
+    build_url = f"{jenkins_base_url}/job/{JENKINS_JOB_NAME}/{latest_build_number}/api/json"
     print("Checking build result from URL:", build_url)
     response = requests.get(build_url, auth=(user, token))
     if response.status_code == 200:
@@ -85,13 +90,7 @@ def check_build_result(jenkins_base_url, latest_build_number, user, token):
         print(f"Failed to retrieve build status for build {latest_build_number}.")
         return None
 
-
-def find_ngrok_log_file(search_root=os.path.expanduser("~/projects/NAutoHUB/NSOT/logs")):
-    for root, dirs, files in os.walk(search_root):
-        for file in files:
-            if file == "ngrok.log":
-                return os.path.join(root, file)
-    return None
+# --- Combined Pipeline Monitor ---
 
 def monitor_jenkins_job():
     log_file_path = find_ngrok_log_file()
@@ -104,19 +103,12 @@ def monitor_jenkins_job():
         print("Unable to retrieve ngrok URL for Jenkins.")
         return "Failed"
 
-    jenkins_user = "admin"
-    jenkins_token = "admin"
-
-    latest_build_number = get_latest_build_number(
-        jenkins_base_url, jenkins_user, jenkins_token
-    )
+    latest_build_number = get_latest_build_number(jenkins_base_url, JENKINS_USER, JENKINS_TOKEN)
     if not latest_build_number:
         return "Failed to retrieve the latest build number"
 
     while True:
-        build_result = check_build_result(
-            jenkins_base_url, latest_build_number, jenkins_user, jenkins_token
-        )
+        build_result = check_build_result(jenkins_base_url, latest_build_number, JENKINS_USER, JENKINS_TOKEN)
         if build_result == "SUCCESS":
             print("Jenkins job completed successfully.")
             return "SUCCESS"
@@ -130,15 +122,14 @@ def monitor_jenkins_job():
             print(f"Unexpected result: {build_result}")
             return build_result
 
+# --- Entry Point for Route ---
 
-# Combined function to push to Git and monitor Jenkins job
 def push_and_monitor_jenkins():
     if git_push():
         return monitor_jenkins_job()
     return "Git push failed"
 
-
-# Run this function standalone for testing
+# For CLI testing
 if __name__ == "__main__":
     result = push_and_monitor_jenkins()
     print("Final result:", result)
