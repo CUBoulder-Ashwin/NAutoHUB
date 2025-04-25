@@ -5,22 +5,17 @@ topology:
       kind: ceos
       image: ceos:4.33.2F
       startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_mgmt.cfg
-    R1:
+    S1:
       kind: ceos
       image: ceos:4.33.2F
       startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R1.cfg
-    R2:
+    S2:
       kind: ceos
       image: ceos:4.33.2F
       startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R2.cfg
-    R3:
-      kind: ceos
-      image: ceos:4.33.2F
-      startup-config: /home/ashch/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R3.cfg
+
   links:
-  - endpoints: ['mgmt:eth1', 'R1:eth1']
-  - endpoints: ['mgmt:eth2', 'R2:eth1']
-  - endpoints: ['mgmt:eth8', 'host:eth1']
-  - endpoints: ['R1:eth2', 'R2:eth2']
-  - endpoints: ['mgmt:eth3', 'R3:eth1']
-  - endpoints: ['R3:eth2', 'R1:eth3']
+  - endpoints: ['mgmt:eth1', 'S1:eth1']
+  - endpoints: ['mgmt:eth2', 'S2:eth1']
+  - endpoints: ['mgmt:eth10', 'host:eth1']
+  - endpoints: ['S1:eth2', 'S2:eth2']

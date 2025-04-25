@@ -1,100 +1,64 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2 class="page-title themed-heading">Configure Device</h2>
+<h2 class="page-title">Add Device</h2>
 
 <div class="tile-container">
-    <form method="POST" class="form-container" id="config-form" onsubmit="showLoading()">
-        <div class="form-group">
-            <label class="form-label">Device Name:</label>
-            <input type="text" name="device_id" class="form-input medium-input" required>
+    <form method="POST" class="form-container" id="add-device-form" onsubmit="showLoading()">
+        <div class="device-form form-group grouped-form">
+            <div class="device-fields">
+                <label class="form-label">Device Name:</label>
+                <input type="text" name="device_name" class="form-input medium-input" required>
+
+                <label class="form-label">Kind:</label>
+                <select name="kind" id="kind-select" class="form-input" required onchange="toggleExecOrConfig()">
+                    <option value="">-- Select Kind --</option>
+                    <option value="ceos">ceos</option>
+                    <option value="linux">linux</option>
+                </select>
+
+                <label class="form-label">Docker Image:</label>
+                <select name="image" class="form-input" required>
+                    <option value="">-- Select Image --</option>
+                    {% for img in docker_images %}
+                        <option value="{{ img }}">{{ img }}</option>
+                    {% endfor %}
+                </select>
+
+                <div id="config-section" class="form-group" style="display: none;">
+                    <label class="form-label">Config File Path:</label>
+                    <input type="text" name="config" class="form-input medium-input" placeholder="/path/to/config.cfg">
+                </div>
+
+                <div id="exec-section" class="form-group" style="display: none;">
+                    <label class="form-label">Exec Commands (1 per line):</label>
+                    <textarea name="exec[]" rows="4" class="form-input medium-input" placeholder="ip link set eth1 up&#10;dhclient eth1"></textarea>
+                </div>
+
+                <label class="form-label">MAC Address (optional):</label>
+                <input type="text" name="mac_address" class="form-input medium-input">
+
+                <label class="form-label">Management IP Address (with subnet):</label>
+                <input type="text" name="ip_address" class="form-input medium-input" placeholder="10.0.0.1/24" required>
+
+                <label class="form-label">How many devices to connect to:</label>
+                <input type="number" name="connection_count" id="connection-count" class="form-input medium-input" min="0" max="10" value="0">
+
+                <div id="connection-dropdowns" class="form-group"></div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label class="form-label">Device Vendor:</label>
-            <select name="device_vendor" class="form-input" required>
-                <option value="">Select Vendor</option>
-                <option value="cisco">Cisco</option>
-                <option value="arista">Arista</option>
-                <option value="juniper">Juniper</option>
-            </select>
+        <!-- FINAL COMMENT MESSAGE PRINT -->
+        {% if message %}
+        <div class="form-group text-center" style="margin-top: 15px;">
+            <p class="message-text">{{ message|safe }}</p>
         </div>
+        {% endif %}
 
-        <div id="router-sections">
-            <fieldset class="grouped-form" id="interface-section">
-                <legend class="section-title">Interfaces</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addInterface('interface-section')">+ Add</button>
-                </div>
-            </fieldset>
-
-            <fieldset class="grouped-form" id="subinterface-section">
-                <legend class="section-title">Subinterfaces</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addSubinterface('subinterface-section')">+ Add</button>
-                </div>
-            </fieldset>
-
-            <fieldset class="grouped-form" id="vlan-section">
-                <legend class="section-title">VLAN Configuration</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addVlan('vlan-section')">+ Add</button>
-                </div>
-            </fieldset>
-
-            <fieldset class="grouped-form" id="rip-section">
-                <legend class="section-title">RIP Configuration</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addRip('rip-section')">+ Add</button>
-                </div>
-            </fieldset>
-
-            <fieldset class="grouped-form" id="ospf-section">
-                <legend class="section-title">OSPF Configuration</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addOspf('ospf-section')">+ Add</button>
-                </div>
-            </fieldset>
-
-            <fieldset class="grouped-form" id="bgp-section">
-                <legend class="section-title">BGP Configuration</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addBgp('bgp-section')">+ Add</button>
-                </div>
-            </fieldset>
-        </div>
-
-        <!-- Final Submit -->
         <div class="form-group text-center button-group">
-            <button type="submit" class="form-button csv-button">Generate Configuration</button>
+            <button type="submit" class="form-button csv-button">Add Device</button>
         </div>
     </form>
-
-    <!-- Final Jenkins Status Message -->
-    {% if jenkins_result %}
-    <div class="form-group text-center" style="margin-top: 15px;">
-        <p class="message-text">
-            {% if jenkins_result == "jenkins_success" %}
-                ✅ Configuration generated successfully. You may now push the config.
-            {% else %}
-                ❌ Failed to generate configuration via Jenkins.
-            {% endif %}
-        </p>
-    </div>
-    {% endif %}
-
-    <!-- Show push button only on Jenkins success -->
-    {% if jenkins_result == 'jenkins_success' %}
-    <div class="form-group text-center button-group" id="push-button-wrapper" style="display: flex;">
-        <button type="button" class="form-button csv-button" onclick="pushConfig()">Push Configuration</button>
-    </div>
-    {% endif %}
 </div>
 
 <!-- LOADING OVERLAY -->
@@ -104,22 +68,85 @@
 </div>
 
 <script>
-function showLoading() {
-    document.getElementById("loading-overlay").style.display = "flex";
-    return true;
+function toggleExecOrConfig() {
+    const kind = document.getElementById("kind-select").value;
+    document.getElementById("config-section").style.display = kind === "ceos" ? "block" : "none";
+    document.getElementById("exec-section").style.display = kind === "linux" ? "block" : "none";
 }
 
+function renderConnectionDropdowns() {
+    const count = parseInt(document.getElementById("connection-count").value);
+    const container = document.getElementById("connection-dropdowns");
+    container.innerHTML = "";
+
+    for (let i = 0; i < count; i++) {
+        const div = document.createElement("div");
+        div.classList.add("form-group");
+        div.innerHTML = `
+            <label class="form-label">Connect to Device ${i + 1}:</label>
+            <select name="connect_to_${i}" class="form-input" required>
+                <option value="">-- Select Device --</option>
+                {% for host in available_hosts %}
+                    <option value="{{ host }}">{{ host }}</option>
+                {% endfor %}
+            </select>
+        `;
+        container.appendChild(div);
+    }
+}
+
+function showLoading() {
+    document.getElementById("loading-overlay").style.display = "flex";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    toggleExecOrConfig();
+    document.getElementById("connection-count").addEventListener("input", renderConnectionDropdowns);
+});
 const terms = [
-  "Routing BGP packets to Valhalla...", "Spinning up Layer 3 magic...",
-  "Injecting routes into the Matrix...", "Summoning OSPF daemons... ",
-  "Crafting VLAN potions...", "Talking to network oracles...",
-  "Negotiating with DHCP spirits...", "Sniffing packets from the astral plane...",
-  "Tunneling through hyperspace...", "Enabling port-channel wizardry...",
-  "Building bridges with STP spells...", "Blessing interfaces with zero drops...",
-  "Summoning Ceos spirits from the cloud...", "Teleporting configs into flash..."
+  "Routing BGP packets to Valhalla...",
+  "Spinning up Layer 3 magic...",
+  "Injecting routes into the Matrix...",
+  "Summoning OSPF daemons... ",
+  "Crafting VLAN potions...",
+  "Talking to network oracles...",
+  "Negotiating with DHCP spirits...",
+  "Sniffing packets from the astral plane...",
+  "Tunneling through hyperspace...",
+  "Enabling port-channel wizardry...",
+  "Building bridges with STP spells...",
+  "Balancing traffic on the tightrope of ECMP...",
+  "Fragmenting datagrams with care...",
+  "Conjuring MAC addresses...",
+  "Programming the P4 gods...",
+  "Pinging the void... ",
+  "Announcing routes like a prophet...",
+  "Weaving MPLS labels into destiny...",
+  "Encoding bits of truth...",
+  "Assembling TCP handshakes...",
+  "Peering with interdimensional routers...",
+  "Binding interfaces with eldritch configs...",
+  "Casting 'show run' scrolls... ",
+  "Parsing YANGs of destiny...",
+  "Bridging subnets across galaxies...",
+  "Extracting SNMP secrets from the vault...",
+  "Interfacing with quantum NICs...",
+  "Configuring routers with dark magic...",
+  "Recabling cables with thoughts alone...",
+  "Blessing interfaces with zero drops...",
+  "Summoning Ceos spirits from the cloud... ",
+  "Resurrecting containers from the abyss...",
+  "Defragmenting reality into packets...",
+  "Rebooting layer zero... ",
+  "Beaming bits through wormholes...",
+  "Unrolling IPv6 prophecies...",
+  "Hacking the mainframe of the underlay...",
+  "Teleporting configs into flash...",
 ];
 
+
 let index = 0;
+
 function rotateTerms() {
   const el = document.getElementById("loading-text");
   el.style.opacity = 0;
@@ -129,161 +156,11 @@ function rotateTerms() {
     index = (index + 1) % terms.length;
   }, 500);
 }
+
+// Shuffle once to avoid repetition in each session
 terms.sort(() => Math.random() - 0.5);
-setInterval(rotateTerms, 7000);
 
-function getInterfaceBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">Interface Type:</label>
-            <input type="text" name="interface_type[]" class="form-input short-input">
-            <label class="form-label">Interface Number:</label>
-            <input type="text" name="interface_number[]" class="form-input short-input">
-            <label class="form-label">IP Address:</label>
-            <input type="text" name="interface_ip[]" class="form-input short-input">
-            <label class="form-label">Subnet Mask:</label>
-            <input type="text" name="interface_mask[]" class="form-input short-input">
-            <label class="form-label">Switchport:</label>
-            <select name="switchport[]" class="form-input">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
-        </div>
-    `;
-}
-
-function getSubinterfaceBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">Parent Interface:</label>
-            <input type="text" name="subinterface_parent[]" class="form-input short-input">
-            <label class="form-label">Subinterface ID:</label>
-            <input type="text" name="subinterface_id[]" class="form-input short-input">
-            <label class="form-label">Encapsulation VLAN:</label>
-            <input type="text" name="subinterface_vlan[]" class="form-input short-input">
-            <label class="form-label">IP Address:</label>
-            <input type="text" name="subinterface_ip[]" class="form-input short-input">
-            <label class="form-label">Subnet Mask:</label>
-            <input type="text" name="subinterface_mask[]" class="form-input short-input">
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
-        </div>
-    `;
-}
-
-function getVlanBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">VLAN ID:</label>
-            <input type="text" name="vlan_id[]" class="form-input short-input">
-            <label class="form-label">VLAN Name:</label>
-            <input type="text" name="vlan_name[]" class="form-input short-input">
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
-        </div>
-    `;
-}
-
-function getRipBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">RIP Version:</label>
-            <input type="text" name="rip_version[]" class="form-input short-input">
-            <label class="form-label">Network IP:</label>
-            <input type="text" name="rip_network[]" class="form-input short-input">
-            <label class="form-label">Redistribute BGP ASN:</label>
-            <input type="text" name="rip_bgp_as[]" class="form-input short-input">
-            <label class="form-label">Metric:</label>
-            <input type="text" name="rip_bgp_metric[]" class="form-input short-input">
-            <input type="checkbox" name="rip_redistribute" class="switchport"> <label class="form-label">Redistribute</label>
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
-        </div>
-    `;
-}
-
-function getOspfBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">Process ID:</label>
-            <input type="text" name="ospf_process_id[]" class="form-input short-input">
-            <label class="form-label">Network IP:</label>
-            <input type="text" name="ospf_network[]" class="form-input short-input">
-            <label class="form-label">Wildcard Mask:</label>
-            <input type="text" name="ospf_wildcard[]" class="form-input short-input">
-            <label class="form-label">Area:</label>
-            <input type="text" name="ospf_area[]" class="form-input short-input">
-            <input type="checkbox" name="ospf_redistribute_connected[]" class="switchport"> <label class="form-label">Redistribute Connected</label>
-            <input type="checkbox" name="ospf_redistribute_bgp[]" class="switchport"> <label class="form-label">Redistribute BGP</label>
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
-        </div>
-    `;
-}
-
-function getBgpBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">ASN:</label>
-            <input type="text" name="bgp_asn[]" class="form-input short-input">
-            <label class="form-label">Neighbor IP:</label>
-            <input type="text" name="bgp_neighbor[]" class="form-input short-input">
-            <label class="form-label">Remote ASN:</label>
-            <input type="text" name="bgp_remote_as[]" class="form-input short-input">
-            <label class="form-label">Address Family:</label>
-            <input type="text" name="bgp_address_family[]" class="form-input short-input">
-            <label class="form-label">Advertised Network:</label>
-            <input type="text" name="bgp_network[]" class="form-input short-input">
-            <label class="form-label">Subnet Mask:</label>
-            <input type="text" name="bgp_mask[]" class="form-input short-input">
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
-        </div>
-    `;
-}
-
-function addInterface(id) {
-    document.querySelector(`#${id} .form-subsection`).insertAdjacentHTML('beforeend', getInterfaceBlock());
-}
-function addSubinterface(id) {
-    document.querySelector(`#${id} .form-subsection`).insertAdjacentHTML('beforeend', getSubinterfaceBlock());
-}
-function addVlan(id) {
-    document.querySelector(`#${id} .form-subsection`).insertAdjacentHTML('beforeend', getVlanBlock());
-}
-function addRip(id) {
-    document.querySelector(`#${id} .form-subsection`).insertAdjacentHTML('beforeend', getRipBlock());
-}
-function addOspf(id) {
-    document.querySelector(`#${id} .form-subsection`).insertAdjacentHTML('beforeend', getOspfBlock());
-}
-function addBgp(id) {
-    document.querySelector(`#${id} .form-subsection`).insertAdjacentHTML('beforeend', getBgpBlock());
-}
-
-async function pushConfig() {
-    const deviceId = document.querySelector("input[name='device_id']").value;
-    const response = await fetch("/push-config", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ device_id: deviceId }),
-    });
-
-    const result = await response.json();
-    if (result.status === "success") {
-        alert("Configuration pushed successfully!");
-    } else {
-        alert("Push failed: " + result.message);
-    }
-}
+setInterval(rotateTerms, 7000); // every 7 seconds
 </script>
 
 <style>
