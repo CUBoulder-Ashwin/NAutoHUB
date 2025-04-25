@@ -85,7 +85,7 @@ chmod +x requirements.sh pilot.sh
 
 ## 🛠️ Manual Setup (Optional) 
 
-### Implementing CI/CD pipeline
+CI/CD Implemenetation:
 
 ## 1. Jenkins & Ngrok Configuration
 
