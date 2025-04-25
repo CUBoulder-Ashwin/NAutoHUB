@@ -8,11 +8,11 @@ topology:
     S1:
       kind: ceos
       image: ceos:4.33.2F
-      startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R1.cfg
+      startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_S1.cfg
     S2:
       kind: ceos
       image: ceos:4.33.2F
-      startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R2.cfg
+      startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_S2.cfg
 
   links:
   - endpoints: ['mgmt:eth1', 'S1:eth1']
