@@ -4,24 +4,24 @@ from netmiko import ConnectHandler
 
 
 def push_configuration(device_id):
-    print(f"Starting configuration push for device_id: {device_id}")  # Debug statement
+    print(f"Starting configuration push for device_id: {device_id}")
 
+    # Locate the CSV
     csv_path = os.path.join(os.path.dirname(__file__), "..", "IPAM", "hosts.csv")
-    print(f"Looking for CSV file at path: {csv_path}")  # Debug statement
+    print(f"Looking for CSV file at path: {csv_path}")
 
     management_ip, username, password = None, None, None
 
     try:
-        with open(csv_path, mode="r") as csvfile:
+        with open(csv_path, mode="r", encoding="utf-8-sig") as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                if row["hostname"] == device_id:
-                    management_ip = row["management_ip"]
-                    username = row["username"]
-                    password = row["password"]
-                    print(
-                        f"Found device in CSV with IP: {management_ip}, Username: {username}"
-                    )
+                print(f"Checking row: {row['hostname'].strip()} vs {device_id.strip()}")
+                if row["hostname"].strip() == device_id.strip():
+                    management_ip = row["management_ip"].strip()
+                    username = row["username"].strip()
+                    password = row["password"].strip()
+                    print(f"Found device with IP: {management_ip}, user: {username}")
                     break
     except FileNotFoundError:
         print("Host CSV file not found.")
@@ -31,6 +31,7 @@ def push_configuration(device_id):
         print("Device credentials or management IP missing.")
         return "Device credentials or management IP missing."
 
+    # Locate the config file
     config_path = os.path.join(
         os.path.dirname(__file__), "..", "configs", f"{device_id}.cfg"
     )
@@ -40,6 +41,7 @@ def push_configuration(device_id):
         print("Config file not found for device.")
         return "Config file not found for device."
 
+    # Build Netmiko connection dictionary
     device = {
         "device_type": "arista_eos",
         "host": management_ip,
@@ -52,9 +54,8 @@ def push_configuration(device_id):
     try:
         net_connect = ConnectHandler(**device)
         print("Connected successfully.")
-
-        # Use delay_factor to manage timing
         net_connect.enable()
+
         output = net_connect.send_config_from_file(config_path)
         print("Configuration push output:")
         print(output)

@@ -4,5 +4,5 @@ devices:
   vendor: arista
   clear_config: 'no'
   vlans:
-  - id: '600'
+  - id: '400'
     name: testing

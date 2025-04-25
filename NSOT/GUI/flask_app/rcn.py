@@ -560,9 +560,10 @@ def push_config():
     push_status = push_configuration(device_id)
 
     if "successfully" in push_status:
-        return jsonify({"status": "success"})
+        return jsonify({"status": "success", "message": push_status})
     else:
         return jsonify({"status": "error", "message": push_status})
+
 
 
 @app.route("/tools", methods=["GET", "POST"])
