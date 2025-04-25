@@ -45,6 +45,11 @@ chmod +x requirements.sh pilot.sh
 ./pilot.sh
 ```
 
+5. You can run the endpoint now.
+
+   ```bash
+   python3 ../NSOT/GUI/flask_app/nhub.py
+   ```
 
 ---
 
