@@ -21,7 +21,7 @@ NSOT is the core of NAutoHUB. It includes:
 A CI/CD pipeline ensures that changes to network infrastructure are tested, validated, and deployed reliably:
 - Jenkins Stage: Automates configuration generation and validation tasks
 - Virtual Test Environment: Runs pre-deployment simulations in virtual network setup like containerlab, etc..
-- Lab Stage: Provides a platform for test engineers to configure and validate setups
+- Physical Test Lab Environment: Provides a platform for test engineers to configure and validate setups
 - Production: Final rollout to customer networks after full validation
 
 # How NAutoHUB Fits
