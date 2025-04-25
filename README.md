@@ -4,6 +4,8 @@
 NAutoHUB is an NMAS – Network Management and Automation System – designed to simplify network configuration, monitoring, and automation.
 It also functions as the Network Source of Truth (NSoT) by maintaining a centralized, version-controlled repository of device configurations, IP allocations, templates, telemetry, and state data.
 
+<br><br>
+<br><br>
 
 # What is NSOT?
 
