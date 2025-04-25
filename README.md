@@ -4,6 +4,7 @@
 NAutoHUB is an NMAS – Network Management and Automation System – designed to simplify network configuration, monitoring, and automation.
 It also functions as the Network Source of Truth (NSoT) by maintaining a centralized, version-controlled repository of device configurations, IP allocations, templates, telemetry, and state data.
 
+
 # What is NSOT?
 
 A Network Source of Truth provides a single, reliable reference for all network data — configurations, states, IPs, and inventory. 
@@ -16,6 +17,7 @@ NSOT is the core of NAutoHUB. It includes:
  - IPAM/ – IP Address Management and device inventory
  - templates/ – Jinja2 templates for building device configs
  - datalake/ – Storage for SNMP/gNMI telemetry and performance metrics
+
    
 # Why CI/CD?
 
@@ -25,27 +27,26 @@ A CI/CD pipeline ensures that changes to network infrastructure are tested, vali
 - Physical Test Lab Environment: Provides a platform for test engineers to configure and validate setups
 - Production: Final rollout to customer networks after full validation
 
+
 # How NAutoHUB Fits
 
 - NAutoHUB supports virtual testing by running Jenkins pipeline tasks and simulating networks in Containerlab.
 - It serves as a tool for lab environments, allowing test engineers to quickly configure, validate, and troubleshoot networks.
 - Production Ready: NAutoHUB can be packaged and delivered to customers, acting as a single Network Source of Truth (NSOT) to manage and automate their existing network infrastructure.
 
+
 ---
+
 
 # 🚀 NAutoHUB Setup Guide
 
 This guide walks you through setting up the NAutoHUB
-
-
 
 ## 📦 Prerequisites
 
 - Ubuntu 20.04+
 - Git installed
 - Internet connection (LOL)
-
-
 
 ## 🤖 Automated Setup
 
@@ -80,8 +81,6 @@ chmod +x requirements.sh pilot.sh
 ```bash
 ./pilot.sh
 ```
-
-
 
 ## 🛠️ Manual Setup (Optional) 
 
@@ -124,7 +123,9 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 https://<your-ngrok>.ngrok-free.app/github-webhook/
 ```
 
+
 ---
+
 
 ## ✅ Troubleshooting
 
