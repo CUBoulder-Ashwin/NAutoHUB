@@ -49,15 +49,15 @@ This guide walks you through setting up the NAutoHUB
 - Git installed
 - Internet connection (LOL)
 
-## 🤖 Setup
+## 🤖 Automated Setup
 
 #### 1. Clone the repo:
 
-```bash
-mkdir -p ~/projects
-cd ~/projects
-git clone https://github.com/CUBoulder-Ashwin/NAutoHUB.git
-```
+ ```bash
+ mkdir -p ~/projects
+ cd ~/projects
+ git clone https://github.com/CUBoulder-Ashwin/NAutoHUB.git
+ ```
 
 #### 2. Create executables:
 
