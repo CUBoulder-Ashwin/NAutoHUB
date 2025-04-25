@@ -21,11 +21,11 @@ NSOT is the core of NAutoHUB. It includes:
 
 # Why CI/CD?
 
-A CI/CD pipeline ensures that changes to network infrastructure are tested, validated, and deployed reliably:
-- Jenkins Stage: Automates configuration generation and validation tasks
+CI/CD pipelines are the foundation for implementing Infrastructure as Code (IaC), allowing automated, consistent, and reliable network deployments from development to production. Four important stages are:
+- Jenkins Validation: Automates configuration generation and validation tasks
 - Virtual Test Environment: Runs pre-deployment simulations in virtual network setup like containerlab, etc..
 - Physical Test Lab Environment: Provides a platform for test engineers to configure and validate setups
-- Production: Final rollout to customer networks after full validation
+- Production push: Final rollout to customer networks after full validation
 
 
 # How NAutoHUB Fits
