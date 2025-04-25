@@ -49,7 +49,7 @@ This guide walks you through setting up the NAutoHUB
 - Git installed
 - Internet connection (LOL)
 
-## 🤖 Automated Setup
+## 🤖 Setup
 
 1. Clone the repo:
 
@@ -83,9 +83,7 @@ chmod +x requirements.sh pilot.sh
 ./pilot.sh
 ```
 
-## 🛠️ Manual Setup (Optional) 
-
-CI/CD Implemenetation:
+## 🛠️ CI/CD Implemenetation: (Optional) 
 
 ## 1. Jenkins & Ngrok Configuration
 
