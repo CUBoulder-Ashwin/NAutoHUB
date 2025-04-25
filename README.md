@@ -99,9 +99,10 @@ tunnels:
 ```
 - Restart the service
 
-  ```bash
-  sudo systemctl restart ngrok.service
-  
+```bash
+sudo systemctl restart ngrok.service
+ ```
+ 
 - Retrieve the initial admin password from jenkins service:
 
  ```bash
