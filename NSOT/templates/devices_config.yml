@@ -6,5 +6,3 @@ devices:
   vlans:
   - id: '600'
     name: testing
-  - id: '400'
-    name: ashwin

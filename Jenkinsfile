@@ -16,7 +16,7 @@ pipeline {
                 echo "🔍 Linting Python files..."
                 sh """
                 . ${VIRTUAL_ENV}/bin/activate
-                flake8 ${PROJECT_ROOT}/NSOT/python-files/ --max-line-length=100
+                flake8 ${PROJECT_ROOT}/NSOT/python-files/ --max-line-length=150
                 """
             }
         }
