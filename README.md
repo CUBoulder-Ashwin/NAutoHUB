@@ -1,3 +1,35 @@
+# What is NAutoHUB?
+
+NAutoHUB is an NMAS – Network Management and Automation System – designed to simplify network configuration, monitoring, and automation.
+It also functions as the Network Source of Truth (NSoT) by maintaining a centralized, version-controlled repository of device configurations, IP allocations, templates, telemetry, and state data.
+
+# What is NSOT?
+
+A Network Source of Truth provides a single, reliable reference for all network data — configurations, states, IPs, and inventory. 
+
+NSOT is the core of NAutoHUB. It includes:
+ - GUI/ – Web-based interface to manage network devices
+ - python-files/ – Scripts for config generation, deployment, and automation
+ - golden_configs/ – Pre-validated configuration templates
+ - golden_states/ – data captures of ideal device states
+ - IPAM/ – IP Address Management and device inventory
+ - templates/ – Jinja2 templates for building device configs
+ - datalake/ – Storage for SNMP/gNMI telemetry and performance metrics
+   
+# Why CI/CD?
+
+A CI/CD pipeline ensures that changes to network infrastructure are tested, validated, and deployed reliably:
+- Jenkins Stage: Automates configuration generation and validation tasks
+- Virtual Test Environment: Runs pre-deployment simulations using Containerlab
+- Lab Stage: Provides a platform for test engineers to configure and validate setups
+- Production: Final rollout to customer networks after full validation
+
+# How NAutoHUB Fits
+
+NAutoHUB supports virtual testing by running Jenkins pipeline tasks and simulating networks in Containerlab.
+It serves as a tool for lab environments, allowing test engineers to quickly configure, validate, and troubleshoot networks.
+Production Ready: NAutoHUB can be packaged and delivered to customers, acting as a single Network Source of Truth (NSOT) to manage and automate their existing network infrastructure.
+
 # 🚀 NAutoHUB Setup Guide
 
 This guide walks you through setting up the NAutoHUB
@@ -50,7 +82,9 @@ chmod +x requirements.sh pilot.sh
 
 ## 🛠️ Manual Setup (Optional) 
 
-### 1. Jenkins & Ngrok Configuration
+### Implementing CI/CD pipeline
+
+## 1. Jenkins & Ngrok Configuration
 
 - Get your [Ngrok auth token](https://dashboard.ngrok.com/get-started/your-authtoken) and paste it into `/NAutoHUB/misc/ngrok_config.yml`:
 
@@ -77,7 +111,7 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 
 - Access the Ngrok URL from `/NAutoHUB/logs/ngrok.log`, complete Jenkins setup in browser.
 
-### 2. GitHub Webhook
+## 2. GitHub Webhook
 
 - Push this repo to GitHub.
 - Go to GitHub → **Settings > Webhooks**
