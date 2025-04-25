@@ -37,7 +37,7 @@ A CI/CD pipeline ensures that changes to network infrastructure are tested, vali
 
 This guide walks you through setting up the NAutoHUB
 
----
+
 
 ## 📦 Prerequisites
 
@@ -45,7 +45,7 @@ This guide walks you through setting up the NAutoHUB
 - Git installed
 - Internet connection (LOL)
 
----
+
 
 ## 🤖 Automated Setup
 
@@ -81,7 +81,7 @@ chmod +x requirements.sh pilot.sh
 ./pilot.sh
 ```
 
----
+
 
 ## 🛠️ Manual Setup (Optional) 
 
