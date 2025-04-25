@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        # Automatically resolves to /home/<user>/projects/NAutoHUB
+        // Dynamically uses the current user's home directory
         PROJECT_ROOT = "${HOME}/projects/NAutoHUB"
         VIRTUAL_ENV = "${PROJECT_ROOT}/pilot-config/venv"
         PIP_CACHE_DIR = "${HOME}/.cache/pip"
@@ -25,7 +25,7 @@ pipeline {
 
         stage('YAML Linting') {
             steps {
-                echo "🔍 Linting YAML files..."
+                echo "📄 Linting YAML files..."
                 sh """
                 . ${VIRTUAL_ENV}/bin/activate
                 find ${PROJECT_ROOT} -path "*/venv" -prune -o -path "*/clab-Lab_AdvNet*" -prune -o \\( -name "*.yml" -o -name "*.yaml" \\) -print | xargs yamllint -d "{rules: {document-start: disable, truthy: disable}}"
