@@ -2,7 +2,7 @@ import pandas as pd
 import csv
 import os
 from netmiko import ConnectHandler
-from datetime import datetime
+#from datetime import datetime
 
 # Path to the CSV file
 csv_path = os.path.join(os.path.dirname(__file__), "..", "IPAM", "hosts.csv")
