@@ -40,16 +40,11 @@ chmod +x requirements.sh pilot.sh
    - creates managment network interfaces and add routes for the containerlabs
    - runs an example containerlab topology
    - creates crafted services like ipam, snmp, ngrok, device health checks, etc
+   - initiates the frontend
 
 ```bash
 ./pilot.sh
 ```
-
-5. You can run the endpoint now.
-
-   ```bash
-   python3 ../NSOT/GUI/flask_app/nahub.py
-   ```
 
 ---
 
