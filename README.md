@@ -1,3 +1,4 @@
+---
 # What is NAutoHUB?
 
 NAutoHUB is an NMAS – Network Management and Automation System – designed to simplify network configuration, monitoring, and automation.
@@ -29,6 +30,8 @@ A CI/CD pipeline ensures that changes to network infrastructure are tested, vali
 - NAutoHUB supports virtual testing by running Jenkins pipeline tasks and simulating networks in Containerlab.
 - It serves as a tool for lab environments, allowing test engineers to quickly configure, validate, and troubleshoot networks.
 - Production Ready: NAutoHUB can be packaged and delivered to customers, acting as a single Network Source of Truth (NSOT) to manage and automate their existing network infrastructure.
+
+---
 
 # 🚀 NAutoHUB Setup Guide
 
