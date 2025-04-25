@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     environment {
-        // Dynamically uses the current user's home directory
-        PROJECT_ROOT = "${HOME}/projects/NAutoHUB"
+        PROJECT_ROOT = "${env.WORKSPACE}"
         VIRTUAL_ENV = "${PROJECT_ROOT}/pilot-config/venv"
         PIP_CACHE_DIR = "${HOME}/.cache/pip"
     }
