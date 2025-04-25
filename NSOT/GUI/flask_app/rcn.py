@@ -448,9 +448,9 @@ def configure_device():
                 jenkins_result = push_and_monitor_jenkins()
 
                 if jenkins_result == "SUCCESS":
-                    return render_template("configure_device.html", jenkins_result="jenkins_success", device_id=device_id)
-
-                return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id=device_id, message="Jenkins failed")
+                    return render_template("configure_device.html", jenkins_result="jenkins_success", device_id=device_id, message="✅ Jenkins pipeline succeeded!")
+                else:
+                    return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id=device_id, message="❌ Jenkins pipeline failed.")
 
             except Exception as pipeline_error:
                 print("🔥 Pipeline error:", pipeline_error)

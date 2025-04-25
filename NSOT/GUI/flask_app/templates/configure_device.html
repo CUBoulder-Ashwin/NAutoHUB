@@ -69,7 +69,11 @@
                 </div>
             </fieldset>
         </div>
-
+        {% if message %}
+        <div class="form-group text-center">
+            <p class="message-text">{{ message }}</p>
+        </div>
+        {% endif %}
         <div class="form-group text-center button-group">
             <button type="submit" class="form-button csv-button">Generate Configuration</button>
         </div>
@@ -495,7 +499,16 @@ body.dark-mode select.form-input:focus {
     font-family: 'Arial Black', sans-serif;
     transition: opacity 0.5s ease-in-out;
 }
-
+.message-text {
+    font-weight: bold;
+    text-align: center;
+}
+body.dark-mode .message-text {
+    color: var(--dark-accent);
+}
+body.light-mode .message-text {
+    color: var(--light-accent);
+}
 
 </style>
 
