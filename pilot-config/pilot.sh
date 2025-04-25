@@ -1,6 +1,9 @@
 #!/bin/bash
 
 set -e  # Exit on any error
+echo "Pulling big files"
+git lfs install
+git lfs pull
 
 echo "Building Docker images for hosts..."
 sudo docker build -f Dockerfile_Hosts -t hosts:latest .
@@ -23,9 +26,22 @@ if groups $USER | grep -q '\bdocker\b'; then
 else
     echo "❌ You are not in the 'docker' group. Adding now..."
     sudo usermod -aG docker $USER
-    echo "⚠️ You must now log out and log back in (or run 'newgrp docker') for changes to take effect."
-    exit 1
+    echo "♻ Re-executing script in newgrp docker session..."
+
+    # Prevent infinite loop using a flag
+    exec newgrp docker <<EONG
+./$(basename "$0") _docker_group_ready
+EONG
+    exit 0
 fi
+
+# Skip docker group check on re-entry
+if [ "$1" = "_docker_group_ready" ]; then
+    shift
+fi
+
+
+echo "✅ Setup complete!"
 
 echo "Activating virtual environment..."
 source venv/bin/activate
@@ -33,4 +49,4 @@ source venv/bin/activate
 echo "Running NAutoHUB Flask App..."
 python3 ~/projects/NAutoHUB/NSOT/GUI/flask_app/rcn.py
 
-echo "✅ Setup complete!"
+

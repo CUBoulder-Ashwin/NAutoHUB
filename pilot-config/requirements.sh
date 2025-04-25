@@ -73,8 +73,13 @@ sudo apt-get install -y libsnmp-dev snmp snmpd snmptrapd snmp-mibs-downloader gc
 sudo add-apt-repository universe -y
 sudo download-mibs
 sudo apt install telegraf
+sudo apt install git-lfs
 sudo apt install gnmic
+
+
 sudo apt install -y python3-pip netplan.io
+sudo systemctl enable systemd-networkd
+sudo systemctl start systemd-networkd
 
 echo "[12/12] Installing Python packages from requirements.txt..."
 
