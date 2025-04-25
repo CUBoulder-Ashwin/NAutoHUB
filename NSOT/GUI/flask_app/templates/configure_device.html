@@ -4,7 +4,7 @@
 <h2 class="page-title themed-heading">Configure Device</h2>
 
 <div class="tile-container">
-    <form method="POST" class="form-container" id="config-form">
+    <form method="POST" class="form-container" id="config-form" onsubmit="return showLoading()">
         <div class="form-group">
             <label class="form-label">Device Name:</label>
             <input type="text" name="device_id" class="form-input medium-input" required>
@@ -75,16 +75,75 @@
         </div>
     </form>
     <div id="loading-overlay" style="display:none;">
-        <div class="loading-text" id="loading-message">Generating YAML...</div>
+        <div class="loading-spinner"></div>
+        <p class="loading-text" id="loading-text">Initializing...</p>
     </div>
-    
-    <div class="form-group text-center button-group" id="push-button-wrapper" style="display: none;">
+    {% if jenkins_result == 'jenkins_success' %}
+    <div class="form-group text-center button-group" id="push-button-wrapper" style="display: flex;">
         <button type="button" class="form-button csv-button" onclick="pushConfig()">Push Configuration</button>
     </div>
+    {% endif %}
 </div>
 
 <script>
-    
+function showLoading() {
+    document.getElementById("loading-overlay").style.display = "flex";
+    return true; // allow native form POST
+}
+const terms = [
+  "Routing BGP packets to Valhalla...",
+  "Spinning up Layer 3 magic...",
+  "Injecting routes into the Matrix...",
+  "Summoning OSPF daemons... ",
+  "Crafting VLAN potions...",
+  "Talking to network oracles...",
+  "Negotiating with DHCP spirits...",
+  "Sniffing packets from the astral plane...",
+  "Tunneling through hyperspace...",
+  "Enabling port-channel wizardry...",
+  "Building bridges with STP spells...",
+  "Balancing traffic on the tightrope of ECMP...",
+  "Fragmenting datagrams with care...",
+  "Conjuring MAC addresses...",
+  "Programming the P4 gods...",
+  "Pinging the void... ",
+  "Announcing routes like a prophet...",
+  "Weaving MPLS labels into destiny...",
+  "Encoding bits of truth...",
+  "Assembling TCP handshakes...",
+  "Peering with interdimensional routers...",
+  "Binding interfaces with eldritch configs...",
+  "Casting 'show run' scrolls... ",
+  "Parsing YANGs of destiny...",
+  "Bridging subnets across galaxies...",
+  "Extracting SNMP secrets from the vault...",
+  "Interfacing with quantum NICs...",
+  "Configuring routers with dark magic...",
+  "Recabling cables with thoughts alone...",
+  "Blessing interfaces with zero drops...",
+  "Summoning Ceos spirits from the cloud... ",
+  "Resurrecting containers from the abyss...",
+  "Defragmenting reality into packets...",
+  "Rebooting layer zero... ",
+  "Beaming bits through wormholes...",
+  "Unrolling IPv6 prophecies...",
+  "Hacking the mainframe of the underlay...",
+  "Teleporting configs into flash...",
+];
+
+let index = 0;
+function rotateTerms() {
+  const el = document.getElementById("loading-text");
+  el.style.opacity = 0;
+  setTimeout(() => {
+    el.innerText = terms[index];
+    el.style.opacity = 1;
+    index = (index + 1) % terms.length;
+  }, 500);
+}
+terms.sort(() => Math.random() - 0.5);
+setInterval(rotateTerms, 7000);
+
 function getInterfaceBlock() {
     return `
         <div class="device-fields">
@@ -221,37 +280,6 @@ function addOspf(sectionId) {
 function addBgp(sectionId) {
     document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getBgpBlock());
 }
-document.getElementById("config-form").addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const form = e.target;
-    const formData = new FormData(form);
-    const loadingOverlay = document.getElementById("loading-overlay");
-    const loadingMessage = document.getElementById("loading-message");
-    const pushWrapper = document.getElementById("push-button-wrapper");
-
-    loadingMessage.textContent = "Generating YAML...";
-    loadingOverlay.style.display = "flex";
-
-    const response = await fetch("/configure-device", {
-        method: "POST",
-        body: formData
-    });
-
-    const result = await response.text();
-    if (result.includes("jenkins_success")) {
-        loadingMessage.textContent = "Running Jenkins Pipeline...";
-
-        // Delay to simulate progress (optional)
-        setTimeout(() => {
-            loadingOverlay.style.display = "none";
-            pushWrapper.style.display = "flex";
-        }, 3000);
-    } else {
-        loadingMessage.textContent = "An error occurred.";
-        setTimeout(() => loadingOverlay.style.display = "none", 3000);
-    }
-});
 
 async function pushConfig() {
     const deviceId = document.querySelector("input[name='device_id']").value;

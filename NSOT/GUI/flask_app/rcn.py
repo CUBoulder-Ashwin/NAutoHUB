@@ -310,8 +310,8 @@ def add_device():
 def configure_device():
     try:
         if request.method == "POST":
-            device_id = request.form["device_id"]
-            device_vendor = request.form["device_vendor"]
+            device_id = request.form.get("device_id")
+            device_vendor = request.form.get("device_vendor")
 
             # Interfaces
             interfaces = []
@@ -432,27 +432,36 @@ def configure_device():
                     ]
                 }
 
-            create_yaml_from_form_data(
-                device_id=device_id,
-                device_vendor=device_vendor,
-                interfaces=interfaces,
-                subinterfaces=subinterfaces,
-                vlans=vlans,
-                rip=rip,
-                ospf=ospf,
-                bgp=bgp,
-            )
+            # Attempt to generate YAML and push via Jenkins
+            try:
+                create_yaml_from_form_data(
+                    device_id=device_id,
+                    device_vendor=device_vendor,
+                    interfaces=interfaces,
+                    subinterfaces=subinterfaces,
+                    vlans=vlans,
+                    rip=rip,
+                    ospf=ospf,
+                    bgp=bgp,
+                )
+                conf_gen()
+                jenkins_result = push_and_monitor_jenkins()
 
-            conf_gen()
-            jenkins_result = push_and_monitor_jenkins()
+                if jenkins_result == "SUCCESS":
+                    return render_template("configure_device.html", jenkins_result="jenkins_success", device_id=device_id)
 
-            if jenkins_result == "SUCCESS":
-                return render_template("configure_device.html", jenkins_result="jenkins_success", device_id=device_id)
-            else:
-                return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id=device_id)
+                return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id=device_id, message="Jenkins failed")
 
-        # GET request fallback
+            except Exception as pipeline_error:
+                print("🔥 Pipeline error:", pipeline_error)
+                return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id=device_id, message=str(pipeline_error))
+
+        # GET request
         return render_template("configure_device.html", jenkins_result=None)
+
+    except Exception as e:
+        print(f"Error in /configure-device: {e}")
+        return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id="unknown", message=str(e))
 
     except Exception as e:
         print(f"Error in /configure-device: {e}")
