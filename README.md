@@ -41,7 +41,6 @@ A CI/CD pipeline ensures that changes to network infrastructure are tested, vali
 # 🚀 NAutoHUB Setup Guide
 
 This guide walks you through setting up the NAutoHUB
-<br><br>
 
 ## 📦 Prerequisites
 - Ubuntu 20.04+
