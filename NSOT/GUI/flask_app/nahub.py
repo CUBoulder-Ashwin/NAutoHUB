@@ -1,4 +1,5 @@
 import os
+import yaml
 import shutil
 import sys
 import time
@@ -8,6 +9,8 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 from jinja2 import Environment, FileSystemLoader
 import subprocess
 from threading import Thread
+from pathlib import Path
+
 
 # Get the current directory of this script
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -158,6 +161,18 @@ def deploy_topology_route():
         )
         print("[✔] Destroy output:")
         print(destroy_output)
+
+        with open(yaml_path) as f:
+            data = yaml.safe_load(f)
+        lab_name = data.get("name", "unknown")
+
+        lab_dir = Path(yaml_path).parent / f"clab-{lab_name}"
+        if lab_dir.exists() and lab_dir.is_dir():
+            shutil.rmtree(lab_dir)
+            print(f"[✔] Deleted old lab folder: {lab_dir}")
+        else:
+            print(f"[ℹ] Lab folder {lab_dir} not found or already deleted.")
+
     except subprocess.CalledProcessError as e:
         print("[ERROR] Failed to destroy old topology:")
         print(e.output)
@@ -200,9 +215,22 @@ def delete_topology_route():
             stderr=subprocess.STDOUT,
             text=True,
         )
-        print("[✔] Delete output:")
+        print("[✔] Destroy output:")
         print(delete_output)
+
+        with open(yaml_path) as f:
+            data = yaml.safe_load(f)
+        lab_name = data.get("name", "unknown")
+
+        lab_dir = Path(yaml_path).parent / f"clab-{lab_name}"
+        if lab_dir.exists() and lab_dir.is_dir():
+            shutil.rmtree(lab_dir)
+            print(f"[✔] Deleted lab folder: {lab_dir}")
+        else:
+            print(f"[ℹ] Lab folder {lab_dir} not found or already deleted.")
+
         message = "✅ Topology deleted successfully."
+
     except subprocess.CalledProcessError as e:
         print("[ERROR] Delete failed:")
         print(e.output)
@@ -211,6 +239,8 @@ def delete_topology_route():
     return render_template(
         "build_topology.html", docker_images=get_docker_images(), message=message
     )
+
+
 
 
 @app.route("/dashboard")
