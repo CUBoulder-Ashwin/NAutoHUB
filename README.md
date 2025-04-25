@@ -23,7 +23,7 @@ NSOT is the core of NAutoHUB. It includes:
 # Why CI/CD?
 
 CI/CD pipelines are the foundation for implementing Infrastructure as Code (IaC), allowing automated, consistent, and reliable network deployments from development to production.
-![cicd](pictures/cicd.png)
+![cicd](pictures/nahub-cicd.png)
 
 
 # How NAutoHUB Fits
