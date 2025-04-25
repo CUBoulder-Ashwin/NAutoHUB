@@ -20,33 +20,12 @@ sudo netplan apply
 echo "Running pilot.py..."
 python3 pilot.py
 
-# Check if user is in docker group
-if groups $USER | grep -q '\bdocker\b'; then
-    echo "✅ User is in the docker group."
-else
-    echo "❌ You are not in the 'docker' group. Adding now..."
-    sudo usermod -aG docker $USER
-    echo "♻ Re-executing script in newgrp docker session..."
-
-    # Prevent infinite loop using a flag
-    exec newgrp docker <<EONG
-./$(basename "$0") _docker_group_ready
-EONG
-    exit 0
-fi
-
-# Skip docker group check on re-entry
-if [ "$1" = "_docker_group_ready" ]; then
-    shift
-fi
-
-
 echo "✅ Setup complete!"
 
 echo "Activating virtual environment..."
 source venv/bin/activate
 
 echo "Running NAutoHUB Flask App..."
-python3 ~/projects/NAutoHUB/NSOT/GUI/flask_app/rcn.py
+python3 ~/projects/NAutoHUB/NSOT/GUI/flask_app/nahub.py
 
 

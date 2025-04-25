@@ -60,14 +60,8 @@ sudo apt install -y python3.12-venv
 python3 -m venv venv
 source venv/bin/activate
 
-echo "[10/12] Fixing permissions so Jenkins can access venv..."
-sudo chmod o+rx $HOME
-sudo chmod o+rx $HOME/projects
-sudo chmod o+rx $HOME/projects/NAutoHUB
-sudo chmod o+rx $HOME/projects/NAutoHUB/pilot-config
-sudo chmod -R o+rx $HOME/projects/NAutoHUB/pilot-config/venv
 
-echo "[11/12] Installing tools..."
+echo "[10/12] Installing tools..."
 sudo apt-get update
 sudo apt-get install -y libsnmp-dev snmp snmpd snmptrapd snmp-mibs-downloader gcc python3-dev syslog-ng
 sudo add-apt-repository universe -y
@@ -81,8 +75,7 @@ sudo apt install -y python3-pip netplan.io
 sudo systemctl enable systemd-networkd
 sudo systemctl start systemd-networkd
 
-echo "[12/12] Installing Python packages from requirements.txt..."
-
+echo "[11/12] Installing Python packages from requirements.txt..."
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 REQ_FILE="${SCRIPT_DIR}/requirements.txt"
 
@@ -91,5 +84,14 @@ if [[ -f "$REQ_FILE" ]]; then
 else
     echo "❗ requirements.txt not found in $SCRIPT_DIR. Skipping Python dependency installation."
 fi
+
+echo "[12/12] Fixing permissions so Jenkins can access venv..."
+sudo chmod o+rx $HOME
+sudo chmod o+rx $HOME/projects
+sudo chmod o+rx $HOME/projects/NAutoHUB
+sudo chmod o+rx $HOME/projects/NAutoHUB/pilot-config
+sudo chmod -R o+rx $HOME/projects/NAutoHUB/pilot-config/venv
+sudo usermod -aG docker $USER
+newgrp docker
 
 echo "✅ All tools and packages have been successfully installed."
