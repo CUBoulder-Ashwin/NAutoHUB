@@ -59,9 +59,15 @@ echo "[9/12] Setting up Python environment and SNMP tools..."
 sudo apt install -y python3.12-venv
 python3 -m venv venv
 source venv/bin/activate
-sudo chmod o+rx ~/projects/NAutoHUB
-sudo chmod o+rx ~/projects/NAutoHUB/pilot-config
-sudo chmod -R +rx /venv
+
+echo "[10/12] Fixing permissions so Jenkins can access venv..."
+sudo chmod o+rx $HOME
+sudo chmod o+rx $HOME/projects
+sudo chmod o+rx $HOME/projects/NAutoHUB
+sudo chmod o+rx $HOME/projects/NAutoHUB/pilot-config
+sudo chmod -R o+rx $HOME/projects/NAutoHUB/pilot-config/venv
+
+echo "[11/12] Installing tools..."
 sudo apt-get update
 sudo apt-get install -y libsnmp-dev snmp snmpd snmptrapd snmp-mibs-downloader gcc python3-dev syslog-ng
 sudo add-apt-repository universe -y
@@ -69,6 +75,8 @@ sudo download-mibs
 sudo apt install telegraf
 sudo apt install gnmic
 sudo apt install -y python3-pip netplan.io
+
+echo "[12/12] Installing python dependencies..."
 pip install easysnmp netmiko flask requests docker
 
 echo "✅ All tools and packages have been successfully installed."
