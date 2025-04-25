@@ -19,7 +19,30 @@ subscriptions:
       - /components/component/cpu
     sample_interval: 1s
 
-  
+  bgp:
+    paths:
+      - /network-instances/network-instance/protocols/protocol/bgp
+    sample_interval: 10s
+
+  ospf:
+    paths:
+      - /network-instances/network-instance/protocols/protocol/ospfv2
+    sample_interval: 10s
+
+  rip:
+    paths:
+      - /network-instances/network-instance/protocols/protocol/rip
+    sample_interval: 10s
+
+  routes:
+    paths:
+      - /network-instances/network-instance/afts
+    sample_interval: 10s
+
+  local-routing:
+    paths:
+      - /network-instances/network-instance/protocols/protocol/local-routing
+    sample_interval: 10s
 
 outputs:
   influxdb:
@@ -27,7 +50,7 @@ outputs:
     address: http://localhost:8086
     org: NAutoHUB
     bucket: gnmi
-    token: 78prwCSyFfiHh7DMe1a4wiBz77_3eQaiOoc1opJg2MqYi2ZF0tCP4xTX4HcuqaPE-S0nV6RiPKthPUwsRX9hyQ==
+    token: yF2zkFUE3quoPDWxqtXF_bzkMQKHtWnA27ujh0vPa-HoLkIxUXn9TtswZeitlusY5CDbvdnPG_0z7I-EGL1TTw==
     override-timestamps: false
     timestamp-precision: s
     health-check-period: 30s
