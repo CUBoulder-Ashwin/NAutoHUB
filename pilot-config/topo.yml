@@ -1,4 +1,4 @@
-name: example
+name: RCN
 topology:
   nodes:
     mgmt:
@@ -8,14 +8,65 @@ topology:
     S1:
       kind: ceos
       image: ceos:4.33.2F
-      startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_S1.cfg
     S2:
       kind: ceos
       image: ceos:4.33.2F
-      startup-config: ~/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_S2.cfg
+    S3:
+      kind: ceos
+      image: ceos:4.33.2F
+    S4:
+      kind: ceos
+      image: ceos:4.33.2F
+    R1:
+      kind: ceos
+      image: ceos:4.33.2F
+    R2:
+      kind: ceos
+      image: ceos:4.33.2F
+    R3:
+      kind: ceos
+      image: ceos:4.33.2F
+    R4:
+      kind: ceos
+      image: ceos:4.33.2F
+    R5:
+      kind: ceos
+      image: ceos:4.33.2F
+    H1:
+      kind: linux
+      image: hosts:latest
+      exec: []
+    H2:
+      kind: linux
+      image: hosts:latest
+      exec: []
+    H3:
+      kind: linux
+      image: hosts:latest
+      exec: []
 
   links:
   - endpoints: ['mgmt:eth1', 'S1:eth1']
   - endpoints: ['mgmt:eth2', 'S2:eth1']
-  - endpoints: ['mgmt:eth10', 'host:eth1']
+  - endpoints: ['mgmt:eth3', 'S3:eth1']
+  - endpoints: ['mgmt:eth4', 'S4:eth1']
+  - endpoints: ['mgmt:eth5', 'R1:eth1']
+  - endpoints: ['mgmt:eth6', 'R2:eth1']
+  - endpoints: ['mgmt:eth7', 'R3:eth1']
+  - endpoints: ['mgmt:eth8', 'R4:eth1']
+  - endpoints: ['mgmt:eth9', 'R5:eth1']
   - endpoints: ['S1:eth2', 'S2:eth2']
+  - endpoints: ['S1:eth3', 'R1:eth2']
+  - endpoints: ['S2:eth3', 'R2:eth2']
+  - endpoints: ['R1:eth3', 'S3:eth2']
+  - endpoints: ['R2:eth3', 'S4:eth2']
+  - endpoints: ['S3:eth3', 'S4:eth3']
+  - endpoints: ['S3:eth4', 'R3:eth2']
+  - endpoints: ['S4:eth4', 'R4:eth2']
+  - endpoints: ['R3:eth3', 'R4:eth3']
+  - endpoints: ['R3:eth4', 'R5:eth2']
+  - endpoints: ['R4:eth4', 'R5:eth3']
+  - endpoints: ['H1:eth1', 'S1:eth4']
+  - endpoints: ['H2:eth1', 'S2:eth4']
+  - endpoints: ['H3:eth1', 'R5:eth4']
+  - endpoints: ['mgmt:eth10', 'host:eth1']

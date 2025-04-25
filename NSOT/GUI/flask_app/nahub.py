@@ -94,14 +94,12 @@ def build_topology():
         devices = []
         links = []
 
-        count_str = request.form.get("device_count", "0")
-        try:
-            count = int(count_str.strip())
-        except ValueError:
-            count = 0
-
-        for i in range(count):
+        # ✅ Dynamically detect how many devices were posted
+        i = 0
+        while True:
             name = request.form.get(f"device_name_{i}")
+            if not name:
+                break
             kind = request.form.get(f"device_kind_{i}")
             image = request.form.get(f"device_image_{i}")
             config = request.form.get(f"device_config_{i}")
@@ -116,6 +114,7 @@ def build_topology():
                     "exec": exec_lines,
                 }
             )
+            i += 1
 
         # Parse links
         link_dev1_list = request.form.get("link_dev1_json")

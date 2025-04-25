@@ -10,23 +10,21 @@
       <input type="text" name="topo_name" class="form-input medium-input" required>
     </div>
 
-    <div class="form-group">
-      <label class="form-label">Number of Devices:</label>
-      <input type="number" name="device_count" id="device-count" class="form-input medium-input" min="0" value="0">
-    </div>
-
     <div id="device-form-list"></div>
+
+    <div class="button-group">
+      <button type="button" class="transparent-button" onclick="addDeviceRow()">+ Add Device</button>
+    </div>
 
     <div id="connections-section" style="display: none;">
       <h3 class="page-title" style="margin-top: 40px;">Connect Devices</h3>
       <input type="hidden" name="link_count" id="link-count" value="0">
       <div id="link-forms"></div>
       <div class="button-group">
-        <button type="button" class="transparent-button" onclick="addLinkRow()">+  Add Link</button>
+        <button type="button" class="transparent-button" onclick="addLinkRow()">+ Add Link</button>
       </div>
     </div>
 
-    <!-- LOADING OVERLAY -->
     <div id="loading-overlay" style="display:none;">
       <div class="loading-spinner"></div>
       <p class="loading-text" id="loading-text">Initializing...</p>
@@ -40,15 +38,17 @@
 
     <input type="hidden" name="link_dev1_json" id="link-dev1-json">
     <input type="hidden" name="link_dev2_json" id="link-dev2-json">
+    
+    <div class="form-group text-center button-group" style="margin-top: 30px;">
+      <button type="submit" class="form-button csv-button" name="generate">Generate YAML</button>
+    </div>
   </form>
 
-  <div class="form-group text-center button-group" style="margin-top: 30px;">
-    <button type="submit" form="topology-form" class="form-button csv-button" name="generate">Generate YAML</button>
-
+  <div class="form-group text-center button-group" style="margin-top: 10px;">
     <form method="POST" action="{{ url_for('deploy_topology_route') }}" style="display: inline;" onsubmit="showLoading()">
       <button type="submit" class="form-button csv-button" formnovalidate>Build Topology</button>
     </form>
-
+  
     <form method="POST" action="{{ url_for('delete_topology_route') }}" style="display: inline;" onsubmit="showLoading()">
       <button type="submit" class="form-button csv-button" formnovalidate>Delete Topology</button>
     </form>
@@ -57,121 +57,9 @@
 
 <script>
 let dockerImages = {{ docker_images|tojson|safe }};
-let kinds = ["linux", "ceos"];
+let kinds = ["ceos", "linux"];
+let deviceRows = [];
 let linkRows = [];
-
-document.addEventListener("DOMContentLoaded", () => {
-  renderDeviceForms(0); // Load initial state
-  document.getElementById("device-count").addEventListener("input", () => {
-    const count = parseInt(document.getElementById("device-count").value);
-    renderDeviceForms(count);
-  });
-});
-
-function renderDeviceForms(count) {
-  const list = document.getElementById("device-form-list");
-  list.innerHTML = "";
-  document.getElementById("link-count").value = 0;
-  document.getElementById("connections-section").style.display = count > 0 ? "block" : "none";
-  document.getElementById("link-forms").innerHTML = "";
-
-  for (let i = 0; i < count; i++) {
-    const form = document.createElement("div");
-    form.classList.add("form-group", "grouped-form");
-    form.innerHTML = `
-      <div class="device-fields">
-        <h4 class="device-title" style="margin-bottom: 15px;">Device ${i}</h4>
-        <label class="form-label">Name:</label>
-        <input type="text" name="device_name_${i}" class="form-input short-input" required>
-
-        <label class="form-label">Kind:</label>
-        <select name="device_kind_${i}" class="form-input" required onchange="toggleConfigExec(${i})" id="kind-${i}">
-          <option value="">-- Select Kind --</option>
-          ${kinds.map(k => `<option value="${k}">${k}</option>`).join("")}
-        </select>
-
-        <label class="form-label">Docker Image:</label>
-        <select name="device_image_${i}" class="form-input" required>
-          <option value="">-- Select Image --</option>
-          ${dockerImages.map(img => `<option value="${img}">${img}</option>`).join("")}
-        </select>
-
-        <div id="config-section-${i}" class="form-group hidden">
-          <label class="form-label">Config File (Optional):</label>
-          <input type="text" name="device_config_${i}" class="form-input short-input" placeholder="Leave blank if not needed">
-        </div>
-
-        <div id="exec-section-${i}" class="form-group hidden">
-          <label class="form-label">Exec Commands (for linux):</label>
-          <textarea name="device_exec_${i}[]" class="form-input short-input" rows="3" placeholder="One command per line"></textarea>
-        </div>
-      </div>
-    `;
-    list.appendChild(form);
-  }
-}
-
-function toggleConfigExec(i) {
-  const kind = document.getElementById(`kind-${i}`).value;
-  document.getElementById(`config-section-${i}`).style.display = kind === "ceos" ? "block" : "none";
-  document.getElementById(`exec-section-${i}`).style.display = kind === "linux" ? "block" : "none";
-}
-
-function addLinkRow() {
-  const devices = [...document.querySelectorAll('[name^="device_name_"]')]
-    .map((el, idx) => el.value.trim() || `Device_${idx}`);
-
-  if (devices.length < 2) return;
-  linkRows.push({ dev1: devices[0], dev2: devices[1] });
-  renderLinkRows(devices);
-}
-
-function removeLinkRow(index) {
-  linkRows.splice(index, 1);
-  const devices = [...document.querySelectorAll('[name^="device_name_"]')].map(el => el.value.trim()).filter(Boolean);
-  renderLinkRows(devices);
-}
-
-function renderLinkRows(devices) {
-  const container = document.getElementById("link-forms");
-  container.innerHTML = "";
-  document.getElementById("link-count").value = linkRows.length;
-
-  linkRows.forEach((link, i) => {
-    const row = document.createElement("div");
-    row.classList.add("form-group", "grouped-form");
-    row.innerHTML = `
-      <div class="device-fields">
-        <label class="form-label">Link ${i + 1}</label>
-        <div style="display: flex; gap: 10px; align-items: center;">
-          <select name="link_dev1_${i}" class="form-input" required>
-            ${devices.map(d => `<option value="${d}" ${d === link.dev1 ? "selected" : ""}>${d}</option>`).join("")}
-          </select>
-          <span style="font-weight: bold;">⇄</span>
-          <select name="link_dev2_${i}" class="form-input" required>
-            ${devices.map(d => `<option value="${d}" ${d === link.dev2 ? "selected" : ""}>${d}</option>`).join("")}
-          </select>
-        </div>
-        <div class="delete-button-wrapper">
-          <button type="button" class="transparent-button" onclick="removeLinkRow(${i})">-  Delete Link</button>
-        </div>
-      </div>
-    `;
-    container.appendChild(row);
-  });
-
-  syncLinkJSON();
-}
-
-function syncLinkJSON() {
-  const dev1List = linkRows.map(link => link.dev1);
-  const dev2List = linkRows.map(link => link.dev2);
-  document.getElementById("link-dev1-json").value = JSON.stringify(dev1List);
-  document.getElementById("link-dev2-json").value = JSON.stringify(dev2List);
-}
-
-let rotateInterval;
-let index = 0;
 
 const terms = [
   "Routing BGP packets to Valhalla...",
@@ -189,14 +77,14 @@ const terms = [
   "Fragmenting datagrams with care...",
   "Conjuring MAC addresses...",
   "Programming the P4 gods...",
-  "Pinging the void...",
+  "Pinging the void... ",
   "Announcing routes like a prophet...",
   "Weaving MPLS labels into destiny...",
   "Encoding bits of truth...",
   "Assembling TCP handshakes...",
   "Peering with interdimensional routers...",
   "Binding interfaces with eldritch configs...",
-  "Casting 'show run' scrolls...",
+  "Casting 'show run' scrolls... ",
   "Parsing YANGs of destiny...",
   "Bridging subnets across galaxies...",
   "Extracting SNMP secrets from the vault...",
@@ -204,19 +92,22 @@ const terms = [
   "Configuring routers with dark magic...",
   "Recabling cables with thoughts alone...",
   "Blessing interfaces with zero drops...",
-  "Summoning Ceos spirits from the cloud...",
+  "Summoning Ceos spirits from the cloud... ",
   "Resurrecting containers from the abyss...",
   "Defragmenting reality into packets...",
-  "Rebooting layer zero...",
+  "Rebooting layer zero... ",
   "Beaming bits through wormholes...",
   "Unrolling IPv6 prophecies...",
   "Hacking the mainframe of the underlay...",
-  "Teleporting configs into flash..."
+  "Teleporting configs into flash...",
 ];
-
-
-// Shuffle once
 terms.sort(() => Math.random() - 0.5);
+let index = 0;
+let rotateInterval;
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderDeviceForms();
+});
 
 function rotateTerms() {
   const el = document.getElementById("loading-text");
@@ -231,8 +122,187 @@ function rotateTerms() {
 function showLoading() {
   const overlay = document.getElementById("loading-overlay");
   overlay.style.display = "flex";
-  rotateTerms(); // show first term instantly
+  rotateTerms();
   rotateInterval = setInterval(rotateTerms, 7000);
+}
+
+function collectCurrentDeviceData() {
+  const updated = [];
+  document.querySelectorAll("#device-form-list .grouped-form").forEach((form, i) => {
+    updated.push({
+      name: form.querySelector(`[name="device_name_${i}"]`)?.value || "",
+      kind: form.querySelector(`[name="device_kind_${i}"]`)?.value || "",
+      image: form.querySelector(`[name="device_image_${i}"]`)?.value || "",
+      config: form.querySelector(`[name="device_config_${i}"]`)?.value || "",
+      exec: form.querySelector(`[name="device_exec_${i}[]"]`)?.value || ""
+    });
+  });
+  return updated;
+}
+
+function collectCurrentLinkData() {
+  const updated = [];
+  document.querySelectorAll("#link-forms .grouped-form").forEach(form => {
+    const selects = form.querySelectorAll("select");
+    updated.push({
+      dev1: selects[0]?.value || "",
+      dev2: selects[1]?.value || ""
+    });
+  });
+  return updated;
+}
+
+function addDeviceRow() {
+  deviceRows = collectCurrentDeviceData();
+  linkRows = collectCurrentLinkData();
+  deviceRows.push({});
+  renderDeviceForms();
+}
+
+function removeDeviceRow(index) {
+  deviceRows = collectCurrentDeviceData();
+  linkRows = collectCurrentLinkData();
+  deviceRows.splice(index, 1);
+  renderDeviceForms();
+}
+
+function renderDeviceForms() {
+  const list = document.getElementById("device-form-list");
+  list.innerHTML = "";
+  document.getElementById("connections-section").style.display = deviceRows.length > 0 ? "block" : "none";
+
+  deviceRows.forEach((device, i) => {
+    const form = document.createElement("div");
+    form.classList.add("form-group", "grouped-form");
+    form.innerHTML = `
+      <div class="device-fields">
+        <h4 class="device-title" style="margin-bottom: 15px;">Device ${i + 1}</h4>
+
+        <label class="form-label">Name:</label>
+        <input type="text" name="device_name_${i}" class="form-input short-input" required value="${device.name || ''}">
+
+        <label class="form-label">Kind:</label>
+        <select name="device_kind_${i}" class="form-input" required onchange="toggleConfigExec(${i})" id="kind-${i}">
+          <option value="">-- Select Kind --</option>
+          ${kinds.map(k => `<option value="${k}" ${k === device.kind ? "selected" : ""}>${k}</option>`).join("")}
+        </select>
+
+        <label class="form-label">Docker Image:</label>
+        <select name="device_image_${i}" class="form-input" required>
+          <option value="">-- Select Image --</option>
+          ${dockerImages.map(img => `<option value="${img}" ${img === device.image ? "selected" : ""}>${img}</option>`).join("")}
+        </select>
+
+        <div id="config-section-${i}" class="form-group" style="display: ${device.kind === 'cEOS' ? 'block' : 'none'};">
+          <label class="form-label">Config File (Optional):</label>
+          <input type="text" name="device_config_${i}" class="form-input short-input" value="${device.config || ''}">
+        </div>
+
+        <div id="exec-section-${i}" class="form-group" style="display: ${device.kind === 'Linux' ? 'block' : 'none'};">
+          <label class="form-label">Exec Commands (for linux):</label>
+          <textarea name="device_exec_${i}[]" class="form-input short-input" rows="3">${device.exec || ''}</textarea>
+        </div>
+
+        <div class="delete-button-wrapper" style="text-align: left; margin-top: 10px;">
+          <button type="button" class="transparent-button" onclick="removeDeviceRow(${i})">- Delete Device</button>
+        </div>
+      </div>
+    `;
+    list.appendChild(form);
+  });
+
+  for (let i = 0; i < deviceRows.length; i++) toggleConfigExec(i);
+  renderLinkRows();
+}
+
+function toggleConfigExec(i) {
+  const kind = document.getElementById(`kind-${i}`)?.value || "";
+  document.getElementById(`config-section-${i}`).style.display = kind === "cEOS" ? "block" : "none";
+  document.getElementById(`exec-section-${i}`).style.display = kind === "Linux" ? "block" : "none";
+}
+
+function addLinkRow() {
+  deviceRows = collectCurrentDeviceData();
+  linkRows = collectCurrentLinkData();
+
+  // 1. Save all current selections
+  const updatedLinks = [...linkRows];
+
+  // 2. Add one new empty link
+  updatedLinks.push({ dev1: "", dev2: "" });
+
+  // 3. Save and render
+  linkRows = updatedLinks;
+  renderLinkRows();
+}
+
+
+
+function removeLinkRow(index) {
+  linkRows.splice(index, 1);
+  renderLinkRows();
+}
+
+function renderLinkRows() {
+  const container = document.getElementById("link-forms");
+  container.innerHTML = "";
+  document.getElementById("link-count").value = linkRows.length;
+
+  const devices = [...document.querySelectorAll('[name^="device_name_"]')].map(el => el.value.trim()).filter(Boolean);
+
+  linkRows.forEach((link, i) => {
+    const row = document.createElement("div");
+    row.classList.add("form-group", "grouped-form");
+    row.innerHTML = `
+      <div class="device-fields">
+        <label class="form-label">Link ${i + 1}</label>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <select name="link_dev1_${i}" class="form-input" onchange="updateLinkRow(${i}, 0)">
+            <option value="">-- Select Device --</option>
+            ${devices.map(d => `<option value="${d}" ${d === link.dev1 ? "selected" : ""}>${d}</option>`).join("")}
+          </select>
+          <span style="font-weight: bold;">⇄</span>
+          <select name="link_dev2_${i}" class="form-input" onchange="updateLinkRow(${i}, 1)">
+            <option value="">-- Select Device --</option>
+            ${devices.map(d => `<option value="${d}" ${d === link.dev2 ? "selected" : ""}>${d}</option>`).join("")}
+          </select>
+        </div>
+        <div class="delete-button-wrapper" style="text-align: left; margin-top: 10px;">
+          <button type="button" class="transparent-button" onclick="removeLinkRow(${i})">- Delete Link</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(row);
+  });
+
+  syncLinkJSON();  // Safe to sync after full render
+}
+
+function updateLinkRow(index, side) {
+  const container = document.getElementById("link-forms");
+  const row = container.querySelectorAll(".grouped-form")[index];
+  const selects = row.querySelectorAll("select");
+
+  if (side === 0) {
+    linkRows[index].dev1 = selects[0].value;
+  } else {
+    linkRows[index].dev2 = selects[1].value;
+  }
+
+  syncLinkJSON(); // Sync immediately after user changes
+}
+
+
+function syncLinkJSON() {
+  const dev1List = [];
+  const dev2List = [];
+  document.querySelectorAll("#link-forms .grouped-form").forEach((form, i) => {
+    const selects = form.querySelectorAll("select");
+    dev1List.push(selects[0]?.value || "");
+    dev2List.push(selects[1]?.value || "");
+  });
+  document.getElementById("link-dev1-json").value = JSON.stringify(dev1List);
+  document.getElementById("link-dev2-json").value = JSON.stringify(dev2List);
 }
 </script>
 
