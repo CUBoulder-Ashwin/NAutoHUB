@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     environment {
-        PROJECT_ROOT = "${env.WORKSPACE}"
+        PROJECT_ROOT = "${env.PROJECT_PATH}"
         VIRTUAL_ENV = "${PROJECT_ROOT}/pilot-config/venv"
-        PIP_CACHE_DIR = "${HOME}/.cache/pip"
     }
 
     options {
