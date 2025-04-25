@@ -5,6 +5,8 @@
 NAutoHUB is an NMAS – Network Management and Automation System – designed to simplify network configuration, monitoring, and automation.
 It also functions as the Network Source of Truth (NSoT) by maintaining a centralized, version-controlled repository of device configurations, IP allocations, templates, telemetry, and state data.
 
+<br><br>
+
 # What is NSOT?
 
 A Network Source of Truth provides a single, reliable reference for all network data — configurations, states, IPs, and inventory. 
@@ -17,7 +19,9 @@ NSOT is the core of NAutoHUB. It includes:
  - IPAM/ – IP Address Management and device inventory
  - templates/ – Jinja2 templates for building device configs
  - datalake/ – Storage for SNMP/gNMI telemetry and performance metrics
-   
+
+<br><br>
+
 # Why CI/CD?
 
 A CI/CD pipeline ensures that changes to network infrastructure are tested, validated, and deployed reliably:
@@ -25,6 +29,8 @@ A CI/CD pipeline ensures that changes to network infrastructure are tested, vali
 - Virtual Test Environment: Runs pre-deployment simulations in virtual network setup like containerlab, etc..
 - Physical Test Lab Environment: Provides a platform for test engineers to configure and validate setups
 - Production: Final rollout to customer networks after full validation
+
+<br><br>
 
 # How NAutoHUB Fits
 
