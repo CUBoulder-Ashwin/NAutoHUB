@@ -44,7 +44,6 @@ This guide walks you through setting up the NAutoHUB
 <br><br>
 
 ## 📦 Prerequisites
-
 - Ubuntu 20.04+
 - Git installed
 - Internet connection (LOL)
