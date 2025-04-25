@@ -3,6 +3,7 @@ import pathlib
 import subprocess
 import getpass
 
+
 def find_base_path():
     """Find the base path up to 'NAutoHUB'."""
     current_dir = pathlib.Path(__file__).parent.absolute()
@@ -13,6 +14,7 @@ def find_base_path():
         raise Exception("Could not find 'NAutoHUB' in the path hierarchy")
     return base_path
 
+
 def get_service_user():
     """Determine the appropriate user for the service."""
     if os.geteuid() == 0:
@@ -20,16 +22,25 @@ def get_service_user():
     else:
         return getpass.getuser()
 
+
 def create_service_or_timer_file(file_name, file_content):
     """Create a systemd service or timer file with elevated permissions."""
     file_path = f"/etc/systemd/system/{file_name}"
     try:
-        subprocess.run(["sudo", "tee", file_path], input=file_content.encode(), check=True, stdout=subprocess.DEVNULL)
+        subprocess.run(
+            ["sudo", "tee", file_path],
+            input=file_content.encode(),
+            check=True,
+            stdout=subprocess.DEVNULL,
+        )
         print(f"File created successfully at {file_path}")
     except subprocess.CalledProcessError:
-        print(f"Error: Failed to create {file_name}. Make sure you have sudo privileges.")
+        print(
+            f"Error: Failed to create {file_name}. Make sure you have sudo privileges."
+        )
     except Exception as e:
         print(f"An error occurred while creating {file_name}: {e}")
+
 
 def deploy():
     """Deploy the services and timers."""
@@ -40,17 +51,26 @@ def deploy():
         print("Error: Failed to reload the daemon. Make sure you have sudo privileges.")
     except Exception as e:
         print(f"An error occurred while reloading the daemon: {e}")
-    
-    services = ["password_update.service", "device_health_check.timer", "device_health_check.service", "ipam.service", "ngrok.service"]
+
+    services = [
+        "password_update.service",
+        "device_health_check.timer",
+        "device_health_check.service",
+        "ipam.service",
+        "ngrok.service",
+    ]
     for service in services:
         try:
             subprocess.run(["sudo", "systemctl", "enable", service], check=True)
             subprocess.run(["sudo", "systemctl", "start", service], check=True)
             print(f"{service} enabled and started successfully")
         except subprocess.CalledProcessError:
-            print(f"Error: Failed to enable/start {service}. Make sure you have sudo privileges.")
+            print(
+                f"Error: Failed to enable/start {service}. Make sure you have sudo privileges."
+            )
         except Exception as e:
             print(f"An error occurred while enabling/starting {service}: {e}")
+
 
 def main():
     base_path = find_base_path()
@@ -70,7 +90,7 @@ User={service_user}
 
 [Install]
 WantedBy=multi-user.target
-"""
+""",
         },
         {
             "file_name": "device_health_check.timer",
@@ -83,7 +103,7 @@ Persistent=true
 
 [Install]
 WantedBy=timers.target
-"""
+""",
         },
         {
             "file_name": "device_health_check.service",
@@ -99,7 +119,7 @@ User={service_user}
 
 [Install]
 WantedBy=multi-user.target
-"""
+""",
         },
         {
             "file_name": "ipam.service",
@@ -116,7 +136,7 @@ Environment=PYTHONUNBUFFERED=1
 
 [Install]
 WantedBy=multi-user.target
-"""
+""",
         },
         {
             "file_name": "ngrok.service",
@@ -133,14 +153,15 @@ User={service_user}
 
 [Install]
 WantedBy=multi-user.target
-"""
-        }
+""",
+        },
     ]
 
     for item in services_and_timers:
         create_service_or_timer_file(item["file_name"], item["content"])
-    
+
     deploy()
+
 
 if __name__ == "__main__":
     subprocess.run(["sudo", "systemctl", "enable", "jenkins"], check=True)

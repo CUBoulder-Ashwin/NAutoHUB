@@ -1,6 +1,7 @@
 import os
 import yaml
 
+
 def clean_empty(data):
     """Recursively remove empty lists, dictionaries, and None values from the data."""
     if isinstance(data, dict):
@@ -8,6 +9,7 @@ def clean_empty(data):
     elif isinstance(data, list):
         return [clean_empty(v) for v in data if v not in [None, {}, []]]
     return data
+
 
 def create_yaml_from_form(device_data, filename="devices_config.yml"):
     """Creates a YAML file from the provided device data."""
@@ -25,6 +27,7 @@ def create_yaml_from_form(device_data, filename="devices_config.yml"):
             sort_keys=False,
         )
     print(f"YAML file saved: {yaml_file_path}")
+
 
 def build_device_data(
     device_id,
@@ -65,7 +68,11 @@ def build_device_data(
                 "mask": sub["mask"],
             }
             for sub in subinterfaces
-            if sub.get("parent") and sub.get("id") and sub.get("vlan") and sub.get("ip") and sub.get("mask")
+            if sub.get("parent")
+            and sub.get("id")
+            and sub.get("vlan")
+            and sub.get("ip")
+            and sub.get("mask")
         ]
 
     if vlans:
@@ -129,6 +136,7 @@ def build_device_data(
         }
 
     return device_data
+
 
 def create_yaml_from_form_data(
     device_id,

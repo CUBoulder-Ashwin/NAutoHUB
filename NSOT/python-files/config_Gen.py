@@ -4,6 +4,7 @@ from jinja2 import Environment, FileSystemLoader
 import sys
 import time
 
+
 def generate_device_configs():
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     yaml_file = os.path.join(base_dir, "templates", "devices_config.yml")
@@ -89,7 +90,9 @@ def generate_device_configs():
                 config += templates[template_key].render(
                     ospf_process=ospf_data["process_id"],
                     ospf_networks=ospf_data.get("networks", []),
-                    redistribute_connected=ospf_data.get("redistribute_connected", False),
+                    redistribute_connected=ospf_data.get(
+                        "redistribute_connected", False
+                    ),
                     redistribute_bgp=ospf_data.get("redistribute_bgp", False),
                 )
 
@@ -100,10 +103,7 @@ def generate_device_configs():
                 config += f"no router bgp {bgp_data['as_number']}\n"
             else:
                 networks = [
-                    {
-                        "ip": net["ip"],
-                        "mask": net.get("mask")
-                    }
+                    {"ip": net["ip"], "mask": net.get("mask")}
                     for family in bgp_data.get("address_families", [])
                     for net in family.get("networks", [])
                     if net.get("ip") and net.get("mask")
@@ -112,7 +112,7 @@ def generate_device_configs():
                 config += templates[template_key].render(
                     bgp_as=bgp_data["as_number"],
                     bgp_networks=networks,
-                    bgp_neighbors=bgp_data.get("neighbors", [])
+                    bgp_neighbors=bgp_data.get("neighbors", []),
                 )
 
         # RIP
@@ -144,6 +144,7 @@ def generate_device_configs():
             config_file.write(config)
 
         print(f"Configuration generated for {hostname} and saved as {filename}")
+
 
 def conf_gen():
     generate_device_configs()

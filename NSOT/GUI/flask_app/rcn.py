@@ -33,7 +33,7 @@ from dhcp_updates import configure_dhcp_relay, configure_dhcp_server
 from update_hosts import update_hosts_csv
 from git_jenkins import push_and_monitor_jenkins
 from push_config import push_configuration
-from read_IPAM import IPAMReader 
+from read_IPAM import IPAMReader
 from read_hosts import HostsReader
 from clab_builder import build_clab_topology
 from clab_push import get_docker_images
@@ -59,6 +59,7 @@ env = Environment(loader=FileSystemLoader(templates_dir))
 def homepage():
     return render_template("homepage.html")
 
+
 @app.route("/add-hosts", methods=["GET", "POST"])
 def add_hosts():
     message = None
@@ -72,12 +73,9 @@ def add_hosts():
         rows = []
         for i in range(len(hostnames)):
             if hostnames[i] and usernames[i] and passwords[i] and management_ips[i]:
-                rows.append([
-                    hostnames[i],
-                    usernames[i],
-                    passwords[i],
-                    management_ips[i]
-                ])
+                rows.append(
+                    [hostnames[i], usernames[i], passwords[i], management_ips[i]]
+                )
 
         if rows:
             path = write_hosts_csv(rows, append=(save_mode == "append"))
@@ -87,6 +85,7 @@ def add_hosts():
             message = "⚠️ No valid entries to save."
 
     return render_template("add_hosts.html", message=message)
+
 
 @app.route("/build-topology", methods=["GET", "POST"])
 def build_topology():
@@ -108,13 +107,15 @@ def build_topology():
             config = request.form.get(f"device_config_{i}")
             exec_lines = request.form.getlist(f"device_exec_{i}[]")
 
-            devices.append({
-                "name": name,
-                "kind": kind,
-                "image": image,
-                "config": config,
-                "exec": exec_lines
-            })
+            devices.append(
+                {
+                    "name": name,
+                    "kind": kind,
+                    "image": image,
+                    "config": config,
+                    "exec": exec_lines,
+                }
+            )
 
         # Parse links
         link_dev1_list = request.form.get("link_dev1_json")
@@ -131,7 +132,9 @@ def build_topology():
         message = f"✅ topo.yml generated at: <code>{output_path}</code>"
         client = docker.from_env()
         images = [tag for img in client.images.list() for tag in img.tags if ":" in tag]
-        return render_template("build_topology.html", docker_images=images, message=message)
+        return render_template(
+            "build_topology.html", docker_images=images, message=message
+        )
 
     # GET request fallback
     client = docker.from_env()
@@ -141,10 +144,19 @@ def build_topology():
 
 @app.route("/deploy-topology", methods=["POST"], endpoint="deploy_topology_route")
 def deploy_topology_route():
-    yaml_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "pilot-config", "topo.yml"))
+    yaml_path = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__), "..", "..", "..", "pilot-config", "topo.yml"
+        )
+    )
     print("[INFO] Destroying old topology...")
     try:
-        destroy_output = subprocess.check_output(f"containerlab destroy -t {yaml_path}", shell=True, stderr=subprocess.STDOUT, text=True)
+        destroy_output = subprocess.check_output(
+            f"containerlab destroy -t {yaml_path}",
+            shell=True,
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
         print("[✔] Destroy output:")
         print(destroy_output)
     except subprocess.CalledProcessError as e:
@@ -153,7 +165,12 @@ def deploy_topology_route():
 
     print("[INFO] Deploying new topology...")
     try:
-        deploy_output = subprocess.check_output(f"containerlab deploy -t {yaml_path}", shell=True, stderr=subprocess.STDOUT, text=True)
+        deploy_output = subprocess.check_output(
+            f"containerlab deploy -t {yaml_path}",
+            shell=True,
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
         time.sleep(2)
         subprocess.run(["sudo", "systemctl", "restart", "ipam.service"], check=True)
         print("[✔] Deploy output:")
@@ -164,15 +181,26 @@ def deploy_topology_route():
         print(e.output)
         message = f"❌ Failed to deploy topology:<br><pre>{e.output}</pre>"
 
-    return render_template("build_topology.html", docker_images=get_docker_images(), message=message)
+    return render_template(
+        "build_topology.html", docker_images=get_docker_images(), message=message
+    )
 
 
 @app.route("/delete-topology", methods=["POST"], endpoint="delete_topology_route")
 def delete_topology_route():
-    yaml_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "pilot-config", "topo.yml"))
+    yaml_path = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__), "..", "..", "..", "pilot-config", "topo.yml"
+        )
+    )
     print("[INFO] Deleting topology...")
     try:
-        delete_output = subprocess.check_output(f"containerlab destroy -t {yaml_path}", shell=True, stderr=subprocess.STDOUT, text=True)
+        delete_output = subprocess.check_output(
+            f"containerlab destroy -t {yaml_path}",
+            shell=True,
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
         print("[✔] Delete output:")
         print(delete_output)
         message = "✅ Topology deleted successfully."
@@ -181,8 +209,9 @@ def delete_topology_route():
         print(e.output)
         message = f"❌ Failed to delete topology:<br><pre>{e.output}</pre>"
 
-    return render_template("build_topology.html", docker_images=get_docker_images(), message=message)
-
+    return render_template(
+        "build_topology.html", docker_images=get_docker_images(), message=message
+    )
 
 
 @app.route("/dashboard")
@@ -224,6 +253,7 @@ def run_deployment_and_relay_config(
             ip_address,
         )
 
+
 @app.route("/add-device", methods=["GET", "POST"])
 def add_device():
     message = None
@@ -250,11 +280,14 @@ def add_device():
         default_gateway = request.form.get("default_gateway")
 
         connect_to = [
-            request.form.get(f"connect_to_{i}") for i in range(connection_count)
+            request.form.get(f"connect_to_{i}")
+            for i in range(connection_count)
             if request.form.get(f"connect_to_{i}")
         ]
 
-        topo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../pilot-config/topo.yml"))
+        topo_path = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "../../../pilot-config/topo.yml")
+        )
         print("[INFO] Destroying old topology before update...")
         os.system(f"containerlab destroy -t {topo_path} || true")
 
@@ -268,7 +301,7 @@ def add_device():
                 exec_lines=exec_lines,
                 mac=mac_address,
                 connect_to_list=connect_to,
-                mgmt_ip=ip_with_subnet
+                mgmt_ip=ip_with_subnet,
             )
 
             if kind == "ceos":
@@ -284,7 +317,12 @@ def add_device():
             else:
                 print(f"⚠️ Path does not exist, skipping: {clab_path}")
 
-            deploy_output = subprocess.check_output(f"containerlab deploy -t {topo_path}", shell=True, stderr=subprocess.STDOUT, text=True)
+            deploy_output = subprocess.check_output(
+                f"containerlab deploy -t {topo_path}",
+                shell=True,
+                stderr=subprocess.STDOUT,
+                text=True,
+            )
             time.sleep(2)
             subprocess.run(["sudo", "systemctl", "restart", "ipam.service"], check=True)
             print("[✔] Deploy output:")
@@ -292,8 +330,21 @@ def add_device():
 
             # Optionally run DHCP relay config if enabled
             if relay_toggle:
-                configure_dhcp_relay(connected_device=connect_to[0] if connect_to else "", connected_interface="eth1", connected_ip=connected_ip, helper_ip=helper_ip)
-                configure_dhcp_server(mac_address, dhcp_server, new_subnet, range_lower, range_upper, default_gateway, ip_address)
+                configure_dhcp_relay(
+                    connected_device=connect_to[0] if connect_to else "",
+                    connected_interface="eth1",
+                    connected_ip=connected_ip,
+                    helper_ip=helper_ip,
+                )
+                configure_dhcp_server(
+                    mac_address,
+                    dhcp_server,
+                    new_subnet,
+                    range_lower,
+                    range_upper,
+                    default_gateway,
+                    ip_address,
+                )
 
             message = "✅ Topology deployed successfully."
 
@@ -302,8 +353,15 @@ def add_device():
             print(e.output)
             message = f"❌ Deployment failed:<br><pre>{e.output}</pre>"
 
-    docker_images = [tag for img in docker.from_env().images.list() for tag in img.tags if ":" in tag]
-    return render_template("add_device.html", docker_images=docker_images, available_hosts=get_hosts_from_csv(), message=message)
+    docker_images = [
+        tag for img in docker.from_env().images.list() for tag in img.tags if ":" in tag
+    ]
+    return render_template(
+        "add_device.html",
+        docker_images=docker_images,
+        available_hosts=get_hosts_from_csv(),
+        message=message,
+    )
 
 
 @app.route("/configure-device", methods=["GET", "POST"])
@@ -322,13 +380,15 @@ def configure_device():
                 request.form.getlist("interface_mask[]"),
                 request.form.getlist("switchport[]"),
             ):
-                interfaces.append({
-                    "type": i_type,
-                    "number": i_num,
-                    "ip": ip if sp != "yes" else None,
-                    "mask": mask if sp != "yes" else None,
-                    "switchport": sp == "yes"
-                })
+                interfaces.append(
+                    {
+                        "type": i_type,
+                        "number": i_num,
+                        "ip": ip if sp != "yes" else None,
+                        "mask": mask if sp != "yes" else None,
+                        "switchport": sp == "yes",
+                    }
+                )
 
             # Subinterfaces
             subinterfaces = []
@@ -339,13 +399,9 @@ def configure_device():
                 request.form.getlist("subinterface_ip[]"),
                 request.form.getlist("subinterface_mask[]"),
             ):
-                subinterfaces.append({
-                    "parent": parent,
-                    "id": sid,
-                    "vlan": vlan,
-                    "ip": ip,
-                    "mask": mask
-                })
+                subinterfaces.append(
+                    {"parent": parent, "id": sid, "vlan": vlan, "ip": ip, "mask": mask}
+                )
 
             # VLANs
             vlans = []
@@ -366,7 +422,7 @@ def configure_device():
             if rip_versions:
                 rip = {
                     "version": rip_versions[0],
-                    "networks": [{"ip": net} for net in rip_networks if net]
+                    "networks": [{"ip": net} for net in rip_networks if net],
                 }
 
                 if rip_redistribute_selected:
@@ -384,7 +440,9 @@ def configure_device():
             ospf_networks = request.form.getlist("ospf_network[]")
             ospf_wildcards = request.form.getlist("ospf_wildcard[]")
             ospf_areas = request.form.getlist("ospf_area[]")
-            ospf_redistribute_connected = request.form.getlist("ospf_redistribute_connected[]")
+            ospf_redistribute_connected = request.form.getlist(
+                "ospf_redistribute_connected[]"
+            )
             ospf_redistribute_bgp = request.form.getlist("ospf_redistribute_bgp[]")
 
             if ospf_process_ids:
@@ -426,10 +484,11 @@ def configure_device():
                                 {"ip": net, "mask": mask}
                                 for net, mask in zip(bgp_networks, bgp_masks)
                                 if net and mask
-                            ]
+                            ],
                         }
-                        for af in bgp_address_families if af
-                    ]
+                        for af in bgp_address_families
+                        if af
+                    ],
                 }
 
             # Attempt to generate YAML and push via Jenkins
@@ -448,40 +507,63 @@ def configure_device():
                 jenkins_result = push_and_monitor_jenkins()
 
                 if jenkins_result == "SUCCESS":
-                    return render_template("configure_device.html", jenkins_result="jenkins_success", device_id=device_id, message="✅ Jenkins pipeline succeeded!")
+                    return render_template(
+                        "configure_device.html",
+                        jenkins_result="jenkins_success",
+                        device_id=device_id,
+                        message="✅ Jenkins pipeline succeeded!",
+                    )
                 else:
-                    return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id=device_id, message="❌ Jenkins pipeline failed.")
+                    return render_template(
+                        "configure_device.html",
+                        jenkins_result="jenkins_failure",
+                        device_id=device_id,
+                        message="❌ Jenkins pipeline failed.",
+                    )
 
             except Exception as pipeline_error:
                 print("🔥 Pipeline error:", pipeline_error)
-                return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id=device_id, message=str(pipeline_error))
+                return render_template(
+                    "configure_device.html",
+                    jenkins_result="jenkins_failure",
+                    device_id=device_id,
+                    message=str(pipeline_error),
+                )
 
         # GET request
         return render_template("configure_device.html", jenkins_result=None)
 
     except Exception as e:
         print(f"Error in /configure-device: {e}")
-        return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id="unknown", message=str(e))
+        return render_template(
+            "configure_device.html",
+            jenkins_result="jenkins_failure",
+            device_id="unknown",
+            message=str(e),
+        )
 
     except Exception as e:
         print(f"Error in /configure-device: {e}")
-        return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id="unknown")
-
-
+        return render_template(
+            "configure_device.html",
+            jenkins_result="jenkins_failure",
+            device_id="unknown",
+        )
 
 
 @app.route("/push-config", methods=["POST"])
 def push_config():
     data = request.get_json()
     device_id = data.get("device_id")
-    
+
     # Run push_configuration function
     push_status = push_configuration(device_id)
-    
+
     if "successfully" in push_status:
         return jsonify({"status": "success"})
     else:
         return jsonify({"status": "error", "message": push_status})
+
 
 @app.route("/tools", methods=["GET", "POST"])
 def tools():
@@ -534,11 +616,13 @@ def tools():
             config_result += "</ul>"
 
     if request.method == "POST" and (
-        "selected_device" in request.form and (
-            any(key.endswith("-dropdown") for key in request.form) or "command" in request.form
+        "selected_device" in request.form
+        and (
+            any(key.endswith("-dropdown") for key in request.form)
+            or "command" in request.form
         )
     ):
-        
+
         hostname = request.form.get("selected_device")
         selected_command = request.form.get("command", "")
 
@@ -551,8 +635,9 @@ def tools():
         success, result = execute_show_command(hostname, selected_command)
         print(result)
         show_result = (
-            f"<h3>Command Output:</h3><pre>{result}</pre>" if success else
-            f'<span style="color:red;">Command failed: {result}</span>'
+            f"<h3>Command Output:</h3><pre>{result}</pre>"
+            if success
+            else f'<span style="color:red;">Command failed: {result}</span>'
         )
 
     return render_template(
@@ -560,15 +645,16 @@ def tools():
         ping_result=ping_result,
         config_result=config_result,
         devices=devices,
-        show_result=show_result
+        show_result=show_result,
     )
 
 
 @app.route("/ipam")
 def ipam():
     """Route to display IPAM table."""
-    #print(f"Rendering IPAM table with data: {ipam_reader.ipam_data}")  # Debug statement
+    # print(f"Rendering IPAM table with data: {ipam_reader.ipam_data}")  # Debug statement
     return render_template("ipam.html", ipam_data=ipam_reader.ipam_data)
+
 
 @app.route("/about")
 def about():

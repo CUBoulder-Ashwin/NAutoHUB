@@ -44,13 +44,15 @@ def collect_device_info(device_name, management_ip):
                 iface_name = "N/A"
                 print(f"⚠️  Could not get full info for {ip} on {device_name}: {e}")
 
-            device_info.append({
-                "Timestamp": timestamp,
-                "Device Name": device_name,
-                "Interface Name": iface_name,
-                "IP Address": ip,
-                "Subnet Mask": subnet,
-            })
+            device_info.append(
+                {
+                    "Timestamp": timestamp,
+                    "Device Name": device_name,
+                    "Interface Name": iface_name,
+                    "IP Address": ip,
+                    "Subnet Mask": subnet,
+                }
+            )
 
     except Exception as e:
         print(f"❌ Error fetching data from {device_name} ({management_ip}): {e}")
@@ -61,9 +63,17 @@ def collect_device_info(device_name, management_ip):
 def main():
     """Main function to read hosts.csv, collect SNMP data, and write to output CSV."""
     while True:
-        with open(hosts_csv, mode="r") as infile, open(output_csv, mode="w", newline="") as outfile:
+        with open(hosts_csv, mode="r") as infile, open(
+            output_csv, mode="w", newline=""
+        ) as outfile:
             reader = csv.DictReader(infile)
-            fieldnames = ["Timestamp", "Device Name", "Interface Name", "IP Address", "Subnet Mask"]
+            fieldnames = [
+                "Timestamp",
+                "Device Name",
+                "Interface Name",
+                "IP Address",
+                "Subnet Mask",
+            ]
             writer = csv.DictWriter(outfile, fieldnames=fieldnames)
             writer.writeheader()
 
@@ -80,10 +90,14 @@ def main():
 
                 if data:
                     for entry in data:
-                        print(f"{entry['Device Name']} | {entry['Interface Name']} | {entry['IP Address']} | {entry['Subnet Mask']}")
+                        print(
+                            f"{entry['Device Name']} | {entry['Interface Name']} | {entry['IP Address']} | {entry['Subnet Mask']}"
+                        )
                     writer.writerows(data)
 
-        print(f"\n✅ IPAM CSV updated at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(
+            f"\n✅ IPAM CSV updated at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        )
         time.sleep(check_interval)
 
 

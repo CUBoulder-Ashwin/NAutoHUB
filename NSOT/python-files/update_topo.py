@@ -10,6 +10,7 @@ CSV_PATH = os.path.abspath(os.path.join(BASE_DIR, "..", "IPAM", "hosts.csv"))
 TEMPLATE_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "templates"))
 CONFIG_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "golden_configs"))
 
+
 def get_hosts_from_csv():
     hosts = []
     if os.path.exists(CSV_PATH):
@@ -19,21 +20,26 @@ def get_hosts_from_csv():
                 hosts.append(row["hostname"])
     return hosts
 
+
 def get_next_eth(used):
     i = 1
     while f"eth{i}" in used:
         i += 1
     return f"eth{i}"
 
+
 class CompactListDumper(yaml.SafeDumper):
     def represent_sequence(self, tag, sequence, flow_style=None):
-        if tag == 'tag:yaml.org,2002:seq' and all(isinstance(i, str) for i in sequence):
+        if tag == "tag:yaml.org,2002:seq" and all(isinstance(i, str) for i in sequence):
             return super().represent_sequence(tag, sequence, flow_style=True)
         return super().represent_sequence(tag, sequence, flow_style)
 
+
 CompactListDumper.add_representer(
     list,
-    lambda self, data: CompactListDumper.represent_sequence(self, 'tag:yaml.org,2002:seq', data)
+    lambda self, data: CompactListDumper.represent_sequence(
+        self, "tag:yaml.org,2002:seq", data
+    ),
 )
 
 
@@ -48,7 +54,18 @@ def generate_day0_config(device_name, mgmt_ip):
         f.write(rendered)
     return config_path
 
-def update_topology(topo_path, device_name, kind, image, config, exec_lines, mac, connect_to_list, mgmt_ip=None):
+
+def update_topology(
+    topo_path,
+    device_name,
+    kind,
+    image,
+    config,
+    exec_lines,
+    mac,
+    connect_to_list,
+    mgmt_ip=None,
+):
     with open(topo_path, "r") as f:
         data = yaml.safe_load(f)
 
@@ -62,7 +79,11 @@ def update_topology(topo_path, device_name, kind, image, config, exec_lines, mac
     dev_if = defaultdict(int)
 
     # mgmt interface
-    used_eths = {link["endpoints"][0].split(":")[1] for link in links if link["endpoints"][0].startswith("mgmt")}
+    used_eths = {
+        link["endpoints"][0].split(":")[1]
+        for link in links
+        if link["endpoints"][0].startswith("mgmt")
+    }
     mgmt_eth = get_next_eth(used_eths)
 
     # auto generate config if CEOS
@@ -85,15 +106,20 @@ def update_topology(topo_path, device_name, kind, image, config, exec_lines, mac
     for target in connect_to_list:
         target_used = {
             ep.split(":")[1]
-            for link in links for ep in link["endpoints"]
+            for link in links
+            for ep in link["endpoints"]
             if ep.startswith(f"{target}:")
         }
         target_eth = get_next_eth(target_used)
         dev_if[device_name] += 1
         this_eth = f"eth{dev_if[device_name]}"
-        links.append({"endpoints": [f"{device_name}:{this_eth}", f"{target}:{target_eth}"]})
+        links.append(
+            {"endpoints": [f"{device_name}:{this_eth}", f"{target}:{target_eth}"]}
+        )
 
     with open(topo_path, "w") as f:
         yaml.dump(data, f, sort_keys=False, Dumper=CompactListDumper)
 
-    print(f"[+] Added {device_name} with mgmt:{mgmt_eth} and {len(connect_to_list)} links.")
+    print(
+        f"[+] Added {device_name} with mgmt:{mgmt_eth} and {len(connect_to_list)} links."
+    )

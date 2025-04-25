@@ -2,15 +2,23 @@
 import csv
 import os
 
+
 def write_hosts_csv(data_rows, append=False):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     ipam_dir = os.path.join(base_dir, "..", "IPAM")
     os.makedirs(ipam_dir, exist_ok=True)
     csv_path = os.path.join(ipam_dir, "hosts.csv")
 
-    headers = ["hostname", "username", "password", "management_ip", "old_password", "new_password"]
+    headers = [
+        "hostname",
+        "username",
+        "password",
+        "management_ip",
+        "old_password",
+        "new_password",
+    ]
 
-    mode = 'a' if append else 'w'
+    mode = "a" if append else "w"
     file_exists = os.path.exists(csv_path)
 
     with open(csv_path, mode, newline="") as csvfile:

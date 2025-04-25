@@ -4,8 +4,9 @@ from netmiko import ConnectHandler
 
 CSV_FILE = os.path.join(os.path.dirname(__file__), "..", "IPAM", "hosts.csv")
 
+
 def find_device_info(hostname):
-    with open(CSV_FILE, newline='') as csvfile:
+    with open(CSV_FILE, newline="") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             if row["hostname"] == hostname:
@@ -17,6 +18,7 @@ def find_device_info(hostname):
                     "secret": row["password"],
                 }
     return None
+
 
 def execute_show_command(hostname, selected_command):
     device_info = find_device_info(hostname)
