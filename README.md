@@ -36,7 +36,6 @@ A CI/CD pipeline ensures that changes to network infrastructure are tested, vali
 
 <br><br>
 ---
-<br><br>
 
 # 🚀 NAutoHUB Setup Guide
 
@@ -126,8 +125,6 @@ https://<your-ngrok>.ngrok-free.app/github-webhook/
 
 <br><br>
 ---
-<br><br>
-
 
 ## ✅ Troubleshooting
 
