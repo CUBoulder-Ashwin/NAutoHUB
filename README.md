@@ -52,7 +52,7 @@ chmod +x requirements.sh pilot.sh
 
 ### 1. Jenkins & Ngrok Configuration
 
-- Get your [Ngrok auth token](https://dashboard.ngrok.com/get-started/your-authtoken) and paste it into `/NAutoHUB/ngrok_config.yml`:
+- Get your [Ngrok auth token](https://dashboard.ngrok.com/get-started/your-authtoken) and paste it into `/NAutoHUB/misc/ngrok_config.yml`:
 
 ```yaml
 version: "2"
@@ -75,7 +75,7 @@ tunnels:
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 ```
 
-- Access the Ngrok URL from `/NAutoHUB/ngrok.log`, complete Jenkins setup in browser.
+- Access the Ngrok URL from `/NAutoHUB/logs/ngrok.log`, complete Jenkins setup in browser.
 
 ### 2. GitHub Webhook
 
