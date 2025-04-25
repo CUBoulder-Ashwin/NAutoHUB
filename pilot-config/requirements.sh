@@ -76,7 +76,15 @@ sudo apt install telegraf
 sudo apt install gnmic
 sudo apt install -y python3-pip netplan.io
 
-echo "[12/12] Installing python dependencies..."
-pip install easysnmp netmiko flask requests docker
+echo "[12/12] Installing Python packages from requirements.txt..."
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+REQ_FILE="${SCRIPT_DIR}/requirements.txt"
+
+if [[ -f "$REQ_FILE" ]]; then
+    pip install -r "$REQ_FILE"
+else
+    echo "❗ requirements.txt not found in $SCRIPT_DIR. Skipping Python dependency installation."
+fi
 
 echo "✅ All tools and packages have been successfully installed."
