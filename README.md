@@ -48,8 +48,7 @@ This guide walks you through setting up the NAutoHUB
 - Ubuntu 20.04+
 - Git installed
 - Internet connection (LOL)
-- 
-<br><br>
+
 ## 🤖 Automated Setup
 
 1. Clone the repo:
@@ -83,7 +82,7 @@ chmod +x requirements.sh pilot.sh
 ```bash
 ./pilot.sh
 ```
-<br><br>
+
 ## 🛠️ Manual Setup (Optional) 
 
 ### Implementing CI/CD pipeline
@@ -125,8 +124,9 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 https://<your-ngrok>.ngrok-free.app/github-webhook/
 ```
 
-
+<br><br>
 ---
+<br><br>
 
 
 ## ✅ Troubleshooting
