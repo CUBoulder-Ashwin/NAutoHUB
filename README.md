@@ -51,7 +51,7 @@ This guide walks you through setting up the NAutoHUB
 
 ## 🤖 Setup
 
-1. Clone the repo:
+#### 1. Clone the repo:
 
 ```bash
 mkdir -p ~/projects
@@ -59,20 +59,20 @@ cd ~/projects
 git clone https://github.com/CUBoulder-Ashwin/NAutoHUB.git
 ```
 
-2. Create executables:
+#### 2. Create executables:
 
 ```bash
 cd NAutoHUB/pilot-config
 chmod +x requirements.sh pilot.sh
 ```
 
-3. `requirements.sh` installs Docker, Containerlab, InfluxDB, Grafana, Ngrok, Java, Jenkins and Python packages like snmp-mibs, easysnmp, netmiko, flask etc.
+#### 3. `requirements.sh` installs Docker, Containerlab, InfluxDB, Grafana, Ngrok, Java, Jenkins and Python packages like snmp-mibs, easysnmp, netmiko, flask etc.
 
 ```bash
 ./requirements.sh
 ```
 
-4. `pilot.sh`,
+#### 4. `pilot.sh`,
    - creates docker images necessary
    - creates managment network interfaces and add routes for the containerlabs
    - runs an example containerlab topology
@@ -106,9 +106,9 @@ tunnels:
   
 - Retrieve the initial admin password from jenkins service:
 
-```bash
-sudo cat /var/lib/jenkins/secrets/initialAdminPassword
-```
+ ```bash
+ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+ ```
 
 - Access the Ngrok URL from `/NAutoHUB/logs/ngrok.log`, complete Jenkins setup in browser.
 
