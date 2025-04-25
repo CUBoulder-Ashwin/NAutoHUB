@@ -300,13 +300,21 @@ async function pushConfig() {
 
     if (result.status === "success") {
         messageContainer.innerHTML = `<p class="message-text">Configuration pushed successfully.</p>`;
+        
+        // Hide the push button
         if (pushWrapper) {
             pushWrapper.style.display = "none";
         }
+
+        // Clear form inputs and dynamic fields
+        document.getElementById("config-form").reset();
+        document.querySelectorAll(".form-subsection").forEach(section => section.innerHTML = "");
     } else {
         messageContainer.innerHTML = `<p class="message-text">Push failed: ${result.message}</p>`;
+        // Keep form as-is so user can retry
     }
 }
+
 </script>
 
 <style>
