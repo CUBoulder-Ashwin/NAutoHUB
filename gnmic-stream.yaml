@@ -7,42 +7,34 @@ targets:
   10.0.101.1:
     name: R1
     address: 10.0.101.1
+  10.0.101.2:
+    name: R2
+    address: 10.0.101.2
 
 subscriptions:
-  interface:
+  # ✅ Fetch operational status (already present)
+  interface-oper-status:
     paths:
       - /interfaces/interface/state/oper-status
     sample_interval: 10s
 
+  # ✅ Fetch full counters (new, needed)
+  interface-counters:
+    paths:
+      - /interfaces/interface/state/counters
+    sample_interval: 10s
+
+  # ✅ Fetch interface basic details (new, needed)
+  interface-metadata:
+    paths:
+      - /interfaces/interface/state
+    sample_interval: 30s  # metadata doesn't change fast, 30s is fine
+
+  # (keep CPU for future)
   cpu:
     paths:
       - /components/component/cpu
     sample_interval: 1s
-
-  bgp:
-    paths:
-      - /network-instances/network-instance/protocols/protocol/bgp
-    sample_interval: 10s
-
-  ospf:
-    paths:
-      - /network-instances/network-instance/protocols/protocol/ospfv2
-    sample_interval: 10s
-
-  rip:
-    paths:
-      - /network-instances/network-instance/protocols/protocol/rip
-    sample_interval: 10s
-
-  routes:
-    paths:
-      - /network-instances/network-instance/afts
-    sample_interval: 10s
-
-  local-routing:
-    paths:
-      - /network-instances/network-instance/protocols/protocol/local-routing
-    sample_interval: 10s
 
 outputs:
   influxdb:
