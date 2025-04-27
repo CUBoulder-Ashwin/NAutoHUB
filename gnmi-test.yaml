@@ -1,0 +1,28 @@
+username: admin
+password: admin
+insecure: true
+port: 6030
+
+targets:
+  10.0.101.1:
+    name: R1
+    address: 10.0.101.1
+    encoding: JSON_IETF
+  10.0.101.2:
+    name: R2
+    address: 10.0.101.2
+    encoding: JSON_IETF
+
+subscriptions:
+  interface-oper-status:
+    paths:
+      - "/interfaces/interface/state/oper-status"
+
+outputs:
+  influxdb:
+    type: influxdb
+    address: "http://localhost:8086"
+    token: "yF2zkFUE3quoPDWxqtXF_bzkMQKHtWnA27ujh0vPa-HoLkIxUXn9TtswZeitlusY5CDbvdnPG_0z7I-EGL1TTw=="
+    org: "NAutoHUB"
+    bucket: "test"
+    debug: true

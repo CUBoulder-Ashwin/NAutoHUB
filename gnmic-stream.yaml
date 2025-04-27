@@ -1,40 +1,18 @@
 username: admin
 password: admin
 insecure: true
-port: 6030
 
 targets:
-  10.0.101.1:
-    name: R1
-    address: 10.0.101.1
-  10.0.101.2:
-    name: R2
-    address: 10.0.101.2
+  R1:
+    address: 10.0.101.1:6030
+  R2:
+    address: 10.0.101.2:6030
 
 subscriptions:
-  # ✅ Fetch operational status (already present)
   interface-oper-status:
     paths:
       - /interfaces/interface/state/oper-status
     sample_interval: 10s
-
-  # ✅ Fetch full counters (new, needed)
-  interface-counters:
-    paths:
-      - /interfaces/interface/state/counters
-    sample_interval: 10s
-
-  # ✅ Fetch interface basic details (new, needed)
-  interface-metadata:
-    paths:
-      - /interfaces/interface/state
-    sample_interval: 30s  # metadata doesn't change fast, 30s is fine
-
-  # (keep CPU for future)
-  cpu:
-    paths:
-      - /components/component/cpu
-    sample_interval: 1s
 
 outputs:
   influxdb:

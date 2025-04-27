@@ -5,11 +5,12 @@ import sys
 import time
 import docker
 import json
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, stream_with_context, Response
 from jinja2 import Environment, FileSystemLoader
 import subprocess
 from threading import Thread
 from pathlib import Path
+import requests
 
 
 # Get the current directory of this script
@@ -63,6 +64,31 @@ def homepage():
     return render_template("homepage.html")
 
 
+@app.route('/chat-query', methods=['POST'])
+def chat_query():
+    data = request.json
+    user_input = data.get('message')
+    history = data.get('history', [])
+
+    def generate():
+        url = "http://localhost:11434/api/generate"
+        prompt_text = "\n".join(history) + "\nYou: " + user_input  # ✅ Include full history
+        payload = {
+            "model": "llama3",
+            "prompt": prompt_text,
+            "stream": True
+        }
+        with requests.post(url, json=payload, stream=True) as response:
+            for line in response.iter_lines():
+                if line:
+                    data = json.loads(line.decode('utf-8'))
+                    chunk = data.get('response', '')
+                    if chunk:
+                        yield chunk
+
+    return Response(stream_with_context(generate()), content_type='text/plain')
+
+    
 @app.route("/add-hosts", methods=["GET", "POST"])
 def add_hosts():
     message = None
