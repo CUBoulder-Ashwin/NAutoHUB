@@ -233,13 +233,17 @@ function toggleChatbot() {
         expanded = false;
     }
 }
+
 function closeChatbot() {
     document.getElementById('chatbot-container').style.display = 'none';
     chatHistory = [];
     document.getElementById('chatbot-messages').innerHTML = "";
     expanded = false;
-}
 
+    const container = document.getElementById('chatbot-container');
+    container.style.width = "300px";
+    container.style.height = "400px";
+}
 function checkSubmit(event) {
     if (event.key === "Enter") {
         sendMessage();
