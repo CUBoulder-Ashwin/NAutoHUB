@@ -7,3 +7,4 @@ flake8
 black
 yamllint
 jinja2
+ollama

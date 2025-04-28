@@ -11,6 +11,7 @@ import subprocess
 from threading import Thread
 from pathlib import Path
 import requests
+import asyncio
 
 
 # Get the current directory of this script
@@ -41,6 +42,7 @@ from read_IPAM import IPAMReader
 from read_hosts import HostsReader
 from clab_builder import build_clab_topology
 from clab_push import get_docker_images
+from machine_learning import ask_llama_for_command_full, ask_llama_to_summarize_stream, send_to_backend,  run_command_on_device
 
 
 # File path for IPAM CSV file
@@ -68,27 +70,55 @@ def homepage():
 def chat_query():
     data = request.json
     user_input = data.get('message')
-    history = data.get('history', [])
 
-    def generate():
-        url = "http://localhost:11434/api/generate"
-        prompt_text = "\n".join(history) + "\nYou: " + user_input  # ✅ Include full history
-        payload = {
-            "model": "llama3",
-            "prompt": prompt_text,
-            "stream": True
-        }
-        with requests.post(url, json=payload, stream=True) as response:
-            for line in response.iter_lines():
-                if line:
-                    data = json.loads(line.decode('utf-8'))
-                    chunk = data.get('response', '')
-                    if chunk:
-                        yield chunk
+    def generate_sync():
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
 
-    return Response(stream_with_context(generate()), content_type='text/plain')
+        async def inner():
+            # First fully collect classification
+            first_response = await ask_llama_for_command_full("llama3.1", user_input)
 
-    
+            if first_response.startswith("{"):
+                # JSON means CLI question
+                parsed = json.loads(first_response)
+                device = parsed["device"]
+                command = parsed["command"]
+
+                cli_output = send_to_backend(device, command)
+                if not cli_output:
+                    yield "⚠️ No CLI output received from device."
+                    return
+
+                # Now stream summarized answer
+                async for token in ask_llama_to_summarize_stream("llama3.1", user_input, cli_output):
+                    yield token
+            else:
+                # Smalltalk — just stream the text
+                for char in first_response:
+                    yield char
+
+        async_gen = inner()
+
+        while True:
+            try:
+                token = loop.run_until_complete(async_gen.__anext__())
+                yield token
+            except StopAsyncIteration:
+                break
+
+    return Response(stream_with_context(generate_sync()), content_type='text/event-stream')
+
+
+
+@app.route('/run-command', methods=['POST'])
+def run_command():
+    data = request.json
+    device = data.get('device')
+    command = data.get('command')
+    return run_command_on_device(device, command)
+
+
 @app.route("/add-hosts", methods=["GET", "POST"])
 def add_hosts():
     message = None
