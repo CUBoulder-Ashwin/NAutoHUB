@@ -1,0 +1,53 @@
+intent,specific_data
+get ip address,ip address
+get interface ip address,ip address
+get ethernet1 ip address,ip address
+
+get interface counters,interface counters
+get interface packet counters,interface counters
+get ethernet1 counters,interface counters
+get counters for interface,interface counters
+
+get interface errors,interface errors
+get errors on ethernet1,interface errors
+get interface error counters,interface errors
+get interface error statistics,interface errors
+
+get interface status,interface status
+get ethernet1 status,interface status
+get link status for interface,interface status
+
+get interface admin status,admin status
+get admin status of ethernet1,admin status
+
+get operational status of ethernet1,operational status
+get interface operational status,operational status
+
+get vlan details,vlan
+get vlan information,vlan
+get vlan id details,vlan
+get vlan 100 information,vlan
+
+get mac address on interface,mac address
+get interface mac address,mac address
+get mac address-table for ethernet1,mac address
+
+get subinterface details,subinterface
+get subinterface configuration,subinterface
+get ethernet1.100 subinterface info,subinterface
+
+get mtu value of interface,interface mtu
+get mtu settings,interface mtu
+get interface mtu,interface mtu
+
+get bandwidth of interface,interface bandwidth
+get interface bandwidth,interface bandwidth
+get bandwidth details of ethernet1,interface bandwidth
+
+
+configure bgp,bgp_template.j2
+configure interface,interfaces_template.j2
+configure ospf,ospf_template.j2
+configure rip,rip_template.j2
+configure subinterface,subinterface_template.j2
+configure vlan,vlan_template.j2

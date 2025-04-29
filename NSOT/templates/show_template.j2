@@ -1,0 +1,53 @@
+{# 
+  Dynamic show command template
+  Variables available: show_type, interface, vlan_id, subinterface
+#}
+
+{# IP address show (filtered by interface) #}
+{% if show_type == "ip address" %}
+show ip interface brief{% if interface %} | include {{ interface }}{% endif %}
+
+{# Interface counters #}
+{% elif show_type == "interface counters" %}
+show interfaces{% if interface %} {{ interface }}{% endif %} counters
+
+{# Interface errors #}
+{% elif show_type == "interface errors" %}
+show interfaces{% if interface %} {{ interface }}{% endif %} counters errors
+
+{# Interface status #}
+{% elif show_type == "interface status" %}
+show interface{% if interface %} {{ interface }}{% endif %} status
+
+{# MAC address table filtered by interface #}
+{% elif show_type == "mac address" %}
+show mac address-table{% if interface %} interface {{ interface }}{% endif %}
+
+{# VLAN information (filtered by vlan_id) #}
+{% elif show_type == "show vlan" %}
+show vlan{% if vlan_id %} id {{ vlan_id }}{% endif %}
+
+{# Subinterface details #}
+{% elif show_type == "subinterface" %}
+show interfaces{% if subinterface %} {{ subinterface }}{% endif %}
+
+{# MTU information #}
+{% elif show_type == "interface mtu" %}
+show interfaces{% if interface %} {{ interface }}{% endif %} | include MTU
+
+{# Bandwidth information #}
+{% elif show_type == "interface bandwidth" %}
+show interfaces{% if interface %} {{ interface }}{% endif %} | include BW
+
+{# Admin status (up/down) #}
+{% elif show_type == "admin status" %}
+show interfaces{% if interface %} {{ interface }}{% endif %} | include line protocol
+
+{# Operational status #}
+{% elif show_type == "operational status" %}
+show interfaces{% if interface %} {{ interface }}{% endif %} | include protocol
+
+{% else %}
+{# Default fallback - if nothing matches, show nothing or raise an error later #}
+Invalid show_type provided
+{% endif %}

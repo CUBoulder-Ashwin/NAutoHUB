@@ -12,6 +12,7 @@ from threading import Thread
 from pathlib import Path
 import requests
 import asyncio
+import ollama
 
 
 # Get the current directory of this script
@@ -22,9 +23,14 @@ templates_dir = os.path.join(current_dir, "..", "..", "templates")
 
 # Go up two levels and into the 'python-files' directory
 python_files_dir = os.path.join(current_dir, "..", "..", "python-files")
+predict_dir = os.path.join(current_dir, "..", "..", "machine_learning", "predict")
+helper_dir = os.path.join(current_dir, "..", "..", "machine_learning", "helper")
 
 # Add 'python-files' to the system path
 sys.path.append(os.path.abspath(python_files_dir))
+sys.path.append(os.path.abspath(helper_dir))
+sys.path.append(os.path.abspath(predict_dir))   
+
 
 # Import your custom modules from 'python-files'
 from create_hosts import write_hosts_csv
@@ -32,7 +38,7 @@ from ping import ping_local, ping_remote
 from goldenConfig import generate_configs
 from show_commands import execute_show_command
 from generate_yaml import create_yaml_from_form_data
-from config_Gen import conf_gen  # Updated import for config generation
+from config_Gen import conf_gen
 from update_topo import update_topology, get_hosts_from_csv
 from dhcp_updates import configure_dhcp_relay, configure_dhcp_server
 from update_hosts import update_hosts_csv
@@ -42,8 +48,12 @@ from read_IPAM import IPAMReader
 from read_hosts import HostsReader
 from clab_builder import build_clab_topology
 from clab_push import get_docker_images
-from machine_learning import ask_llama_for_command_full, ask_llama_to_summarize_stream, send_to_backend,  run_command_on_device
-
+from llm_extract import real_llm_extract, process_cli_output
+from predict_specific import predict_specific_output
+from predict_genericshow import predict_generic_show_command
+from fetch_show import connect_and_run_command
+from generate_show import generate_show_command
+from generate_config import render_device_config
 
 # File path for IPAM CSV file
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -76,27 +86,82 @@ def chat_query():
         asyncio.set_event_loop(loop)
 
         async def inner():
-            # First fully collect classification
-            first_response = await ask_llama_for_command_full("llama3.1", user_input)
+            # 🧠 Step 1: Ask LLM if this is chitchat, and let it respond directly if yes
+            system_prompt = """YYou are an intelligent, friendly and helpful network assistant named NBot working for the NutoHUB developed by Ashwin Chandrsekaran.
+If the user's message is just a greeting, thank-you, or a personal question about you (e.g., 'hi', 'thanks', 'who are you?', etc), respond warmly and naturally.
+If it's a technical network-related request (about configurations, interfaces, protocols, etc), reply only with "TECHNICAL".
+"""
 
-            if first_response.startswith("{"):
-                # JSON means CLI question
-                parsed = json.loads(first_response)
-                device = parsed["device"]
-                command = parsed["command"]
+            response = ollama.chat(
+                model="llama3.1",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_input}
+                ]
+            )
 
-                cli_output = send_to_backend(device, command)
-                if not cli_output:
-                    yield "⚠️ No CLI output received from device."
-                    return
+            llm_reply = response['message']['content'].strip()
 
-                # Now stream summarized answer
-                async for token in ask_llama_to_summarize_stream("llama3.1", user_input, cli_output):
-                    yield token
-            else:
-                # Smalltalk — just stream the text
-                for char in first_response:
-                    yield char
+            if llm_reply != "TECHNICAL":
+                yield llm_reply
+                return
+
+            # 🧠 Step 2: Proceed with technical pipeline
+            extracted_actions = real_llm_extract(user_input)
+            if not extracted_actions:
+                yield "⚠️ Sorry, could not understand the request."
+                return
+
+            for action in extracted_actions:
+                intent = action.get('intent')
+                device = action.get('device')
+                monitor = action.get('monitor')
+                configure = action.get('configure')
+
+                if (configure is None or configure == {}) and monitor is None:
+                    # Generic Show
+                    if intent is None:
+                        yield "⚠️ Intent is missing."
+                        return
+
+                    cli_command = predict_generic_show_command(intent)
+                    cli_output = connect_and_run_command(device, cli_command)
+
+                    if cli_output:
+                        answer = process_cli_output(user_input, cli_output)
+                        for token in answer:
+                            yield token
+                    else:
+                        yield "⚠️ No output from device."
+
+                elif (configure is None or configure == {}):
+                    # Specific Show
+                    predicted_show_type = predict_specific_output(intent)
+                    final_command = generate_show_command(predicted_show_type, monitor)
+                    cli_output = connect_and_run_command(device, final_command)
+
+                    if cli_output:
+                        answer = process_cli_output(user_input, cli_output)
+                        for token in answer:
+                            yield token
+                    else:
+                        yield "⚠️ No output from device."
+
+                elif monitor is None:
+                    # Configuration mode
+                    predicted_template = predict_specific_output(intent)
+
+                    if isinstance(configure, dict):
+                        params = configure
+                    else:
+                        params = {"raw": configure}
+
+                    config_text = render_device_config(device, predicted_template, params)
+
+                    if config_text:
+                        yield f"✅ Configuration generated for {device}:\n\n{config_text}"
+                    else:
+                        yield "⚠️ Failed to generate configuration."
 
         async_gen = inner()
 
@@ -110,13 +175,6 @@ def chat_query():
     return Response(stream_with_context(generate_sync()), content_type='text/event-stream')
 
 
-
-@app.route('/run-command', methods=['POST'])
-def run_command():
-    data = request.json
-    device = data.get('device')
-    command = data.get('command')
-    return run_command_on_device(device, command)
 
 
 @app.route("/add-hosts", methods=["GET", "POST"])

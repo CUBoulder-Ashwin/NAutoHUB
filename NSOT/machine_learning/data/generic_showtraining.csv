@@ -1,0 +1,28 @@
+intent,cli_command
+get lldp neighbor,show lldp neighbors
+get interface status,show interface status
+get dynamic mac addresses,show mac address-table dynamic
+get ip address,show ip interface brief
+get mac address,show version | grep address
+get ospf neighbors,show ip ospf neighbor
+get bgp neighbors,show ip bgp summary
+get vlan info,show vlan
+get subinterface info,show interfaces
+get mtu info,show interfaces | include MTU
+get cpu usage,show processes cpu
+get memory usage,show processes memory
+get environment status,show environment all
+get interface errors,show interfaces counters errors
+get interface bandwidth,show interfaces counters
+get interface counters,show interfaces counters
+get system uptime,show version
+get port channels,show port-channel summary
+get arp table,show ip arp
+get neighbors,show cdp neighbors
+get transceiver info,show interfaces transceiver
+get software version,show version
+get boot variables,show boot
+get ntp status,show ntp status
+get logging information,show logging
+get spanning-tree status,show spanning-tree
+get dhcp leases,show ip dhcp binding
