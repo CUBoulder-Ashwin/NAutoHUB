@@ -13,10 +13,10 @@ def run_pipeline(user_input):
         return
 
     for action in extracted_actions:
-        intent = action.get('intent')
-        device = action.get('device')
-        monitor = action.get('monitor')
-        configure = action.get('configure')
+        intent = action.get("intent")
+        device = action.get("device")
+        monitor = action.get("monitor")
+        configure = action.get("configure")
 
         if (configure is None or configure == {}) and monitor is None:
             print("\nGeneric Show Command Prediction...")
@@ -30,7 +30,7 @@ def run_pipeline(user_input):
                     final_answer = process_cli_output(user_input, output)
                     print(f"\nLLM Final Answer:\n{final_answer}")
 
-        elif (configure is None or configure == {}):
+        elif configure is None or configure == {}:
             print("\n Specific Show Command..")
 
             predicted_show_type = predict_specific_output(intent)
@@ -52,14 +52,14 @@ def run_pipeline(user_input):
             # Predict the correct template based on intent
             predicted_output = predict_specific_output(intent)
 
-            if not predicted_output.endswith('.j2'):
-                #print(f"❌ Prediction Error: Expected a template file, but got '{predicted_output}'")
+            if not predicted_output.endswith(".j2"):
+                # print(f"❌ Prediction Error: Expected a template file, but got '{predicted_output}'")
                 return
 
             template_file = predicted_output
 
             # Example: parse known structure into dict
-            params = {}  
+            params = {}
             if isinstance(configure, dict):
                 params = configure
             else:
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     print(" Starting continuous assistant. Type 'exit' to quit.\n")
     while True:
         user_query = input("Enter your query (or 'exit' to quit): ").strip()
-        if user_query.lower() in ['exit', 'quit']:
+        if user_query.lower() in ["exit", "quit"]:
             print("👋 Exiting pipeline. Goodbye!")
             break
         run_pipeline(user_query)

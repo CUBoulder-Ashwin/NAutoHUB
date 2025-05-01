@@ -8,10 +8,10 @@ from tensorflow.keras.layers import Dense, Input
 import tensorflow as tf
 
 # Load data
-data = pd.read_csv('data/specific_data.csv')
+data = pd.read_csv("data/specific_data.csv")
 
-X = data['intent']
-y = data['specific_data']
+X = data["intent"]
+y = data["specific_data"]
 
 # TF-IDF Vectorization
 vectorizer = TfidfVectorizer()
@@ -25,23 +25,27 @@ y_encoded = label_encoder.fit_transform(y)
 # X_train, X_test, y_train, y_test = train_test_split(X_tfidf, y_encoded, test_size=0.2)
 
 # Build simple model
-model = Sequential([
-    Input(shape=(X_tfidf.shape[1],)),
-    Dense(64, activation='relu'),
-    Dense(32, activation='relu'),
-    Dense(len(label_encoder.classes_), activation='softmax')
-])
+model = Sequential(
+    [
+        Input(shape=(X_tfidf.shape[1],)),
+        Dense(64, activation="relu"),
+        Dense(32, activation="relu"),
+        Dense(len(label_encoder.classes_), activation="softmax"),
+    ]
+)
 
-model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+model.compile(
+    optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"]
+)
 
 # Train model
 model.fit(X_tfidf, y_encoded, epochs=200, verbose=1)
 
 # Save everything
-model.save('models/show_type_model.h5')
+model.save("models/show_type_model.h5")
 
-with open('models/show_type_vectorizer.pkl', 'wb') as f:
+with open("models/show_type_vectorizer.pkl", "wb") as f:
     pickle.dump(vectorizer, f)
 
-with open('models/show_type_label_encoder.pkl', 'wb') as f:
+with open("models/show_type_label_encoder.pkl", "wb") as f:
     pickle.dump(label_encoder, f)

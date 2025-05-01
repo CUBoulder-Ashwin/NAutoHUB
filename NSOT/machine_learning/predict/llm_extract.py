@@ -10,10 +10,12 @@ helper_dir = os.path.join(current_dir, "..", "helper")
 sys.path.append(os.path.abspath(helper_dir))
 from ollama_utils import stop_ollama_model
 
+
 def read_prompt_template():
     """Reads the static prompt template from prompts/extract_fields.txt"""
-    with open(os.path.join(models_dir, 'extract_fields.txt'), 'r') as file:
+    with open(os.path.join(models_dir, "extract_fields.txt"), "r") as file:
         return file.read()
+
 
 def extract_json_from_text(text):
     """Extract JSON block from LLM output even if extra text is present"""
@@ -22,6 +24,7 @@ def extract_json_from_text(text):
         return json_match.group(1)
     else:
         return None
+
 
 def process_cli_output(user_query, cli_output):
     """Ask Llama to intelligently extract information from CLI output based on user query."""
@@ -69,14 +72,15 @@ Device Output:
 Provide the final answer below:
 """
     response = ollama.chat(
-        model='llama3.1',
+        model="llama3.1",
         messages=[{"role": "user", "content": prompt}],
         options={"temperature": 0},
     )
 
-    answer = response['message']['content']
+    answer = response["message"]["content"]
     stop_ollama_model("llama3.1")
     return answer
+
 
 def real_llm_extract(user_input):
     """Sends user input to Llama 3.1 via Ollama and extracts intent, device, monitor, configure"""
@@ -84,12 +88,12 @@ def real_llm_extract(user_input):
     final_prompt = prompt_template.replace("{user_input_here}", user_input)
 
     response = ollama.chat(
-        model='llama3.1',
+        model="llama3.1",
         messages=[{"role": "user", "content": final_prompt}],
-        options={"temperature": 0}
+        options={"temperature": 0},
     )
 
-    model_output = response['message']['content']
+    model_output = response["message"]["content"]
     json_text = extract_json_from_text(model_output)
 
     if not json_text:

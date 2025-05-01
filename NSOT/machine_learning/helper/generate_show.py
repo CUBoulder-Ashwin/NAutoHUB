@@ -1,6 +1,7 @@
 import os
 from jinja2 import Environment, FileSystemLoader
 
+
 def generate_show_command(predicted_show_type, monitor=None):
     # Get the current directory where this script is located
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -13,7 +14,7 @@ def generate_show_command(predicted_show_type, monitor=None):
     env = Environment(loader=FileSystemLoader(templates_dir))
 
     # Load the show_template.j2
-    template = env.get_template('show_template.j2')
+    template = env.get_template("show_template.j2")
 
     # Template expects these variables
     template_vars = {
@@ -21,7 +22,7 @@ def generate_show_command(predicted_show_type, monitor=None):
         "interface": monitor,
         "ip_address": None,
         "vlan_id": None,
-        "subinterface": None
+        "subinterface": None,
     }
 
     # Render the command

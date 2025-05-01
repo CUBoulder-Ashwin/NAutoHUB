@@ -7,10 +7,12 @@ TOPO_PATH = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "..", "pilot-config", "topo.yml")
 )
 
+
 # Custom Dumper to format 2-element endpoint lists without quotes
 class NoQuotesDumper(yaml.SafeDumper):
     def ignore_aliases(self, data):
         return True
+
 
 def represent_inline_endpoints(dumper, data):
     if (
@@ -20,12 +22,17 @@ def represent_inline_endpoints(dumper, data):
     ):
         return yaml.SequenceNode(
             tag="tag:yaml.org,2002:seq",
-            value=[dumper.represent_scalar("tag:yaml.org,2002:str", i, style="") for i in data],
+            value=[
+                dumper.represent_scalar("tag:yaml.org,2002:str", i, style="")
+                for i in data
+            ],
             flow_style=True,
         )
     return dumper.represent_list(data)
 
+
 yaml.add_representer(list, represent_inline_endpoints, Dumper=NoQuotesDumper)
+
 
 def build_clab_topology(topo_name, devices, links):
     nodes = {}
@@ -62,7 +69,9 @@ def build_clab_topology(topo_name, devices, links):
         if dev["kind"].lower() == "ceos":
             mgmt_eth = f"eth{interface_counts['mgmt'] + 1}"
             dev_eth = "eth1"
-            yaml_links.append({"endpoints": [f"mgmt:{mgmt_eth}", f"{dev['name']}:{dev_eth}"]})
+            yaml_links.append(
+                {"endpoints": [f"mgmt:{mgmt_eth}", f"{dev['name']}:{dev_eth}"]}
+            )
             interface_counts["mgmt"] += 1
             interface_counts[dev["name"]] += 1
 

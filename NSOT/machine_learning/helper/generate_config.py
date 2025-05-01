@@ -5,12 +5,15 @@ from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 
 TEMPLATE_DIR = "templates"
 
+
 def render_device_config(device_name, template_file, params):
     try:
         env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
         template = env.get_template(template_file)
     except TemplateNotFound:
-        print(f"❌ Template file '{template_file}' not found in '{TEMPLATE_DIR}' folder.")
+        print(
+            f"❌ Template file '{template_file}' not found in '{TEMPLATE_DIR}' folder."
+        )
         return None
 
     try:

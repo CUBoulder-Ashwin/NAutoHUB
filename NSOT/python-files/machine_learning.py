@@ -15,6 +15,7 @@ INSTRUCTIONS_FILE = os.path.join(MISC_DIR, "instructions.txt")
 IPAM_DIR = os.path.join(NSOT_DIR, "IPAM")
 HOSTS_CSV = os.path.join(IPAM_DIR, "hosts.csv")
 
+
 # Stream version
 async def ask_llama_for_command_stream(model: str, user_input: str):
     client = ollama.AsyncClient()
@@ -29,6 +30,7 @@ async def ask_llama_for_command_stream(model: str, user_input: str):
         if "message" in chunk and "content" in chunk["message"]:
             yield chunk["message"]["content"]
 
+
 # Full collected version
 async def ask_llama_for_command_full(model: str, user_input: str):
     content = ""
@@ -36,8 +38,11 @@ async def ask_llama_for_command_full(model: str, user_input: str):
         content += chunk
     return content.strip()
 
+
 # Summarization stream version
-async def ask_llama_to_summarize_stream(model: str, user_question: str, cli_output: str):
+async def ask_llama_to_summarize_stream(
+    model: str, user_question: str, cli_output: str
+):
     client = ollama.AsyncClient()
     summarization_prompt = f"""
 User Question: {user_question}
@@ -53,12 +58,14 @@ Summarize in human readable clean English. Focus only on relevant details.
         if "message" in chunk and "content" in chunk["message"]:
             yield chunk["message"]["content"]
 
+
 # Summarization full collected version
 async def ask_llama_to_summarize_full(model: str, user_question: str, cli_output: str):
     content = ""
     async for chunk in ask_llama_to_summarize_stream(model, user_question, cli_output):
         content += chunk
     return content.strip()
+
 
 def send_to_backend(device: str, command: str):
     """Send device + command to /run-command backend route."""
@@ -77,6 +84,7 @@ def send_to_backend(device: str, command: str):
         print("\n❌ Request error:", str(e))
         return None
 
+
 # Backend device connection
 def lookup_device(device_name):
     with open(HOSTS_CSV, "r") as file:
@@ -86,9 +94,10 @@ def lookup_device(device_name):
                 return {
                     "ip": row["management_ip"],
                     "username": row["username"],
-                    "password": row["password"]
+                    "password": row["password"],
                 }
     return None
+
 
 def run_command_on_device(device, command):
     device_info = lookup_device(device)
@@ -98,9 +107,9 @@ def run_command_on_device(device, command):
     try:
         connection = ConnectHandler(
             device_type="arista_eos",
-            host=device_info['ip'],
-            username=device_info['username'],
-            password=device_info['password'],
+            host=device_info["ip"],
+            username=device_info["username"],
+            password=device_info["password"],
         )
         connection.enable()
 

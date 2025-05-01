@@ -5,7 +5,16 @@ import sys
 import time
 import docker
 import json
-from flask import Flask, render_template, request, redirect, url_for, jsonify, stream_with_context, Response
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    jsonify,
+    stream_with_context,
+    Response,
+)
 from jinja2 import Environment, FileSystemLoader
 import subprocess
 from threading import Thread
@@ -31,8 +40,8 @@ sys.path.append(os.path.abspath(python_files_dir))
 sys.path.append(os.path.abspath(helper_dir))
 sys.path.append(os.path.abspath(predict_dir))
 topo_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "../../../pilot-config/topo.yml")
-        )   
+    os.path.join(os.path.dirname(__file__), "../../../pilot-config/topo.yml")
+)
 
 
 # Import your custom modules from 'python-files'
@@ -74,10 +83,10 @@ def homepage():
     return render_template("homepage.html")
 
 
-@app.route('/chat-query', methods=['POST'])
+@app.route("/chat-query", methods=["POST"])
 def chat_query():
     data = request.json
-    user_input = data.get('message')
+    user_input = data.get("message")
 
     def generate_sync():
         loop = asyncio.new_event_loop()
@@ -85,12 +94,21 @@ def chat_query():
 
         async def inner():
             # Step 1: Smalltalk detection
-            smalltalk_keywords = ["hi", "hello", "thanks", "thank you", "bye", "who are you", "goodbye"]
+            smalltalk_keywords = [
+                "hi",
+                "hello",
+                "thanks",
+                "thank you",
+                "bye",
+                "who are you",
+                "goodbye",
+            ]
             if any(kw in user_input.lower() for kw in smalltalk_keywords):
                 yield "👋 Hi there! I'm NBot, your friendly network assistant."
                 return
 
             import ollama
+
             response = ollama.chat(
                 model="llama3.1",
                 messages=[
@@ -98,13 +116,13 @@ def chat_query():
                         "role": "system",
                         "content": """You are an intelligent, helpful network automation assistant. 
 If the user's input is a casual greeting, question about yourself, or a non-technical sentence, reply only with 'SMALLTALK'. 
-If the user's input is technical (related to networking, configs, interfaces, protocols, etc), reply only with 'TECHNICAL'."""
+If the user's input is technical (related to networking, configs, interfaces, protocols, etc), reply only with 'TECHNICAL'.""",
                     },
-                    {"role": "user", "content": user_input}
-                ]
+                    {"role": "user", "content": user_input},
+                ],
             )
 
-            mode = response['message']['content'].strip()
+            mode = response["message"]["content"].strip()
             if mode == "SMALLTALK":
                 yield "🧠 Hello! How can I assist with your network today?"
                 return
@@ -126,10 +144,10 @@ If the user's input is technical (related to networking, configs, interfaces, pr
                 return
 
             for action in extracted_actions:
-                intent = action.get('intent')
-                device = action.get('device')
-                monitor = action.get('monitor')
-                configure = action.get('configure')
+                intent = action.get("intent")
+                device = action.get("device")
+                monitor = action.get("monitor")
+                configure = action.get("configure")
 
                 if (configure is None or configure == {}) and monitor is None:
                     if intent is None:
@@ -146,7 +164,7 @@ If the user's input is technical (related to networking, configs, interfaces, pr
                     else:
                         yield "⚠️ No output from device."
 
-                elif (configure is None or configure == {}):
+                elif configure is None or configure == {}:
                     predicted_show_type = predict_specific_output(intent)
                     final_command = generate_show_command(predicted_show_type, monitor)
                     cli_output = connect_and_run_command(device, final_command)
@@ -166,7 +184,9 @@ If the user's input is technical (related to networking, configs, interfaces, pr
                     else:
                         params = {"raw": configure}
 
-                    config_text = render_device_config(device, predicted_template, params)
+                    config_text = render_device_config(
+                        device, predicted_template, params
+                    )
 
                     if config_text:
                         yield f"✅ Configuration generated for {device}:\n\n{config_text}"
@@ -181,10 +201,12 @@ If the user's input is technical (related to networking, configs, interfaces, pr
             except StopAsyncIteration:
                 break
 
-    return Response(stream_with_context(generate_sync()), content_type='text/event-stream')
+    return Response(
+        stream_with_context(generate_sync()), content_type="text/event-stream"
+    )
 
 
-@app.route('/shutdown-ollama', methods=['POST'])
+@app.route("/shutdown-ollama", methods=["POST"])
 def shutdown_ollama_route():
     try:
         stop_ollama_model("llama3.1")
@@ -369,8 +391,6 @@ def delete_topology_route():
     return render_template(
         "build_topology.html", docker_images=get_docker_images(), message=message
     )
-
-
 
 
 @app.route("/dashboard")
@@ -724,7 +744,6 @@ def push_config():
         return jsonify({"status": "error", "message": push_status})
 
 
-
 @app.route("/tools", methods=["GET", "POST"])
 def tools():
     ping_result = None
@@ -841,9 +860,9 @@ def topology():
 
     try:
         gws = netifaces.gateways()
-        default_iface = gws['default'][netifaces.AF_INET][1]
+        default_iface = gws["default"][netifaces.AF_INET][1]
         iface_addrs = netifaces.ifaddresses(default_iface)
-        interface_ip = iface_addrs[netifaces.AF_INET][0]['addr']
+        interface_ip = iface_addrs[netifaces.AF_INET][0]["addr"]
     except Exception as e:
         print(f"[ERROR] Could not determine interface IP: {e}")
         interface_ip = "127.0.0.1"
@@ -854,7 +873,8 @@ def topology():
 
 import docker
 
-@app.route('/clab-health')
+
+@app.route("/clab-health")
 def clab_health():
     try:
         client = docker.from_env()
@@ -870,4 +890,4 @@ def clab_health():
 if __name__ == "__main__":
     thread = Thread(target=ipam_reader.read_ipam_file, daemon=True)
     thread.start()
-    app.run(host="0.0.0.0", port=5555, debug=True, threaded=True) 
+    app.run(host="0.0.0.0", port=5555, debug=True, threaded=True)
