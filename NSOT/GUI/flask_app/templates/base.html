@@ -6,331 +6,447 @@
   <title>Network Dashboard</title>
 
 <style>
-    :root {
-        --dark-bg: #0d0d0d;
-        --dark-accent: #d4a373;
-        --dark-hover: #eec68d;
-        --light-bg: #fdf6e3;
-        --light-accent: #734c24;
-        --light-hover: #b07c59;
-    }
-    body.dark-mode { background-color: var(--dark-bg); color: var(--dark-accent); }
-    body.light-mode { background-color: var(--light-bg); color: var(--light-accent); }
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-        transition: background-color 0.3s, color 0.3s;
-    }
+  :root {
+    --dark-bg: #0d0d0d;
+    --dark-accent: #d4a373;
+    --dark-hover: #eec68d;
+    --light-bg: #fdf6e3;
+    --light-accent: #734c24;
+    --light-hover: #b07c59;
+  }
 
-    .navbar { display: flex; align-items: center; justify-content: space-between; padding: 15px 30px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); }
-    .dark-mode .navbar { background-color: var(--dark-bg); border-bottom: 1px solid #333; }
-    .light-mode .navbar { background-color: var(--light-accent); }
-    .navbar-left, .navbar-center, .navbar-right { flex: 1; display: flex; align-items: center; }
-    .navbar-left { justify-content: flex-start; }
-    .navbar-center { justify-content: center; }
-    .navbar-right { justify-content: flex-end; }
-    .navbar-logo { font-size: 1.5em; font-weight: bold; text-decoration: none; color: var(--dark-accent); text-shadow: 0 0 6px rgba(212, 163, 115, 0.5); }
-    .navbar-logo:hover { text-shadow: 0 0 12px rgba(212, 163, 115, 0.9); }
-    #darkModeToggle, .profile-button { background: none; border: none; font-size: 1.5em; cursor: pointer; }
-    .dark-mode #darkModeToggle, .dark-mode .profile-button { color: #734c24; }
-    .light-mode #darkModeToggle, .light-mode .profile-button { color: #fdf6e3; }
-    .dark-mode #darkModeToggle:hover, .dark-mode .profile-button:hover { color: var(--dark-hover); }
-    .light-mode #darkModeToggle:hover, .light-mode .profile-button:hover { color: var(--light-hover); }
+  body.dark-mode {
+    background-color: var(--dark-bg);
+    color: var(--dark-accent);
+  }
+  body.light-mode {
+    background-color: var(--light-bg);
+    color: var(--light-accent);
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+  }
 
-    .hamburger-menu { position: fixed; top: 0; right: 0; width: 300px; height: 100%; box-shadow: -2px 0 10px rgba(0,0,0,0.2); overflow-y: auto; transform: translateX(100%); transition: transform 0.4s ease; z-index: 1000; }
-    .hamburger-menu.open { transform: translateX(0); }
-    .dark-mode .hamburger-menu { background-color: var(--dark-bg); color: var(--dark-accent); }
-    .light-mode .hamburger-menu { background-color: var(--light-accent); color: #fdf6e3; }
-    .hamburger-close { 
-        font-size: 1.5em; 
-        cursor: pointer; 
-        padding: 10px; 
-        text-align: right; 
-    }
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 30px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
 
-    .hamburger-menu a {
-        display: block;
-        padding: 15px 20px;
-        text-decoration: none;
-        font-weight: bold;
-        border-bottom: 1px solid #444;
-    }
+  .dark-mode .navbar { background-color: var(--dark-bg); border-bottom: 1px solid #333; }
+  .light-mode .navbar { background-color: var(--light-accent); }
 
-    /* Light mode hamburger links */
-    .light-mode .hamburger-menu a, .light-mode .hamburger-close {
-        color: #fdf6e3;
-    }
+  .navbar-left, .navbar-center, .navbar-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+  .navbar-left { justify-content: flex-start; gap: 12px; }
+  .navbar-center { justify-content: center; }
+  .navbar-right { justify-content: flex-end; gap: 15px; }
 
-    /* Dark mode hamburger links */
-    .dark-mode .hamburger-menu a, .dark-mode .hamburger-close {
-        color: #734c24;
-    }
-
-    /* Hover effect */
-    .hamburger-menu a:hover {
-        text-decoration: underline;
-    }
-
-    .container { padding: 30px; }
-    .back-button { font-size: 1.5em; margin-right: 15px; text-decoration: none; }
-    .light-mode .hamburger-menu a, .light-mode .hamburger-close,.light-mode .back-button {
-        color: #fdf6e3;
-    }
-
-    /* Dark mode hamburger links */
-    .dark-mode .hamburger-menu a, .dark-mode .hamburger-close, .dark-mode .back-button{
-        color: #734c24;
-    }
-    .back-button:hover { color: var(--dark-hover); }
-
-    #chatbot-icon { position: fixed; bottom: 20px; right: 20px; background: none; border: none; font-size: 28px; color: var(--dark-accent); cursor: pointer; z-index: 1001; }
-
-    /* ✅ Chatbot Styles */
-    #chatbot-container {
-        display: none;
-        position: fixed;
-        bottom: 80px;
-        right: 20px;
-        width: 300px;
-        height: 400px;
-        max-height: 600px;
-        border-radius: 15px;
-        border: none; 
-        box-shadow: 0 0 15px rgba(212, 163, 115, 0.6);
-        overflow: hidden;
-        flex-direction: column;
-        transition: height 0.4s ease;
-        z-index: 1000;
-    }
-    .dark-mode #chatbot-container {
-        background-color: var(--dark-bg);
-        box-shadow: 0 0 15px rgba(212, 163, 115, 0.6);
-    }
-    .light-mode #chatbot-container {
-        background-color: var(--light-bg);
-        box-shadow: 0 0 15px rgba(115, 76, 36, 0.4);
-    }
-
-    #chatbot-header {
-        text-align: center;
-        font-weight: bold;
-        font-size: 1.2em;
-        padding: 10px;
-        position: relative;
-        border-bottom: none; /* Remove hard line */
-        box-shadow: 0 2px 8px rgba(212, 163, 115, 0.5);
-    }
-    
-    body.light-mode #chatbot-header {
-        box-shadow: 0 2px 8px rgba(115, 76, 36, 0.4);
-    }
-
-    body.dark-mode #chatbot-header {
-        box-shadow: 0 2px 8px rgba(212, 163, 115, 0.5);
-    }
-
-    #chatbot-close {
-        position: absolute;
-        right: 10px;
-        top: 5px;
-        cursor: pointer;
-        font-size: 1.2em;
-    }
-    .dark-mode #chatbot-close { color: var(--dark-accent);}
-    .light-mode #chatbot-close { color: var(--light-accent);}
-
-    #chatbot-messages {
-        flex-grow: 1;
-        padding: 10px;
-        overflow-y: auto;
-        font-size: 0.9em;
-        background: inherit;
-        color: inherit;
-    }
-
-    body.light-mode #chatbot-messages span {
-        color: #734c24;
-    }
-
-    body.dark-mode #chatbot-messages span {
-        color: #d4a373; /* ✅ Golden for dark mode */
-    }
-
-    #chatbot-input {
-        display: flex;
-        padding: 5px;
-        background: inherit;
-    }
-    #chatbot-input input {
-        flex-grow: 1;
-        padding: 8px;
-        border-radius: 6px;
-        background: inherit;
-        color: inherit;
-        border: 1px solid;
-    }
-    .dark-mode #chatbot-input input { border-color: var(--light-accent);}
-    .light-mode #chatbot-input input { border-color: var(--dark-accent);}
-    #chatbot-input input:focus {
-        outline: none;
-        box-shadow: 0 0 8px var(--dark-accent);
-        transition: box-shadow 0.3s ease;
-    }
-    #chatbot-input button {
-        padding: 8px 12px;
-        margin-left: 5px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: bold;
-        border: none;
-    }
-    .dark-mode #chatbot-input button {
-        background-color: var(--dark-accent);
-        color: var(--dark-bg);
-    }
-    .light-mode #chatbot-input button {
-        background-color: var(--light-accent);
-        color: white;
-    }
-    
-    .chat-label {
-    color: inherit;
+  .navbar-logo {
+    font-size: 1.5em;
     font-weight: bold;
-}
+    text-decoration: none;
+    color: var(--dark-accent);
+    text-shadow: 0 0 6px rgba(212, 163, 115, 0.5);
+  }
+  .navbar-logo:hover { text-shadow: 0 0 12px rgba(212, 163, 115, 0.9); }
+
+  #darkModeToggle, .profile-button {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+  }
+
+  .dark-mode #darkModeToggle, .dark-mode .profile-button { color: #734c24; }
+  .light-mode #darkModeToggle, .light-mode .profile-button { color: #fdf6e3; }
+
+  .dark-mode #darkModeToggle:hover, .dark-mode .profile-button:hover { color: var(--dark-hover); }
+  .light-mode #darkModeToggle:hover, .light-mode .profile-button:hover { color: var(--light-hover); }
+
+  .hamburger-menu {
+    position: fixed;
+    top: 0; right: 0;
+    width: 300px;
+    height: 100%;
+    transform: translateX(100%);
+    transition: transform 0.4s ease;
+    z-index: 1000;
+    overflow-y: auto;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+  }
+
+  .hamburger-menu.open { transform: translateX(0); }
+
+  .dark-mode .hamburger-menu { background-color: var(--dark-bg); color: var(--dark-accent); }
+  .light-mode .hamburger-menu { background-color: var(--light-accent); color: #fdf6e3; }
+
+  .hamburger-close {
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 10px;
+    text-align: right;
+  }
+
+  .hamburger-menu a {
+    display: block;
+    padding: 15px 20px;
+    text-decoration: none;
+    font-weight: bold;
+    border-bottom: 1px solid #444;
+  }
+
+  .light-mode .hamburger-menu a, .light-mode .hamburger-close { color: #fdf6e3; }
+  .dark-mode .hamburger-menu a, .dark-mode .hamburger-close { color: #734c24; }
+
+  .hamburger-menu a:hover { text-decoration: underline; }
+
+  .container { padding: 30px; }
+
+  .back-button {
+    font-size: 1.5em;
+    text-decoration: none;
+  }
+
+  .light-mode .back-button { color: #fdf6e3; }
+  .dark-mode .back-button { color: #734c24; }
+
+  .back-button:hover { color: var(--dark-hover); }
+
+  #clab-status-indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.2);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  body.dark-mode #clab-status-indicator.neutral {
+    background-color: #0d0d0d;
+    box-shadow: inset 0 0 0 2px rgba(212, 163, 115, 0.2);
+  }
+
+  body.light-mode #clab-status-indicator.neutral {
+    background-color: #734c24;
+    box-shadow: inset 0 0 0 2px rgba(253, 246, 227, 0.2);
+  }
+
+  #clab-status-indicator.online {
+    background-color: #00ff00;
+    animation: blink 1s infinite;
+    box-shadow: 0 0 8px rgba(0,255,0,0.6);
+  }
+
+  #clab-status-indicator.offline {
+    background-color: red;
+    box-shadow: 0 0 8px rgba(255,0,0,0.4);
+  }
+
+  @keyframes blink {
+    0% { box-shadow: 0 0 5px 0 rgba(0,255,0, 0.8); }
+    50% { box-shadow: 0 0 10px 6px rgba(0,255,0, 0.4); }
+    100% { box-shadow: 0 0 5px 0 rgba(0,255,0, 0.8); }
+  }
+
+  #chatbot-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: var(--dark-accent);
+    cursor: pointer;
+    z-index: 1001;
+  }
+
+  #chatbot-container {
+    visibility: hidden;
+    opacity: 0;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    border-radius: 15px;
+    background-color: var(--dark-bg);
+    box-shadow: 0 0 15px rgba(212, 163, 115, 0.6);
+    z-index: 1001;
+    overflow: hidden;
+    flex-direction: column;
+    font-size: 0.9em;
+    transition: all 0.6s ease;
+    display: flex; /* Always flex */
+  }
+
+  #chatbot-container.visible {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  #chatbot-container.expanded {
+    width: 1375px;
+    height: 600px;
+  }
+
+
+  .light-mode #chatbot-container {
+    background-color: var(--light-bg);
+    box-shadow: 0 0 15px rgba(115, 76, 36, 0.4);
+  }
+
+
+  #chatbot-header {
+    padding: 10px;
+    font-weight: bold;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid var(--dark-accent);
+  }
+
+  .light-mode #chatbot-header {
+    border-bottom: 1px solid var(--light-accent);
+  }
+
+  #chatbot-close {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    cursor: pointer;
+  }
+
+  #chatbot-messages {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #chatbot-input {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid var(--dark-accent);
+  }
+
+  .light-mode #chatbot-input {
+    border-top: 1px solid var(--light-accent);
+  }
+
+  #chatbot-input input {
+    flex-grow: 1;
+    padding: 8px;
+    border-radius: 6px;
+    background: inherit;
+    color: inherit;
+    border: 1px solid var(--dark-accent);
+  }
+
+  .light-mode #chatbot-input input {
+    border-color: var(--light-accent);
+  }
+
+  #chatbot-input input:focus {
+    outline: none;
+    box-shadow: 0 0 8px var(--dark-accent);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .light-mode #chatbot-input input:focus {
+    box-shadow: 0 0 8px var(--light-accent);
+  }
+
+  #chatbot-input button {
+    margin-left: 6px;
+    padding: 8px;
+    border-radius: 6px;
+    background-color: var(--dark-accent);
+    color: var(--dark-bg);
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+  }
+
+  .light-mode #chatbot-input button {
+    background-color: var(--light-accent);
+    color: #fff;
+  }
+
+  .chat-entry {
+    margin-bottom: 12px;
+    line-height: 1.6em;
+    word-wrap: break-word;
+    white-space: pre-wrap;        
+    overflow-wrap: break-word; 
+    max-width: 100%;
+  }
+
 </style>
 
 <script>
-let chatHistory = [];
-let expanded = false;
+  let chatHistory = [];
+  let botResponseCount = 0;
 
-function toggleHamburgerMenu() {
+  function toggleHamburgerMenu() {
     document.querySelector('.hamburger-menu').classList.toggle('open');
+  }
+
+  function toggleChatbot() {
+    const container = document.getElementById('chatbot-container');
+    container.classList.toggle('visible');
+  }
+
+  function closeChatbot() {
+    const container = document.getElementById('chatbot-container');
+    container.classList.remove('visible');
+    container.classList.remove('expanded');
+    chatHistory = [];
+    document.getElementById('chatbot-messages').innerHTML = "";
+    botResponseCount = 0;
+  }
+
+
+  function checkSubmit(event) {
+    if (event.key === "Enter") sendMessage();
+  }
+
+
+  function sendMessage() {
+  const input = document.getElementById('user-input');
+  const message = input.value.trim();
+  if (message === "") return;
+
+  const messages = document.getElementById('chatbot-messages');
+  const sendButton = document.querySelector("#chatbot-input button");
+
+  input.value = "";
+  input.disabled = true;
+  sendButton.disabled = true;
+
+  const userDiv = document.createElement('div');
+  userDiv.classList.add('chat-entry');
+  userDiv.innerHTML = `<strong>You:</strong> <span>${message}</span>`;
+  messages.appendChild(userDiv);
+
+  const botDiv = document.createElement('div');
+  botDiv.classList.add('chat-entry');
+  botDiv.innerHTML = `<strong>NBot:</strong> <span id="bot-response">Thinking...</span>`;
+  messages.appendChild(botDiv);
+
+  messages.scrollTop = messages.scrollHeight;
+  chatHistory.push(`You: ${message}`);
+
+  fetch('/chat-query', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: message, history: chatHistory })
+  })
+  .then(response => {
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    const botResponseSpan = botDiv.querySelector('#bot-response');
+    botResponseSpan.innerText = "";
+    let fullBotResponse = "";
+
+    function readChunk() {
+      reader.read().then(({ done, value }) => {
+        if (done) {
+          chatHistory.push(`Bot: ${fullBotResponse}`);
+          input.disabled = false;
+          sendButton.disabled = false;
+          input.focus();
+
+          botResponseCount += 1;
+          if (botResponseCount === 2) {
+            document.getElementById('chatbot-container').classList.add('expanded');
+          }
+          return;
+        }
+
+        const chunk = decoder.decode(value, { stream: true });
+        let i = 0;
+
+        function typeChar() {
+          if (i < chunk.length) {
+            botResponseSpan.innerText += chunk[i++];
+            messages.scrollTop = messages.scrollHeight;
+            setTimeout(typeChar, 12);  // typing delay in ms
+          } else {
+            fullBotResponse += chunk;
+            readChunk();  // Continue reading next chunk
+          }
+        }
+
+        typeChar();
+      });
+    }
+
+    readChunk();
+  })
+  .catch(() => {
+    const botResponseSpan = botDiv.querySelector('#bot-response');
+    botResponseSpan.innerText = "⚠️ Error contacting assistant.";
+    input.disabled = false;
+    sendButton.disabled = false;
+  });
 }
 
-function toggleDarkMode() {
+
+  function toggleDarkMode() {
     const body = document.body;
     const toggleButton = document.getElementById('darkModeToggle');
 
     if (body.classList.contains('dark-mode')) {
-        body.classList.replace('dark-mode', 'light-mode');
-        toggleButton.textContent = '🌜';
-        localStorage.setItem('theme', 'light-mode');
+      body.classList.replace('dark-mode', 'light-mode');
+      toggleButton.textContent = '🌜';
+      localStorage.setItem('theme', 'light-mode');
     } else {
-        body.classList.replace('light-mode', 'dark-mode');
-        toggleButton.textContent = '🌞';
-        localStorage.setItem('theme', 'dark-mode');
+      body.classList.replace('light-mode', 'dark-mode');
+      toggleButton.textContent = '🌞';
+      localStorage.setItem('theme', 'dark-mode');
     }
-}
+  }
 
-window.onload = () => {
+  function updateClabStatus() {
+    const indicator = document.getElementById("clab-status-indicator");
+    indicator.className = "neutral";
+    fetch("/clab-health")
+      .then(response => response.json())
+      .then(data => {
+        indicator.classList.remove("neutral", "online", "offline");
+        if (data.status === "up") {
+          indicator.classList.add("online");
+          indicator.title = data.message;
+        } else {
+          indicator.classList.add("offline");
+          indicator.title = data.message;
+        }
+      })
+      .catch(() => {
+        indicator.classList.remove("neutral", "online");
+        indicator.classList.add("offline");
+        indicator.title = "Status check failed";
+      });
+  }
+
+  window.onload = () => {
     const savedTheme = localStorage.getItem('theme') || 'light-mode';
     document.body.classList.add(savedTheme);
     document.getElementById('darkModeToggle').textContent = savedTheme === 'dark-mode' ? '🌞' : '🌜';
-    document.getElementById('chatbot-container').style.display = 'none';
-};
+    updateClabStatus();
+  };
 
-function toggleChatbot() {
-    const container = document.getElementById('chatbot-container');
-    if (container.style.display === 'none') {
-        container.style.display = 'flex';
-    } else {
-        container.style.display = 'none';
-        chatHistory = [];
-        document.getElementById('chatbot-messages').innerHTML = "";
-        expanded = false;
-    }
-}
-
-function closeChatbot() {
-    document.getElementById('chatbot-container').style.display = 'none';
-    chatHistory = [];
-    document.getElementById('chatbot-messages').innerHTML = "";
-    expanded = false;
-
-    const container = document.getElementById('chatbot-container');
-    container.style.width = "300px";
-    container.style.height = "400px";
-}
-function checkSubmit(event) {
-    if (event.key === "Enter") {
-        sendMessage();
-    }
-}
-
-function adjustChatbotHeight() {
-    const container = document.getElementById('chatbot-container');
-    const messageCount = document.getElementById('chatbot-messages').children.length;
-    if (!expanded && messageCount >= 4) {
-        container.style.height = "600px";
-        container.style.width = "1375px";
-        expanded = true;
-    }
-}
-
-function sendMessage() {
-    const input = document.getElementById('user-input');
-    const message = input.value.trim();
-    if (message === "") return;
-
-    const messages = document.getElementById('chatbot-messages');
-    const sendButton = document.querySelector("#chatbot-input button");
-
-    input.value = "";
-    input.disabled = true;
-    sendButton.disabled = true;
-
-    const userDiv = document.createElement('div');
-    userDiv.style.marginBottom = '10px';
-    userDiv.innerHTML = `<strong class="chat-label">You:</strong> <span>${message}</span>`;
-    messages.appendChild(userDiv);
-
-    const botDiv = document.createElement('div');
-    botDiv.style.marginBottom = '15px';
-    botDiv.innerHTML = `<strong class="chat-label">NBot:</strong> <span id="bot-response">Thinking...</span>`;
-    messages.appendChild(botDiv);
-
-    messages.scrollTop = messages.scrollHeight;
-    chatHistory.push(`You: ${message}`);
-
-    fetch('/chat-query', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: message, history: chatHistory })
-    })
-    .then(response => {
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        const botResponseSpan = botDiv.querySelector('#bot-response');
-        botResponseSpan.innerText = "";
-        let fullBotResponse = "";
-
-        function readChunk() {
-            reader.read().then(({ done, value }) => {
-                if (done) {
-                    chatHistory.push(`Bot: ${fullBotResponse}`);
-                    input.disabled = false;
-                    sendButton.disabled = false;
-                    input.focus();
-                    return;
-                }
-                const chunk = decoder.decode(value, { stream: true });
-                botResponseSpan.innerText += chunk;
-                fullBotResponse += chunk;
-                adjustChatbotHeight();
-                messages.scrollTop = messages.scrollHeight;
-                readChunk();
-            });
-        }
-        readChunk();
-    })
-    .catch(() => {
-        const botResponseSpan = botDiv.querySelector('#bot-response');
-        botResponseSpan.innerText = "⚠️ Error contacting assistant.";
-        input.disabled = false;
-        sendButton.disabled = false;
-    });
-}
+  setInterval(updateClabStatus, 5000);
 </script>
 </head>
 
@@ -338,14 +454,17 @@ function sendMessage() {
   <nav class="navbar">
     <div class="navbar-left">
       {% if request.endpoint != 'homepage' %}
-      <a href="{{ url_for('homepage') }}" class="back-button">←</a>
+        <a href="{{ url_for('homepage') }}" class="back-button">←</a>
       {% endif %}
       <button id="darkModeToggle" onclick="toggleDarkMode()">🌜</button>
     </div>
+
     <div class="navbar-center">
       <a href="{{ url_for('homepage') }}" class="navbar-logo">NAutoHUB</a>
     </div>
+
     <div class="navbar-right">
+      <div id="clab-status-indicator" title="Checking status..."></div>
       <button class="profile-button" onclick="toggleHamburgerMenu()">☰</button>
     </div>
   </nav>

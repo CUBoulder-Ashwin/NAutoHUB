@@ -69,7 +69,9 @@ sudo download-mibs
 sudo apt install telegraf
 sudo apt install git-lfs
 sudo apt install gnmic
-
+sudo apt install xdg-utils
+sudo apt install graphviz
+sudo apt install socat
 
 sudo apt install -y python3-pip netplan.io
 sudo systemctl enable systemd-networkd

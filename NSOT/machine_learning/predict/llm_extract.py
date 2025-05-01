@@ -1,12 +1,14 @@
-# llama_extract.py
 import ollama
+import sys
 import json
 import re
 import os
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-
 models_dir = os.path.join(current_dir, "..", "..", "machine_learning", "prompts")
+helper_dir = os.path.join(current_dir, "..", "helper")
+sys.path.append(os.path.abspath(helper_dir))
+from ollama_utils import stop_ollama_model
 
 def read_prompt_template():
     """Reads the static prompt template from prompts/extract_fields.txt"""
@@ -21,11 +23,10 @@ def extract_json_from_text(text):
     else:
         return None
 
-
 def process_cli_output(user_query, cli_output):
     """Ask Llama to intelligently extract information from CLI output based on user query."""
     prompt = f"""
-You are an intelligent network assitant named NBot working for the NutoHUB developed by Ashwin Chandrsekaran.
+You are an intelligent network assistant named NBot working for the NAutoHUB developed by Ashwin Chandrasekaran.
 
 Given:
 - A user's question about the network.
@@ -74,9 +75,8 @@ Provide the final answer below:
     )
 
     answer = response['message']['content']
+    stop_ollama_model("llama3.1")
     return answer
-
-
 
 def real_llm_extract(user_input):
     """Sends user input to Llama 3.1 via Ollama and extracts intent, device, monitor, configure"""
@@ -85,28 +85,23 @@ def real_llm_extract(user_input):
 
     response = ollama.chat(
         model='llama3.1',
-        messages=[
-            {"role": "user", "content": final_prompt}
-        ],
-        options={
-            "temperature": 0,
-        }
+        messages=[{"role": "user", "content": final_prompt}],
+        options={"temperature": 0}
     )
 
     model_output = response['message']['content']
-
     json_text = extract_json_from_text(model_output)
 
     if not json_text:
         print(model_output)
+        stop_ollama_model("llama3.1")
         return None
 
     try:
         extracted_fields = json.loads(json_text)
 
-        # 🧠 Check if it's a list or a single dict
         if isinstance(extracted_fields, dict):
-            extracted_fields = [extracted_fields]  # make it a list with one element
+            extracted_fields = [extracted_fields]
 
         print("\n✅ Extracted Actions:")
         for idx, action in enumerate(extracted_fields):
@@ -122,3 +117,6 @@ def real_llm_extract(user_input):
         print("\n❌ Failed to parse extracted JSON. Raw output:")
         print(json_text)
         return None
+
+    finally:
+        stop_ollama_model("llama3.1")

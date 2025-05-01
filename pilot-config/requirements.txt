@@ -11,3 +11,4 @@ ollama
 scikit-learn
 jinja2
 tensorflow[and-cuda]
+netifaces

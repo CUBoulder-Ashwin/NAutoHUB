@@ -10,26 +10,29 @@ from jinja2 import Environment, FileSystemLoader
 import subprocess
 from threading import Thread
 from pathlib import Path
-import requests
 import asyncio
-import ollama
+import netifaces
 
 
 # Get the current directory of this script
 current_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Path to 'templates' folder at NSOT level
-templates_dir = os.path.join(current_dir, "..", "..", "templates")
+project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
 
 # Go up two levels and into the 'python-files' directory
 python_files_dir = os.path.join(current_dir, "..", "..", "python-files")
 predict_dir = os.path.join(current_dir, "..", "..", "machine_learning", "predict")
 helper_dir = os.path.join(current_dir, "..", "..", "machine_learning", "helper")
+templates_dir = os.path.join(current_dir, "..", "..", "templates")
+pilot_config_dir = os.path.join(project_root, "pilot-config")
+topology_dir = os.path.join(project_root, "NSOT", "topology")
 
 # Add 'python-files' to the system path
 sys.path.append(os.path.abspath(python_files_dir))
 sys.path.append(os.path.abspath(helper_dir))
-sys.path.append(os.path.abspath(predict_dir))   
+sys.path.append(os.path.abspath(predict_dir))
+topo_path = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "../../../pilot-config/topo.yml")
+        )   
 
 
 # Import your custom modules from 'python-files'
@@ -48,12 +51,7 @@ from read_IPAM import IPAMReader
 from read_hosts import HostsReader
 from clab_builder import build_clab_topology
 from clab_push import get_docker_images
-from llm_extract import real_llm_extract, process_cli_output
-from predict_specific import predict_specific_output
-from predict_genericshow import predict_generic_show_command
-from fetch_show import connect_and_run_command
-from generate_show import generate_show_command
-from generate_config import render_device_config
+from ollama_utils import stop_ollama_model
 
 # File path for IPAM CSV file
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -86,27 +84,42 @@ def chat_query():
         asyncio.set_event_loop(loop)
 
         async def inner():
-            # 🧠 Step 1: Ask LLM if this is chitchat, and let it respond directly if yes
-            system_prompt = """YYou are an intelligent, friendly and helpful network assistant named NBot working for the NutoHUB developed by Ashwin Chandrsekaran.
-If the user's message is just a greeting, thank-you, or a personal question about you (e.g., 'hi', 'thanks', 'who are you?', etc), respond warmly and naturally.
-If it's a technical network-related request (about configurations, interfaces, protocols, etc), reply only with "TECHNICAL".
-"""
+            # Step 1: Smalltalk detection
+            smalltalk_keywords = ["hi", "hello", "thanks", "thank you", "bye", "who are you", "goodbye"]
+            if any(kw in user_input.lower() for kw in smalltalk_keywords):
+                yield "👋 Hi there! I'm NBot, your friendly network assistant."
+                return
 
+            import ollama
             response = ollama.chat(
                 model="llama3.1",
                 messages=[
-                    {"role": "system", "content": system_prompt},
+                    {
+                        "role": "system",
+                        "content": """You are an intelligent, helpful network automation assistant. 
+If the user's input is a casual greeting, question about yourself, or a non-technical sentence, reply only with 'SMALLTALK'. 
+If the user's input is technical (related to networking, configs, interfaces, protocols, etc), reply only with 'TECHNICAL'."""
+                    },
                     {"role": "user", "content": user_input}
                 ]
             )
 
-            llm_reply = response['message']['content'].strip()
-
-            if llm_reply != "TECHNICAL":
-                yield llm_reply
+            mode = response['message']['content'].strip()
+            if mode == "SMALLTALK":
+                yield "🧠 Hello! How can I assist with your network today?"
+                return
+            elif mode != "TECHNICAL":
+                yield "⚠️ I couldn't determine if this was a technical query. Please try rephrasing."
                 return
 
-            # 🧠 Step 2: Proceed with technical pipeline
+            # Step 2: LLM extraction and response
+            from llm_extract import real_llm_extract, process_cli_output
+            from predict_specific import predict_specific_output
+            from predict_genericshow import predict_generic_show_command
+            from fetch_show import connect_and_run_command
+            from generate_show import generate_show_command
+            from generate_config import render_device_config
+
             extracted_actions = real_llm_extract(user_input)
             if not extracted_actions:
                 yield "⚠️ Sorry, could not understand the request."
@@ -119,7 +132,6 @@ If it's a technical network-related request (about configurations, interfaces, p
                 configure = action.get('configure')
 
                 if (configure is None or configure == {}) and monitor is None:
-                    # Generic Show
                     if intent is None:
                         yield "⚠️ Intent is missing."
                         return
@@ -135,7 +147,6 @@ If it's a technical network-related request (about configurations, interfaces, p
                         yield "⚠️ No output from device."
 
                 elif (configure is None or configure == {}):
-                    # Specific Show
                     predicted_show_type = predict_specific_output(intent)
                     final_command = generate_show_command(predicted_show_type, monitor)
                     cli_output = connect_and_run_command(device, final_command)
@@ -148,7 +159,6 @@ If it's a technical network-related request (about configurations, interfaces, p
                         yield "⚠️ No output from device."
 
                 elif monitor is None:
-                    # Configuration mode
                     predicted_template = predict_specific_output(intent)
 
                     if isinstance(configure, dict):
@@ -164,7 +174,6 @@ If it's a technical network-related request (about configurations, interfaces, p
                         yield "⚠️ Failed to generate configuration."
 
         async_gen = inner()
-
         while True:
             try:
                 token = loop.run_until_complete(async_gen.__anext__())
@@ -175,6 +184,13 @@ If it's a technical network-related request (about configurations, interfaces, p
     return Response(stream_with_context(generate_sync()), content_type='text/event-stream')
 
 
+@app.route('/shutdown-ollama', methods=['POST'])
+def shutdown_ollama_route():
+    try:
+        stop_ollama_model("llama3.1")
+        return jsonify({"status": "success", "message": "Ollama stopped."})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
 
 
 @app.route("/add-hosts", methods=["GET", "POST"])
@@ -810,7 +826,48 @@ def contact():
     return render_template("contact.html")
 
 
+@app.route("/topology")
+def topology():
+    try:
+        subprocess.Popen(
+            f"containerlab graph -t {topo_path}",
+            shell=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        print(f"[INFO] Started containerlab graph for: {topo_path}")
+    except Exception as e:
+        print(f"[ERROR] Failed to start containerlab graph: {e}")
+
+    try:
+        gws = netifaces.gateways()
+        default_iface = gws['default'][netifaces.AF_INET][1]
+        iface_addrs = netifaces.ifaddresses(default_iface)
+        interface_ip = iface_addrs[netifaces.AF_INET][0]['addr']
+    except Exception as e:
+        print(f"[ERROR] Could not determine interface IP: {e}")
+        interface_ip = "127.0.0.1"
+
+    graph_url = f"http://{interface_ip}:50080"
+    return render_template("topology.html", graph_url=graph_url)
+
+
+import docker
+
+@app.route('/clab-health')
+def clab_health():
+    try:
+        client = docker.from_env()
+        containers = client.containers.list(filters={"label": "containerlab"})
+        if containers:
+            return jsonify({"status": "up", "message": "Containerlab is up"})
+        else:
+            return jsonify({"status": "down", "message": "Containerlab is down"})
+    except Exception as e:
+        return jsonify({"status": "down", "message": f"Error: {str(e)}"})
+
+
 if __name__ == "__main__":
     thread = Thread(target=ipam_reader.read_ipam_file, daemon=True)
     thread.start()
-    app.run(host="0.0.0.0", port=5555, debug=True)
+    app.run(host="0.0.0.0", port=5555, debug=True, threaded=True) 

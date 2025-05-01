@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="iframe-container">
+    <iframe
+      id="graphFrame"
+      src="{{ graph_url }}"
+      frameborder="0"
+    ></iframe>
+</div>
+
+<style>
+:root {
+    --dark-bg: #0d0d0d;
+    --dark-accent: #d4a373;
+    --dark-hover: #eec68d;
+
+    --light-bg: #fdf6e3;
+    --light-accent: #8b5e3c;
+    --light-hover: #b07c59;
+}
+
+body.dark-mode {
+    background-color: var(--dark-bg);
+    color: #f0e6d2;
+}
+
+body.light-mode {
+    background-color: var(--light-bg);
+    color: #2e2e2e;
+}
+
+.dashboard-title {
+    text-align: center;
+    color: var(--dark-accent);
+    font-size: 2.5em;
+    margin-top: 20px;
+    font-family: 'Arial Black', sans-serif;
+}
+
+.iframe-container {
+    max-width: 90%;
+    height: 60vhl;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #121212;
+    border: 2px solid var(--dark-accent);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(212, 163, 115, 0.4);
+}
+
+body.light-mode .iframe-container {
+    background-color: #fffdf6;
+    border-color: var(--light-accent);
+    box-shadow: 0 0 20px rgba(139, 94, 60, 0.3);
+}
+
+iframe {
+    width: 100%;
+    height: 675px;
+    border: none;
+}
+
+/* 🌓 Invert colors only in dark mode */
+body.dark-mode iframe {
+    filter: invert(1) hue-rotate(180deg);
+}
+</style>
+
+{% endblock %}

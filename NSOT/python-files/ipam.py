@@ -9,7 +9,7 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 ipam_dir = os.path.join(script_dir, "..", "IPAM")
 hosts_csv = os.path.join(ipam_dir, "hosts.csv")
 output_csv = os.path.join(ipam_dir, "ipam_output.csv")
-check_interval = 300  # seconds
+check_interval = 10  # seconds
 
 # SNMP OIDs
 OID_IP = "1.3.6.1.2.1.4.20.1.1"
