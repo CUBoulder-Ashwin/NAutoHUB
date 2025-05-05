@@ -538,6 +538,7 @@ def add_device():
 @app.route("/configure-device", methods=["GET", "POST"])
 def configure_device():
     try:
+        devices = hosts_reader.get_devices()
         if request.method == "POST":
             device_id = request.form.get("device_id")
             device_vendor = request.form.get("device_vendor")
@@ -702,24 +703,11 @@ def configure_device():
                 )
 
         # GET request
-        return render_template("configure_device.html", jenkins_result=None)
+        return render_template("configure_device.html", jenkins_result=None, devices=devices)
 
     except Exception as e:
         print(f"Error in /configure-device: {e}")
-        return render_template(
-            "configure_device.html",
-            jenkins_result="jenkins_failure",
-            device_id="unknown",
-            message=str(e),
-        )
-
-    except Exception as e:
-        print(f"Error in /configure-device: {e}")
-        return render_template(
-            "configure_device.html",
-            jenkins_result="jenkins_failure",
-            device_id="unknown",
-        )
+        return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id="unknown", message=str(e), devices=[])
 
 
 @app.route("/push-config", methods=["POST"])

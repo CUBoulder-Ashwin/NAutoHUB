@@ -1,12 +1,15 @@
 ---
 devices:
-- hostname: R1
+- hostname: R2
   vendor: arista
   clear_config: 'no'
   interfaces:
   - name: ethernet2
-    ip_address: 10.10.10.1
+    ip_address: 20.20.20.1
     subnet_mask: '24'
   - name: loopback0
-    ip_address: 1.1.1.1
+    ip_address: 2.2.2.2
+    subnet_mask: '32'
+  - name: loopback1
+    ip_address: 22.22.22.22
     subnet_mask: '32'
