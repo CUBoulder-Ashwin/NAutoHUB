@@ -82,9 +82,9 @@ def build_device_data(
             if vlan.get("id") and vlan.get("name")
         ]
 
-    if ospf and ospf.get("process_ids") and ospf["process_ids"][0]:
+    if ospf and ospf.get("process_id"):
         device_data["ospf"] = {
-            "process_id": ospf["process_ids"][0],
+            "process_id": ospf["process_id"],
             "networks": [
                 {
                     "ip": net["ip"],
@@ -100,9 +100,10 @@ def build_device_data(
             },
         }
 
-    if bgp and bgp.get("asn"):
+
+    if bgp and bgp.get("as_number"):
         device_data["bgp"] = {
-            "as_number": bgp["asn"],
+            "as_number": bgp["as_number"],
             "address_families": [
                 {
                     "type": family["type"],
@@ -124,6 +125,7 @@ def build_device_data(
                 if neighbor.get("ip") and neighbor.get("remote_as")
             ],
         }
+
 
     if rip and rip.get("version") and any(rip.get("networks")):
         device_data["rip"] = {
