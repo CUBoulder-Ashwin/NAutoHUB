@@ -53,7 +53,7 @@ from generate_yaml import create_yaml_from_form_data
 from config_Gen import conf_gen
 from update_topo import update_topology, get_hosts_from_csv
 from dhcp_updates import configure_dhcp_relay, configure_dhcp_server
-from update_hosts import update_hosts_csv
+from update_hosts import update_hosts_csv, regenerate_hosts_csv
 from git_jenkins import push_and_monitor_jenkins
 from push_config import push_configuration
 from read_IPAM import IPAMReader
@@ -61,6 +61,7 @@ from read_hosts import HostsReader
 from clab_builder import build_clab_topology
 from clab_push import get_docker_images
 from ollama_utils import stop_ollama_model
+from gnmi_hosts import update_gnmic_yaml_from_hosts
 
 # File path for IPAM CSV file
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -282,7 +283,8 @@ def build_topology():
         print("[INFO] Generating topology YAML...")
         output_path = build_clab_topology(topo_name, devices, links)
         print(f"[✔] YAML saved at: {output_path}")
-
+        print(f"[INFO] Generating hosts.csv...")
+        regenerate_hosts_csv(devices)
         message = f"✅ topo.yml generated at: <code>{output_path}</code>"
         client = docker.from_env()
         images = [tag for img in client.images.list() for tag in img.tags if ":" in tag]
@@ -338,10 +340,15 @@ def deploy_topology_route():
             text=True,
         )
         time.sleep(2)
+        update_gnmic_yaml_from_hosts()
+        subprocess.run(
+            ["sudo", "systemctl", "restart", "gnmic_nautohub.service"], check=True
+        )
         subprocess.run(["sudo", "systemctl", "restart", "ipam.service"], check=True)
         print("[✔] Deploy output:")
         print(deploy_output)
         message = "✅ Containerlab topology deployed successfully."
+
     except subprocess.CalledProcessError as e:
         print("[ERROR] Deployment failed:")
         print(e.output)
@@ -485,7 +492,6 @@ def add_device():
 
             if kind == "ceos":
                 update_hosts_csv(device_name, ip_address)
-
             print("[INFO] Deploying new topology...")
 
             clab_path = os.path.join(PILOT_DIR, "clab-example")
@@ -503,6 +509,10 @@ def add_device():
                 text=True,
             )
             time.sleep(2)
+            update_gnmic_yaml_from_hosts()
+            subprocess.run(
+                ["sudo", "systemctl", "restart", "gnmic_nautohub.service"], check=True
+            )
             subprocess.run(["sudo", "systemctl", "restart", "ipam.service"], check=True)
             print("[✔] Deploy output:")
             print(deploy_output)

@@ -5,7 +5,6 @@ import getpass
 
 
 def find_base_path():
-    """Find the base path up to 'NAutoHUB'."""
     current_dir = pathlib.Path(__file__).parent.absolute()
     base_path = current_dir
     while base_path.name != "NAutoHUB" and base_path.parent != base_path:
@@ -16,15 +15,10 @@ def find_base_path():
 
 
 def get_service_user():
-    """Determine the appropriate user for the service."""
-    if os.geteuid() == 0:
-        return "root"
-    else:
-        return getpass.getuser()
+    return "root" if os.geteuid() == 0 else getpass.getuser()
 
 
 def create_service_or_timer_file(file_name, file_content):
-    """Create a systemd service or timer file with elevated permissions."""
     file_path = f"/etc/systemd/system/{file_name}"
     try:
         subprocess.run(
@@ -33,24 +27,20 @@ def create_service_or_timer_file(file_name, file_content):
             check=True,
             stdout=subprocess.DEVNULL,
         )
-        print(f"File created successfully at {file_path}")
+        print(f"✅ Created: {file_path}")
     except subprocess.CalledProcessError:
-        print(
-            f"Error: Failed to create {file_name}. Make sure you have sudo privileges."
-        )
+        print(f"❌ Failed to create {file_name}. Do you have sudo privileges?")
     except Exception as e:
-        print(f"An error occurred while creating {file_name}: {e}")
+        print(f"❌ Error creating {file_name}: {e}")
 
 
 def deploy():
-    """Deploy the services and timers."""
     try:
         subprocess.run(["sudo", "systemctl", "daemon-reload"], check=True)
-        print("Daemon reloaded successfully")
+        print("🔁 systemd daemon reloaded")
     except subprocess.CalledProcessError:
-        print("Error: Failed to reload the daemon. Make sure you have sudo privileges.")
-    except Exception as e:
-        print(f"An error occurred while reloading the daemon: {e}")
+        print("❌ Failed to reload systemd daemon.")
+        return
 
     services = [
         "password_update.service",
@@ -58,18 +48,16 @@ def deploy():
         "device_health_check.service",
         "ipam.service",
         "ngrok.service",
+        "gnmic_nautohub.service",
     ]
+
     for service in services:
         try:
             subprocess.run(["sudo", "systemctl", "enable", service], check=True)
             subprocess.run(["sudo", "systemctl", "start", service], check=True)
-            print(f"{service} enabled and started successfully")
+            print(f"✅ Enabled & started: {service}")
         except subprocess.CalledProcessError:
-            print(
-                f"Error: Failed to enable/start {service}. Make sure you have sudo privileges."
-            )
-        except Exception as e:
-            print(f"An error occurred while enabling/starting {service}: {e}")
+            print(f"❌ Failed to enable/start {service}")
 
 
 def main():
@@ -155,6 +143,23 @@ User={service_user}
 WantedBy=multi-user.target
 """,
         },
+        {
+            "file_name": "gnmic_nautohub.service",
+            "content": f"""[Unit]
+Description=gNMIc Stream Collector Service
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+ExecStart=/usr/local/bin/gnmic subscribe --config {base_path}/gnmic-stream.yaml
+WorkingDirectory={base_path}
+Restart=always
+User={service_user}
+
+[Install]
+WantedBy=multi-user.target
+""",
+        },
     ]
 
     for item in services_and_timers:
@@ -166,5 +171,5 @@ WantedBy=multi-user.target
 if __name__ == "__main__":
     subprocess.run(["sudo", "systemctl", "enable", "jenkins"], check=True)
     subprocess.run(["sudo", "systemctl", "start", "jenkins"], check=True)
-    print("Jenkins enabled and started successfully")
+    print("✅ Jenkins enabled and started")
     main()

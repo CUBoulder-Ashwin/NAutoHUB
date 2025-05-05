@@ -11,6 +11,39 @@ csv_relative_path = os.path.join(
 CSV_FILE_PATH = os.path.abspath(csv_relative_path)  # Get absolute path
 
 
+def regenerate_hosts_csv(devices):
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.abspath(os.path.join(current_dir, "..", "IPAM", "hosts.csv"))
+
+    fieldnames = [
+        "hostname",
+        "username",
+        "password",
+        "management_ip",
+        "old_password",
+        "new_password",
+    ]
+
+    with open(csv_path, mode="w", newline="") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+
+        for dev in devices:
+            mgmt_ip = dev.get("config", "").strip()  # IP is entered as config for CEOS
+            writer.writerow(
+                {
+                    "hostname": dev["name"],
+                    "username": "admin",
+                    "password": "admin",
+                    "management_ip": mgmt_ip,
+                    "old_password": "",
+                    "new_password": "",
+                }
+            )
+
+    print(f"[✔] Generated hosts.csv with {len(devices)} device(s).")
+
+
 def update_hosts_csv(device_name, ip_address, username="admin", password="admin"):
     # Read existing CSV contents
     rows = []
