@@ -1,6 +1,4 @@
-import asyncio
 import ollama
-import json
 import os
 import requests
 import csv

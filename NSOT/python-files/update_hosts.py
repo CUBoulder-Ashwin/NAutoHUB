@@ -84,4 +84,3 @@ def update_hosts_csv(device_name, ip_address, username="admin", password="admin"
         writer.writerows(rows)
 
     print(f"{device_name} updated successfully in {CSV_FILE_PATH}")
-

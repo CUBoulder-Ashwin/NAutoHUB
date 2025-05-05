@@ -33,7 +33,7 @@ def build_device_data(
     device_id,
     device_vendor,
     interfaces,
-    subinterfaces=None,  # ✅ Added
+    subinterfaces=None,
     ospf=None,
     bgp=None,
     vlans=None,
@@ -142,7 +142,7 @@ def create_yaml_from_form_data(
     device_id,
     device_vendor,
     interfaces,
-    subinterfaces=None,  # ✅ Added here too
+    subinterfaces=None,
     ospf=None,
     bgp=None,
     vlans=None,
@@ -154,7 +154,7 @@ def create_yaml_from_form_data(
         device_id,
         device_vendor,
         interfaces,
-        subinterfaces,  # ✅ Pass subinterfaces
+        subinterfaces,
         ospf,
         bgp,
         vlans,

@@ -1,5 +1,11 @@
 {% for interface in interfaces -%}
 interface {{ interface.name }}
+{% if interface.switchport %}
+ switchport
+ no shutdown
+{% else %}
+ no switchport
  ip address {{ interface.ip_address }}/{{ interface.subnet_mask }}
  no shutdown
+{% endif %}
 {% endfor %}
