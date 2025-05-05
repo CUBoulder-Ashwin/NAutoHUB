@@ -262,24 +262,29 @@ def build_topology():
             config = request.form.get(f"device_config_{i}")
             exec_lines = request.form.getlist(f"device_exec_{i}[]")
             ip_with_subnet = request.form.get(f"device_mgmt_ip_{i}", "")
-            ip_address = ip_with_subnet.split("/")[0] if "/" in ip_with_subnet else ip_with_subnet
+            ip_address = (
+                ip_with_subnet.split("/")[0]
+                if "/" in ip_with_subnet
+                else ip_with_subnet
+            )
             username = request.form.get(f"device_username_{i}", "")
             password = request.form.get(f"device_password_{i}", "")
 
-            devices.append({
-                "name": name,
-                "kind": kind,
-                "image": image,
-                "config": config,
-                "exec": exec_lines,
-                "mgmt_ip": ip_with_subnet,
-                "ip_address":ip_address,
-                "username": username,
-                "password": password
-            })
+            devices.append(
+                {
+                    "name": name,
+                    "kind": kind,
+                    "image": image,
+                    "config": config,
+                    "exec": exec_lines,
+                    "mgmt_ip": ip_with_subnet,
+                    "ip_address": ip_address,
+                    "username": username,
+                    "password": password,
+                }
+            )
 
             i += 1
-
 
         # ✅ Parse links
         link_dev1_list = request.form.get("link_dev1_json")
@@ -302,7 +307,9 @@ def build_topology():
         images = [tag for img in client.images.list() for tag in img.tags if ":" in tag]
         message = f"✅ topo.yml generated at: <code>{output_path}</code>"
 
-        return render_template("build_topology.html", docker_images=images, message=message)
+        return render_template(
+            "build_topology.html", docker_images=images, message=message
+        )
 
     # GET fallback
     client = docker.from_env()
@@ -329,7 +336,7 @@ def deploy_topology_route():
         print(destroy_output)
 
         with open(yaml_path) as f:
-            data = yaml.safe_load(f) or {} 
+            data = yaml.safe_load(f) or {}
         lab_name = data.get("name", "unknown") if data else "unknown"
 
         lab_dir = Path(yaml_path).parent / f"clab-{lab_name}"
@@ -463,10 +470,12 @@ def add_device():
                 connect_to_list=connect_to,
                 mgmt_ip=ip_with_subnet,
                 username=username,
-                password=password
+                password=password,
             )
 
-            update_hosts_csv(device_name, ip_address, username=username, password=password)
+            update_hosts_csv(
+                device_name, ip_address, username=username, password=password
+            )
 
             print("[INFO] Deploying new topology...")
             clab_path = os.path.join(PILOT_DIR, "clab-example")
@@ -484,7 +493,9 @@ def add_device():
             )
             time.sleep(2)
             update_gnmic_yaml_from_hosts()
-            subprocess.run(["sudo", "systemctl", "restart", "gnmic_nautohub.service"], check=True)
+            subprocess.run(
+                ["sudo", "systemctl", "restart", "gnmic_nautohub.service"], check=True
+            )
             subprocess.run(["sudo", "systemctl", "restart", "ipam.service"], check=True)
             print("[✔] Deploy output:")
             print(deploy_output)
@@ -825,6 +836,7 @@ def about():
 def contact():
     return render_template("contact.html")
 
+
 @app.route("/dashboard")
 def dashboard():
     # Embed your Grafana dashboard in the dashboard template
@@ -863,7 +875,6 @@ def run_deployment_and_relay_config(
             default_gateway,
             ip_address,
         )
-
 
 
 @app.route("/topology")

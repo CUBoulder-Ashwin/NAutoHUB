@@ -8,6 +8,7 @@ from day0_config import generate_day0_config
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSV_PATH = os.path.abspath(os.path.join(BASE_DIR, "..", "IPAM", "hosts.csv"))
 
+
 def get_hosts_from_csv():
     hosts = []
     if os.path.exists(CSV_PATH):
@@ -38,6 +39,7 @@ CompactListDumper.add_representer(
         self, "tag:yaml.org,2002:seq", data
     ),
 )
+
 
 def update_topology(
     topo_path,
