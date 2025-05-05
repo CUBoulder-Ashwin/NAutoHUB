@@ -1,7 +1,7 @@
 !
 hostname {{ device_name }}
 !
-username admin privilege 15 role network-admin secret admin
+username {{ username }} privilege 15 role network-admin secret {{ password }}
 !
 management api http-commands
    no shutdown

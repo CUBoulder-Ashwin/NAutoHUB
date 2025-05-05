@@ -272,7 +272,8 @@ def build_topology():
                 "image": image,
                 "config": config,
                 "exec": exec_lines,
-                "mgmt_ip": ip_address,
+                "mgmt_ip": ip_with_subnet,
+                "ip_address":ip_address,
                 "username": username,
                 "password": password
             })
@@ -309,8 +310,6 @@ def build_topology():
     return render_template("build_topology.html", docker_images=images)
 
 
-
-
 @app.route("/deploy-topology", methods=["POST"], endpoint="deploy_topology_route")
 def deploy_topology_route():
     yaml_path = os.path.abspath(
@@ -330,8 +329,8 @@ def deploy_topology_route():
         print(destroy_output)
 
         with open(yaml_path) as f:
-            data = yaml.safe_load(f)
-        lab_name = data.get("name", "unknown")
+            data = yaml.safe_load(f) or {} 
+        lab_name = data.get("name", "unknown") if data else "unknown"
 
         lab_dir = Path(yaml_path).parent / f"clab-{lab_name}"
         if lab_dir.exists() and lab_dir.is_dir():
@@ -413,46 +412,6 @@ def delete_topology_route():
     )
 
 
-@app.route("/dashboard")
-def dashboard():
-    # Embed your Grafana dashboard in the dashboard template
-    return render_template("dashboard.html")
-
-
-def run_deployment_and_relay_config(
-    deploy_command,
-    relay_toggle,
-    connected_device,
-    connected_interface,
-    connected_ip,
-    helper_ip,
-    mac_address,
-    dhcp_server,
-    new_subnet,
-    range_lower,
-    range_upper,
-    default_gateway,
-    ip_address,
-):
-    # Run deployment synchronously in the thread
-    deploy_result = subprocess.run(deploy_command, shell=True)
-
-    # Only proceed with DHCP configuration if the deployment was successful
-    if deploy_result.returncode == 0 and relay_toggle:
-        configure_dhcp_relay(
-            connected_device, connected_interface, connected_ip, helper_ip
-        )
-        configure_dhcp_server(
-            mac_address,
-            dhcp_server,
-            new_subnet,
-            range_lower,
-            range_upper,
-            default_gateway,
-            ip_address,
-        )
-
-
 @app.route("/add-device", methods=["GET", "POST"])
 def add_device():
     message = None
@@ -466,8 +425,8 @@ def add_device():
         mac_address = request.form.get("mac_address", "")
         ip_with_subnet = request.form.get("ip_address", "")
         ip_address = ip_with_subnet.split("/")[0]
-        username = request.form.get("username", "admin")
-        password = request.form.get("password", "admin")
+        username = request.form.get("username", "")
+        password = request.form.get("password", "")
         connection_count = int(request.form.get("connection_count", "0"))
 
         # Optional DHCP relay values
@@ -503,6 +462,8 @@ def add_device():
                 mac=mac_address,
                 connect_to_list=connect_to,
                 mgmt_ip=ip_with_subnet,
+                username=username,
+                password=password
             )
 
             update_hosts_csv(device_name, ip_address, username=username, password=password)
@@ -863,6 +824,46 @@ def about():
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
+
+@app.route("/dashboard")
+def dashboard():
+    # Embed your Grafana dashboard in the dashboard template
+    return render_template("dashboard.html")
+
+
+def run_deployment_and_relay_config(
+    deploy_command,
+    relay_toggle,
+    connected_device,
+    connected_interface,
+    connected_ip,
+    helper_ip,
+    mac_address,
+    dhcp_server,
+    new_subnet,
+    range_lower,
+    range_upper,
+    default_gateway,
+    ip_address,
+):
+    # Run deployment synchronously in the thread
+    deploy_result = subprocess.run(deploy_command, shell=True)
+
+    # Only proceed with DHCP configuration if the deployment was successful
+    if deploy_result.returncode == 0 and relay_toggle:
+        configure_dhcp_relay(
+            connected_device, connected_interface, connected_ip, helper_ip
+        )
+        configure_dhcp_server(
+            mac_address,
+            dhcp_server,
+            new_subnet,
+            range_lower,
+            range_upper,
+            default_gateway,
+            ip_address,
+        )
+
 
 
 @app.route("/topology")

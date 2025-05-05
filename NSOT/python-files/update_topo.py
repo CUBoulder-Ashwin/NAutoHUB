@@ -2,14 +2,11 @@ import yaml
 import os
 import csv
 from collections import defaultdict
-from jinja2 import Environment, FileSystemLoader
+from day0_config import generate_day0_config
 
 # Paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSV_PATH = os.path.abspath(os.path.join(BASE_DIR, "..", "IPAM", "hosts.csv"))
-TEMPLATE_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "templates"))
-CONFIG_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "golden_configs"))
-
 
 def get_hosts_from_csv():
     hosts = []
@@ -42,19 +39,6 @@ CompactListDumper.add_representer(
     ),
 )
 
-
-def generate_day0_config(device_name, mgmt_ip):
-    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
-    template = env.get_template("day0_config.j2")
-    rendered = template.render(device_name=device_name, mgmt_ip=mgmt_ip)
-
-    os.makedirs(CONFIG_DIR, exist_ok=True)
-    config_path = os.path.join(CONFIG_DIR, f"goldenconfigs_{device_name}.cfg")
-    with open(config_path, "w") as f:
-        f.write(rendered)
-    return config_path
-
-
 def update_topology(
     topo_path,
     device_name,
@@ -64,7 +48,9 @@ def update_topology(
     exec_lines,
     mac,
     connect_to_list,
-    mgmt_ip=None,
+    mgmt_ip,
+    username,
+    password,
 ):
     with open(topo_path, "r") as f:
         data = yaml.safe_load(f)
@@ -88,7 +74,7 @@ def update_topology(
 
     # auto generate config if CEOS
     if kind == "ceos" and not config and mgmt_ip:
-        config = generate_day0_config(device_name, mgmt_ip)
+        config = generate_day0_config(device_name, mgmt_ip, username, password)
 
     node_entry = {"kind": kind, "image": image}
     if kind == "ceos" and config:

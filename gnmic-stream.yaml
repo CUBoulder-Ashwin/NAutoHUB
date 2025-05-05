@@ -3,9 +3,11 @@ password: admin
 insecure: true
 targets:
   R1:
-    address: :6030
+    address: 10.0.101.1:6030
   R2:
-    address: :6030
+    address: 10.0.101.2:6030
+  R3:
+    address: 10.0.101.3:6030
 subscriptions:
   interface-counters:
     paths:

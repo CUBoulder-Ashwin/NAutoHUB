@@ -3,6 +3,10 @@ devices:
 - hostname: R1
   vendor: arista
   clear_config: 'no'
-  vlans:
-  - id: '500'
-    name: flash
+  interfaces:
+  - name: ethernet2
+    ip_address: 10.10.10.1
+    subnet_mask: '24'
+  - name: loopback0
+    ip_address: 1.1.1.1
+    subnet_mask: '32'

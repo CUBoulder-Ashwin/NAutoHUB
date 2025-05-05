@@ -29,13 +29,12 @@ def regenerate_hosts_csv(devices):
         writer.writeheader()
 
         for dev in devices:
-            mgmt_ip = dev.get("config", "").strip()
             writer.writerow(
                 {
                     "hostname": dev["name"],
                     "username": dev.get("username", ""),
                     "password": dev.get("password", ""),
-                    "management_ip": dev.get("mgmt_ip", ""),
+                    "management_ip": dev.get("ip_address", ""),
                     "old_password": "",
                     "new_password": "",
                 }

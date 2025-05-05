@@ -8,9 +8,19 @@ topology:
     R1:
       kind: ceos
       image: ceos:4.33.2F
+      startup-config: /home/ashch/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R1.cfg
     R2:
       kind: ceos
       image: ceos:4.33.2F
+      startup-config: /home/ashch/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R2.cfg
+    R3:
+      kind: ceos
+      image: ceos:4.33.2F
+      startup-config: /home/ashch/projects/NAutoHUB/NSOT/golden_configs/goldenconfigs_R3.cfg
   links:
   - endpoints: ['mgmt:eth1', 'R1:eth1']
   - endpoints: ['mgmt:eth2', 'R2:eth1']
+  - endpoints: ['mgmt:eth3', 'host:eth1']
+  - endpoints: ['mgmt:eth4', 'R3:eth1']
+  - endpoints: ['R3:eth2', 'R1:eth2']
+  - endpoints: ['R3:eth3', 'R2:eth2']

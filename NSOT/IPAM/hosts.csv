@@ -1,1 +1,4 @@
 hostname,username,password,management_ip,old_password,new_password
+R1,admin,admin,10.0.101.1,,
+R2,admin,admin,10.0.101.2,,
+R3,admin,admin,10.0.101.3,,
