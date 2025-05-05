@@ -41,6 +41,12 @@
                 <label class="form-label">Management IP Address (with subnet):</label>
                 <input type="text" name="ip_address" class="form-input medium-input" placeholder="10.0.0.1/24" required>
 
+                <label class="form-label">SSH Username:</label>
+                <input type="text" name="username" class="form-input medium-input" placeholder="admin" required>
+
+                <label class="form-label">SSH Password:</label>
+                <input type="password" name="password" class="form-input medium-input" placeholder="admin" required>
+
                 <label class="form-label">How many devices to connect to:</label>
                 <input type="number" name="connection_count" id="connection-count" class="form-input medium-input" min="0" max="10" value="0">
 
@@ -48,7 +54,6 @@
             </div>
         </div>
 
-        <!-- FINAL COMMENT MESSAGE PRINT -->
         {% if message %}
         <div class="form-group text-center" style="margin-top: 15px;">
             <p class="message-text">{{ message|safe }}</p>

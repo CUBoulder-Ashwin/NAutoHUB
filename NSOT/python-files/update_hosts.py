@@ -29,13 +29,13 @@ def regenerate_hosts_csv(devices):
         writer.writeheader()
 
         for dev in devices:
-            mgmt_ip = dev.get("config", "").strip()  # IP is entered as config for CEOS
+            mgmt_ip = dev.get("config", "").strip()
             writer.writerow(
                 {
                     "hostname": dev["name"],
-                    "username": "admin",
-                    "password": "admin",
-                    "management_ip": mgmt_ip,
+                    "username": dev.get("username", ""),
+                    "password": dev.get("password", ""),
+                    "management_ip": dev.get("mgmt_ip", ""),
                     "old_password": "",
                     "new_password": "",
                 }
@@ -45,9 +45,9 @@ def regenerate_hosts_csv(devices):
 
 
 def update_hosts_csv(device_name, ip_address, username="admin", password="admin"):
-    # Read existing CSV contents
     rows = []
     device_found = False
+
     if os.path.exists(CSV_FILE_PATH):
         with open(CSV_FILE_PATH, mode="r") as csvfile:
             reader = csv.DictReader(csvfile)
@@ -59,7 +59,6 @@ def update_hosts_csv(device_name, ip_address, username="admin", password="admin"
                     device_found = True
                 rows.append(row)
 
-    # If the device is not found, append it as a new row
     if not device_found:
         rows.append(
             {
@@ -67,12 +66,11 @@ def update_hosts_csv(device_name, ip_address, username="admin", password="admin"
                 "username": username,
                 "password": password,
                 "management_ip": ip_address,
-                "old_password": "",  # Assuming no old_password provided
-                "new_password": "",  # Assuming no new_password provided
+                "old_password": "",
+                "new_password": "",
             }
         )
 
-    # Write back the updated CSV
     with open(CSV_FILE_PATH, mode="w", newline="") as csvfile:
         fieldnames = [
             "hostname",
@@ -87,3 +85,4 @@ def update_hosts_csv(device_name, ip_address, username="admin", password="admin"
         writer.writerows(rows)
 
     print(f"{device_name} updated successfully in {CSV_FILE_PATH}")
+

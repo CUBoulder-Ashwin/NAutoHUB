@@ -134,7 +134,10 @@ function collectCurrentDeviceData() {
       kind: form.querySelector(`[name="device_kind_${i}"]`)?.value || "",
       image: form.querySelector(`[name="device_image_${i}"]`)?.value || "",
       config: form.querySelector(`[name="device_config_${i}"]`)?.value || "",
-      exec: form.querySelector(`[name="device_exec_${i}[]"]`)?.value || ""
+      exec: form.querySelector(`[name="device_exec_${i}[]"]`)?.value || "",
+      mgmt_ip: form.querySelector(`[name="device_mgmt_ip_${i}"]`)?.value || "",
+      username: form.querySelector(`[name="device_username_${i}"]`)?.value || "",
+      password: form.querySelector(`[name="device_password_${i}"]`)?.value || ""
     });
   });
   return updated;
@@ -202,6 +205,17 @@ function renderDeviceForms() {
           <label class="form-label">Exec Commands (for linux):</label>
           <textarea name="device_exec_${i}[]" class="form-input short-input" rows="3">${device.exec || ''}</textarea>
         </div>
+
+       <label class="form-label">Management IP Address (with subnet)</label>
+      <input type="text" name="device_mgmt_ip_${i}" class="form-input short-input" placeholder="10.0.0.1/24" value="${device.mgmt_ip || ''}">
+
+      <label class="form-label">SSH Username:</label>
+      <input type="text" name="device_username_${i}" class="form-input short-input" placeholder="admin" value="${device.username || ''}">
+
+      <label class="form-label">SSH Password:</label>
+      <input type="password" name="device_password_${i}" class="form-input short-input" placeholder="admin" value="${device.password || ''}">
+
+
 
         <div class="delete-button-wrapper" style="text-align: left; margin-top: 10px;">
           <button type="button" class="transparent-button" onclick="removeDeviceRow(${i})">- Delete Device</button>

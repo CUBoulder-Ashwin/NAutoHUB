@@ -250,29 +250,37 @@ def build_topology():
         devices = []
         links = []
 
-        # ✅ Dynamically detect how many devices were posted
+        # ✅ Collect device entries
         i = 0
         while True:
             name = request.form.get(f"device_name_{i}")
             if not name:
                 break
+
             kind = request.form.get(f"device_kind_{i}")
             image = request.form.get(f"device_image_{i}")
             config = request.form.get(f"device_config_{i}")
             exec_lines = request.form.getlist(f"device_exec_{i}[]")
+            ip_with_subnet = request.form.get(f"device_mgmt_ip_{i}", "")
+            ip_address = ip_with_subnet.split("/")[0] if "/" in ip_with_subnet else ip_with_subnet
+            username = request.form.get(f"device_username_{i}", "")
+            password = request.form.get(f"device_password_{i}", "")
 
-            devices.append(
-                {
-                    "name": name,
-                    "kind": kind,
-                    "image": image,
-                    "config": config,
-                    "exec": exec_lines,
-                }
-            )
+            devices.append({
+                "name": name,
+                "kind": kind,
+                "image": image,
+                "config": config,
+                "exec": exec_lines,
+                "mgmt_ip": ip_address,
+                "username": username,
+                "password": password
+            })
+
             i += 1
 
-        # Parse links
+
+        # ✅ Parse links
         link_dev1_list = request.form.get("link_dev1_json")
         link_dev2_list = request.form.get("link_dev2_json")
         if link_dev1_list and link_dev2_list:
@@ -280,22 +288,27 @@ def build_topology():
             dev2_list = json.loads(link_dev2_list)
             links = list(zip(dev1_list, dev2_list))
 
+        # ✅ Build topology and update CSV
         print("[INFO] Generating topology YAML...")
         output_path = build_clab_topology(topo_name, devices, links)
         print(f"[✔] YAML saved at: {output_path}")
-        print(f"[INFO] Generating hosts.csv...")
+
+        print("[INFO] Generating hosts.csv...")
         regenerate_hosts_csv(devices)
-        message = f"✅ topo.yml generated at: <code>{output_path}</code>"
+
+        # ✅ Render response
         client = docker.from_env()
         images = [tag for img in client.images.list() for tag in img.tags if ":" in tag]
-        return render_template(
-            "build_topology.html", docker_images=images, message=message
-        )
+        message = f"✅ topo.yml generated at: <code>{output_path}</code>"
 
-    # GET request fallback
+        return render_template("build_topology.html", docker_images=images, message=message)
+
+    # GET fallback
     client = docker.from_env()
     images = [tag for img in client.images.list() for tag in img.tags if ":" in tag]
     return render_template("build_topology.html", docker_images=images)
+
+
 
 
 @app.route("/deploy-topology", methods=["POST"], endpoint="deploy_topology_route")
@@ -453,6 +466,8 @@ def add_device():
         mac_address = request.form.get("mac_address", "")
         ip_with_subnet = request.form.get("ip_address", "")
         ip_address = ip_with_subnet.split("/")[0]
+        username = request.form.get("username", "admin")
+        password = request.form.get("password", "admin")
         connection_count = int(request.form.get("connection_count", "0"))
 
         # Optional DHCP relay values
@@ -490,12 +505,10 @@ def add_device():
                 mgmt_ip=ip_with_subnet,
             )
 
-            if kind == "ceos":
-                update_hosts_csv(device_name, ip_address)
+            update_hosts_csv(device_name, ip_address, username=username, password=password)
+
             print("[INFO] Deploying new topology...")
-
             clab_path = os.path.join(PILOT_DIR, "clab-example")
-
             if os.path.exists(clab_path):
                 shutil.rmtree(clab_path)
                 print(f"✅ Removed: {clab_path}")
@@ -510,14 +523,11 @@ def add_device():
             )
             time.sleep(2)
             update_gnmic_yaml_from_hosts()
-            subprocess.run(
-                ["sudo", "systemctl", "restart", "gnmic_nautohub.service"], check=True
-            )
+            subprocess.run(["sudo", "systemctl", "restart", "gnmic_nautohub.service"], check=True)
             subprocess.run(["sudo", "systemctl", "restart", "ipam.service"], check=True)
             print("[✔] Deploy output:")
             print(deploy_output)
 
-            # Optionally run DHCP relay config if enabled
             if relay_toggle:
                 configure_dhcp_relay(
                     connected_device=connect_to[0] if connect_to else "",
