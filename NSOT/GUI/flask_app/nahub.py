@@ -634,34 +634,38 @@ def configure_device():
 
             # BGP
             bgp = None
-            bgp_asns = request.form.getlist("bgp_asn[]")
+            bgp_asn = request.form.get("bgp_asn")
             bgp_networks = request.form.getlist("bgp_network[]")
             bgp_masks = request.form.getlist("bgp_mask[]")
             bgp_neighbors = request.form.getlist("bgp_neighbor[]")
             bgp_remote_as = request.form.getlist("bgp_remote_as[]")
             bgp_address_families = request.form.getlist("bgp_address_family[]")
 
-            if bgp_asns:
-                bgp = {
-                    "as_number": bgp_asns[0],
-                    "neighbors": [
-                        {"ip": ip, "remote_as": remote_as}
-                        for ip, remote_as in zip(bgp_neighbors, bgp_remote_as)
-                        if ip and remote_as
-                    ],
-                    "address_families": [
-                        {
+            if bgp_asn and bgp_address_families:
+                address_family_entries = {}
+
+                for af, net, mask, neighbor_ip, neighbor_as in zip(
+                    bgp_address_families, bgp_networks, bgp_masks, bgp_neighbors, bgp_remote_as
+                ):
+                    if not (af and net and mask and neighbor_ip and neighbor_as):
+                        continue
+
+                    if af not in address_family_entries:
+                        address_family_entries[af] = {
                             "type": af,
-                            "networks": [
-                                {"ip": net, "mask": mask}
-                                for net, mask in zip(bgp_networks, bgp_masks)
-                                if net and mask
-                            ],
+                            "networks": [],
+                            "neighbors": []
                         }
-                        for af in bgp_address_families
-                        if af
-                    ],
+
+                    address_family_entries[af]["networks"].append({"ip": net, "mask": mask})
+                    address_family_entries[af]["neighbors"].append({"ip": neighbor_ip, "remote_as": neighbor_as})
+
+                bgp = {
+                    "as_number": bgp_asn,
+                    "address_families": list(address_family_entries.values()),
                 }
+
+
 
             # Attempt to generate YAML and push via Jenkins
             try:

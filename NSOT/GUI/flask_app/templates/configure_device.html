@@ -68,6 +68,11 @@
 
             <fieldset class="grouped-form" id="bgp-section">
                 <legend class="section-title">BGP Configuration</legend>
+                <!-- ASN input appears ONCE -->
+                <div class="device-fields">
+                    <label class="form-label">ASN:</label>
+                    <input type="text" name="bgp_asn" class="form-input short-input">
+                </div>
                 <div class="form-subsection"></div>
                 <div class="button-group">
                     <button type="button" class="transparent-button" onclick="addBgp('bgp-section')">+ Add</button>
@@ -253,8 +258,6 @@ function getOspfBlock() {
 function getBgpBlock() {
     return `
         <div class="device-fields">
-            <label class="form-label">ASN:</label>
-            <input type="text" name="bgp_asn[]" class="form-input short-input">
             <label class="form-label">Neighbor IP:</label>
             <input type="text" name="bgp_neighbor[]" class="form-input short-input">
             <label class="form-label">Remote ASN:</label>
@@ -271,6 +274,7 @@ function getBgpBlock() {
         </div>
     `;
 }
+
 
 function addInterface(sectionId) {
     document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getInterfaceBlock());

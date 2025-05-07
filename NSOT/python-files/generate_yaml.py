@@ -116,14 +116,27 @@ def build_device_data(
                 for family in bgp.get("address_families", [])
                 if family.get("type")
             ],
-            "neighbors": [
-                {
-                    "ip": neighbor["ip"],
-                    "remote_as": neighbor["remote_as"],
-                }
-                for neighbor in bgp["neighbors"]
-                if neighbor.get("ip") and neighbor.get("remote_as")
-            ],
+            "address_families": [
+            {
+                "type": family["type"],
+                "networks": [
+                    {"ip": net["ip"], "mask": net.get("mask")}
+                    for net in family.get("networks", [])
+                    if net.get("ip") and net.get("mask")
+                ],
+                "neighbors": [
+                    {
+                        "ip": neighbor["ip"],
+                        "remote_as": neighbor["remote_as"],
+                    }
+                    for neighbor in family.get("neighbors", [])
+                    if neighbor.get("ip") and neighbor.get("remote_as")
+                ],
+            }
+            for family in bgp.get("address_families", [])
+            if family.get("type")
+        ],
+
         }
 
 

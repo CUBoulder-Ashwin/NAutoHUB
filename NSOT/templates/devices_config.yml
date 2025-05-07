@@ -1,34 +1,15 @@
 ---
 devices:
-- hostname: R2
+- hostname: R1
   vendor: arista
   clear_config: 'no'
-  interfaces:
-  - name: ethernet2
-    ip_address: 20.20.20.1
-    subnet_mask: '24'
-  - name: loopback0
-    ip_address: 2.2.2.2
-    subnet_mask: '32'
-  - name: loopback1
-    ip_address: 22.22.22.22
-    subnet_mask: '32'
-  ospf:
-    process_id: '1'
-    networks:
-    - ip: 20.20.20.0
-      wildcard: '24'
-      area: '0'
-    redistribute:
-      connected: true
-      bgp: false
   bgp:
-    as_number: '65002'
+    as_number: '65001'
     address_families:
     - type: ipv4
       networks:
-      - ip: 22.22.22.22
-        mask: '32'
-    neighbors:
-    - ip: 1.1.1.1
-      remote_as: '65001'
+      - ip: 10.10.10.0
+        mask: '24'
+      neighbors:
+      - ip: 20.20.20.1
+        remote_as: '65002'

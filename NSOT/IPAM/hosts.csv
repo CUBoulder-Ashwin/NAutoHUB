@@ -1,4 +1,4 @@
 hostname,username,password,management_ip,old_password,new_password
-R1,admin,admin,10.0.101.1,,
-R2,admin,admin,10.0.101.2,,
-R3,admin,admin,10.0.101.3,,
+R1,admin,admin,10.0.101.1,gAAAAABoGsUBlZzCp37gZwXkGveZmZJXJ9JjvKyBzs5diNXtG_t__pS2atU5tnLyCxVmT08YaJRb-doe9bTp5_OLHg3VFwD4aQ==,gAAAAABoGsUBTt6yMBH_VtzJBapUsqgreu6Px13BkIiEpywwwFtMxzT7fZtuxzyQNsI9U3xGHHGJI0COH9r9Pad7Adg2mFqmVA==
+R2,admin,admin,10.0.101.2,gAAAAABoGsUBWw9Oj30tKiWjJRhnrkNBACFLGTHKVArintcIt3TUem65N_wx1E85j0E1QO0gwsXJzjcWLqVT9o3_Qvy_LOFnUQ==,gAAAAABoGsUB5IHgpyXSA5XR9JKQCaFGB3LiJd-nNpBRj6b5BbHAj7bwWMXnwW5316fEdioX2w4jVlmEKvAWUcPcmbCZhhjA9Q==
+R3,admin,admin,10.0.101.3,gAAAAABoGsUBIlMyRKz1u0gSBIey72_ii-Ahzfc7L0p5hDQAkoJlqWX-1XS9EX46Pz00Yq4Y02seRZzZouEZH9cN1oxzp9-xVQ==,gAAAAABoGsUBhtaJdbDvPzOlbOjADv2OrsQWSK5Sq70QZ0XTAlOfOc9Lbn4-Ll2v-Gd2wCcRjN7nDQ4qxJGADwJWYZUElw2HOw==

@@ -1,19 +1,22 @@
+{% if bgp %}
 ip routing
-router bgp {{ bgp_as }}
+router bgp {{ bgp.as_number }}
  bgp log-neighbor-changes
- {% if bgp_networks -%}
- {% for network in bgp_networks -%}
-   network {{ network.ip }}
- {% endfor -%}
- {% endif -%}
- {% if bgp_neighbors -%}
- {% for neighbor in bgp_neighbors -%}
-   neighbor {{ neighbor.ip }} remote-as {{ neighbor.remote_as }}
- {% endfor -%}
- {% endif -%}
- {% if ospf_redistribute -%}
-   redistribute ospf {{ ospf_redistribute.process_id }} match internal external 1 external 2
- {% endif -%}
- {% if rip_redistribute -%}
-   redistribute rip metric {{ rip_metric }}
- {% endif %}
+
+{% for af in bgp.address_families %}
+ {% for network in af.networks %}
+  network {{ network.ip }}
+ {% endfor %}
+ {% for neighbor in af.neighbors %}
+  neighbor {{ neighbor.ip }} remote-as {{ neighbor.remote_as }}
+ {% endfor %}
+{% endfor %}
+
+{% if ospf_redistribute %}
+ redistribute ospf {{ ospf_redistribute.process_id }} match internal external 1 external 2
+{% endif %}
+
+{% if rip_redistribute %}
+ redistribute rip metric {{ rip_metric }}
+{% endif %}
+{% endif %}
