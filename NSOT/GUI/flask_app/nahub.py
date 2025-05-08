@@ -617,6 +617,7 @@ def configure_device():
             )
             ospf_redistribute_bgp = request.form.getlist("ospf_redistribute_bgp[]")
 
+            ospf_process_ids = [pid for pid in ospf_process_ids if pid.strip()]
             if ospf_process_ids:
                 ospf = {
                     "process_id": ospf_process_ids[0],

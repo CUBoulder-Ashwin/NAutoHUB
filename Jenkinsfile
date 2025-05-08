@@ -2,15 +2,23 @@ pipeline {
     agent any
 
     environment {
-        PROJECT_ROOT = "${env.PROJECT_PATH}"
+        PROJECT_ROOT = "${env.WORKSPACE}"       // Assuming Jenkinsfile is in project root
         VIRTUAL_ENV = "${PROJECT_ROOT}/pilot-config/venv"
     }
 
     options {
+        skipDefaultCheckout(true)
         buildDiscarder(logRotator(numToKeepStr: '1'))
     }
 
     stages {
+        stage('Checkout Code') {
+            steps {
+                echo "📥 Checking out source code..."
+                checkout scm
+            }
+        }
+
         stage('Python Linting') {
             steps {
                 echo "🔍 Linting Python files..."
