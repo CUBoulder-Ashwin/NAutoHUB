@@ -552,13 +552,15 @@ def configure_device():
                 request.form.getlist("interface_mask[]"),
                 request.form.getlist("switchport[]"),
             ):
-                interfaces.append({
-                    "type": i_type,
-                    "number": i_num,
-                    "ip": ip if sp != "yes" else None,
-                    "mask": mask if sp != "yes" else None,
-                    "switchport": sp == "yes",
-                })
+                interfaces.append(
+                    {
+                        "type": i_type,
+                        "number": i_num,
+                        "ip": ip if sp != "yes" else None,
+                        "mask": mask if sp != "yes" else None,
+                        "switchport": sp == "yes",
+                    }
+                )
 
             # Subinterfaces
             subinterfaces = []
@@ -569,13 +571,9 @@ def configure_device():
                 request.form.getlist("subinterface_ip[]"),
                 request.form.getlist("subinterface_mask[]"),
             ):
-                subinterfaces.append({
-                    "parent": parent,
-                    "id": sid,
-                    "vlan": vlan,
-                    "ip": ip,
-                    "mask": mask
-                })
+                subinterfaces.append(
+                    {"parent": parent, "id": sid, "vlan": vlan, "ip": ip, "mask": mask}
+                )
 
             # VLANs
             vlans = []
@@ -614,7 +612,9 @@ def configure_device():
             ospf_networks = request.form.getlist("ospf_network[]")
             ospf_wildcards = request.form.getlist("ospf_wildcard[]")
             ospf_areas = request.form.getlist("ospf_area[]")
-            ospf_redistribute_connected = request.form.getlist("ospf_redistribute_connected[]")
+            ospf_redistribute_connected = request.form.getlist(
+                "ospf_redistribute_connected[]"
+            )
             ospf_redistribute_bgp = request.form.getlist("ospf_redistribute_bgp[]")
 
             if ospf_process_ids:
@@ -649,7 +649,11 @@ def configure_device():
                 address_family_entries = {}
 
                 for af, net, mask, neighbor_ip, neighbor_as in zip(
-                    bgp_address_families, bgp_networks, bgp_masks, bgp_neighbors, bgp_remote_as
+                    bgp_address_families,
+                    bgp_networks,
+                    bgp_masks,
+                    bgp_neighbors,
+                    bgp_remote_as,
                 ):
                     if not (af and net and mask and neighbor_ip and neighbor_as):
                         continue
@@ -658,11 +662,15 @@ def configure_device():
                         address_family_entries[af] = {
                             "type": af,
                             "networks": [],
-                            "neighbors": []
+                            "neighbors": [],
                         }
 
-                    address_family_entries[af]["networks"].append({"ip": net, "mask": mask})
-                    address_family_entries[af]["neighbors"].append({"ip": neighbor_ip, "remote_as": neighbor_as})
+                    address_family_entries[af]["networks"].append(
+                        {"ip": net, "mask": mask}
+                    )
+                    address_family_entries[af]["neighbors"].append(
+                        {"ip": neighbor_ip, "remote_as": neighbor_as}
+                    )
 
                 bgp = {
                     "as_number": bgp_asn,
@@ -710,12 +718,19 @@ def configure_device():
                     message=str(pipeline_error),
                 )
 
-        return render_template("configure_device.html", jenkins_result=None, devices=devices)
+        return render_template(
+            "configure_device.html", jenkins_result=None, devices=devices
+        )
 
     except Exception as e:
         print(f"Error in /configure-device: {e}")
-        return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id="unknown", message=str(e), devices=[])
-
+        return render_template(
+            "configure_device.html",
+            jenkins_result="jenkins_failure",
+            device_id="unknown",
+            message=str(e),
+            devices=[],
+        )
 
 
 @app.route("/push-config", methods=["POST"])

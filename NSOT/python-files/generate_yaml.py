@@ -100,7 +100,6 @@ def build_device_data(
             },
         }
 
-
     if bgp and bgp.get("as_number"):
         device_data["bgp"] = {
             "as_number": bgp["as_number"],
@@ -127,8 +126,6 @@ def build_device_data(
             "redistribute_ospf": bgp.get("redistribute_ospf", False),
             "redistribute_rip": bgp.get("redistribute_rip", False),
         }
-
-
 
     if rip and rip.get("version") and any(rip.get("networks")):
         device_data["rip"] = {

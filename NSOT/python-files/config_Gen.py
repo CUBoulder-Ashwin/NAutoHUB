@@ -4,6 +4,7 @@ from jinja2 import Environment, FileSystemLoader
 import sys
 import time
 
+
 def generate_device_configs():
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     yaml_file = os.path.join(base_dir, "templates", "devices_config.yml")
@@ -57,11 +58,15 @@ def generate_device_configs():
                     config += f"no interface {iface['type']}{iface['number']}\n"
             else:
                 template_key = "interfaces_cisco" if vendor == "cisco" else "interfaces"
-                config += templates[template_key].render(interfaces=device["interfaces"])
+                config += templates[template_key].render(
+                    interfaces=device["interfaces"]
+                )
 
         # Subinterfaces
         if "subinterfaces" in device:
-            config += templates["subinterfaces"].render(subinterfaces=device["subinterfaces"])
+            config += templates["subinterfaces"].render(
+                subinterfaces=device["subinterfaces"]
+            )
 
         # VLANs
         if "vlans" in device:
@@ -81,7 +86,9 @@ def generate_device_configs():
                 config += templates[template_key].render(
                     ospf_process=ospf_data["process_id"],
                     ospf_networks=ospf_data.get("networks", []),
-                    redistribute_connected=ospf_data.get("redistribute_connected", False),
+                    redistribute_connected=ospf_data.get(
+                        "redistribute_connected", False
+                    ),
                     redistribute_bgp=ospf_data.get("redistribute_bgp", False),
                 )
 
@@ -104,10 +111,7 @@ def generate_device_configs():
                     if neighbor.get("ip") and neighbor.get("remote_as")
                 ]
                 template_key = "bgp_cisco" if vendor == "cisco" else "bgp"
-                config += templates[template_key].render(
-                    bgp=bgp_data
-                )
-
+                config += templates[template_key].render(bgp=bgp_data)
 
         # RIP
         if "rip" in device:

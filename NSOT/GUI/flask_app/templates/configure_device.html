@@ -61,6 +61,12 @@
             <fieldset class="grouped-form" id="ospf-section">
                 <legend class="section-title">OSPF Configuration</legend>
                 <div class="form-subsection"></div>
+
+                <div class="checkbox-row">
+                    <label><input type="checkbox" name="ospf_redistribute_connected[]"> Redistribute Connected</label>
+                    <label><input type="checkbox" name="ospf_redistribute_bgp[]"> Redistribute BGP</label>
+                </div> 
+
                 <div class="button-group">
                     <button type="button" class="transparent-button" onclick="addOspf('ospf-section')">+ Add</button>
                 </div>
@@ -76,11 +82,9 @@
             
                 <div class="form-subsection"></div>
             
-                <div class="device-fields">
-                    <input type="checkbox" name="redistribute_ospf_into_bgp" class="switchport">
-                    <label class="form-label">Redistribute OSPF into BGP</label>
-                    <input type="checkbox" name="redistribute_rip_into_bgp" class="switchport">
-                    <label class="form-label">Redistribute RIP into BGP</label>
+                <div class="device-fields checkbox-row">
+                    <label><input type="checkbox" name="redistribute_ospf_into_bgp"> Redistribute OSPF into BGP</label>
+                    <label><input type="checkbox" name="redistribute_rip_into_bgp"> Redistribute RIP into BGP</label>
                 </div>
             
                 <div class="button-group">
@@ -256,8 +260,6 @@ function getOspfBlock() {
             <input type="text" name="ospf_wildcard[]" class="form-input short-input">
             <label class="form-label">Area:</label>
             <input type="text" name="ospf_area[]" class="form-input short-input">
-            <input type="checkbox" name="ospf_redistribute_connected[]" class="switchport"> <label class="form-label">Redistribute Connected</label>
-            <input type="checkbox" name="ospf_redistribute_bgp[]" class="switchport"> <label class="form-label">Redistribute BGP</label>
             <div class="delete-button-wrapper">
                 <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
             </div>
@@ -542,6 +544,24 @@ body.dark-mode .message-text {
 body.light-mode .message-text {
     color: var(--light-accent);
 }
+.checkbox-row {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.checkbox-row label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
 
 </style>
 

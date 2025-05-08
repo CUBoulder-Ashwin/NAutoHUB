@@ -1,7 +1,7 @@
 router bgp {{ bgp.as_number }}
 {% for af in bgp.address_families %}
   {% for network in af.networks %}
-  network {{ network.ip }} mask {{ network.mask }}
+  network {{ network.ip }}/{{ network.mask }}
   {% endfor %}
   {% for neighbor in af.neighbors %}
   neighbor {{ neighbor.ip }} remote-as {{ neighbor.remote_as }}
