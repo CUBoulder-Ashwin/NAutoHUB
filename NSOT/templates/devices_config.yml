@@ -1,6 +1,6 @@
 ---
 devices:
-- hostname: R1
+- hostname: R3
   vendor: arista
   clear_config: 'no'
   bgp:
@@ -8,7 +8,7 @@ devices:
     address_families:
     - type: ipv4
       networks:
-      - ip: 10.10.10.0
+      - ip: 30.30.30.0
         mask: '24'
       neighbors:
       - ip: 20.20.20.1

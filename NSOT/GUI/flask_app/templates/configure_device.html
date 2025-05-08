@@ -68,16 +68,26 @@
 
             <fieldset class="grouped-form" id="bgp-section">
                 <legend class="section-title">BGP Configuration</legend>
-                <!-- ASN input appears ONCE -->
+            
                 <div class="device-fields">
                     <label class="form-label">ASN:</label>
                     <input type="text" name="bgp_asn" class="form-input short-input">
                 </div>
+            
                 <div class="form-subsection"></div>
+            
+                <div class="device-fields">
+                    <input type="checkbox" name="redistribute_ospf_into_bgp" class="switchport">
+                    <label class="form-label">Redistribute OSPF into BGP</label>
+                    <input type="checkbox" name="redistribute_rip_into_bgp" class="switchport">
+                    <label class="form-label">Redistribute RIP into BGP</label>
+                </div>
+            
                 <div class="button-group">
                     <button type="button" class="transparent-button" onclick="addBgp('bgp-section')">+ Add</button>
                 </div>
             </fieldset>
+            
         </div>
         {% if message %}
         <div class="form-group text-center">

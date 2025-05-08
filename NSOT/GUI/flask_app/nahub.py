@@ -552,15 +552,13 @@ def configure_device():
                 request.form.getlist("interface_mask[]"),
                 request.form.getlist("switchport[]"),
             ):
-                interfaces.append(
-                    {
-                        "type": i_type,
-                        "number": i_num,
-                        "ip": ip if sp != "yes" else None,
-                        "mask": mask if sp != "yes" else None,
-                        "switchport": sp == "yes",
-                    }
-                )
+                interfaces.append({
+                    "type": i_type,
+                    "number": i_num,
+                    "ip": ip if sp != "yes" else None,
+                    "mask": mask if sp != "yes" else None,
+                    "switchport": sp == "yes",
+                })
 
             # Subinterfaces
             subinterfaces = []
@@ -571,9 +569,13 @@ def configure_device():
                 request.form.getlist("subinterface_ip[]"),
                 request.form.getlist("subinterface_mask[]"),
             ):
-                subinterfaces.append(
-                    {"parent": parent, "id": sid, "vlan": vlan, "ip": ip, "mask": mask}
-                )
+                subinterfaces.append({
+                    "parent": parent,
+                    "id": sid,
+                    "vlan": vlan,
+                    "ip": ip,
+                    "mask": mask
+                })
 
             # VLANs
             vlans = []
@@ -612,9 +614,7 @@ def configure_device():
             ospf_networks = request.form.getlist("ospf_network[]")
             ospf_wildcards = request.form.getlist("ospf_wildcard[]")
             ospf_areas = request.form.getlist("ospf_area[]")
-            ospf_redistribute_connected = request.form.getlist(
-                "ospf_redistribute_connected[]"
-            )
+            ospf_redistribute_connected = request.form.getlist("ospf_redistribute_connected[]")
             ospf_redistribute_bgp = request.form.getlist("ospf_redistribute_bgp[]")
 
             if ospf_process_ids:
@@ -641,6 +641,10 @@ def configure_device():
             bgp_remote_as = request.form.getlist("bgp_remote_as[]")
             bgp_address_families = request.form.getlist("bgp_address_family[]")
 
+            # NEW: Read redistribute toggles from BGP section
+            redistribute_ospf_into_bgp = "redistribute_ospf_into_bgp" in request.form
+            redistribute_rip_into_bgp = "redistribute_rip_into_bgp" in request.form
+
             if bgp_asn and bgp_address_families:
                 address_family_entries = {}
 
@@ -663,9 +667,9 @@ def configure_device():
                 bgp = {
                     "as_number": bgp_asn,
                     "address_families": list(address_family_entries.values()),
+                    "redistribute_ospf": redistribute_ospf_into_bgp,
+                    "redistribute_rip": redistribute_rip_into_bgp,
                 }
-
-
 
             # Attempt to generate YAML and push via Jenkins
             try:
@@ -706,12 +710,12 @@ def configure_device():
                     message=str(pipeline_error),
                 )
 
-        # GET request
         return render_template("configure_device.html", jenkins_result=None, devices=devices)
 
     except Exception as e:
         print(f"Error in /configure-device: {e}")
         return render_template("configure_device.html", jenkins_result="jenkins_failure", device_id="unknown", message=str(e), devices=[])
+
 
 
 @app.route("/push-config", methods=["POST"])
