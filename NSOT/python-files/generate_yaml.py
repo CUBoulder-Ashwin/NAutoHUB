@@ -112,32 +112,22 @@ def build_device_data(
                         for net in family.get("networks", [])
                         if net.get("ip") and net.get("mask")
                     ],
+                    "neighbors": [
+                        {
+                            "ip": neighbor["ip"],
+                            "remote_as": neighbor["remote_as"],
+                        }
+                        for neighbor in family.get("neighbors", [])
+                        if neighbor.get("ip") and neighbor.get("remote_as")
+                    ],
                 }
                 for family in bgp.get("address_families", [])
                 if family.get("type")
             ],
-            "address_families": [
-            {
-                "type": family["type"],
-                "networks": [
-                    {"ip": net["ip"], "mask": net.get("mask")}
-                    for net in family.get("networks", [])
-                    if net.get("ip") and net.get("mask")
-                ],
-                "neighbors": [
-                    {
-                        "ip": neighbor["ip"],
-                        "remote_as": neighbor["remote_as"],
-                    }
-                    for neighbor in family.get("neighbors", [])
-                    if neighbor.get("ip") and neighbor.get("remote_as")
-                ],
-            }
-            for family in bgp.get("address_families", [])
-            if family.get("type")
-        ],
-
+            "redistribute_ospf": bgp.get("redistribute_ospf", False),
+            "redistribute_rip": bgp.get("redistribute_rip", False),
         }
+
 
 
     if rip and rip.get("version") and any(rip.get("networks")):

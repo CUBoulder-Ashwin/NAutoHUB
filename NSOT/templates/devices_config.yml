@@ -8,8 +8,10 @@ devices:
     address_families:
     - type: ipv4
       networks:
-      - ip: 10.10.10.0
+      - ip: 30.30.30.0
         mask: '24'
       neighbors:
       - ip: 20.20.20.1
         remote_as: '65002'
+    redistribute_ospf: true
+    redistribute_rip: true
