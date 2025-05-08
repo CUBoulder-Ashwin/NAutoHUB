@@ -4,7 +4,6 @@ from jinja2 import Environment, FileSystemLoader
 import sys
 import time
 
-
 def generate_device_configs():
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     yaml_file = os.path.join(base_dir, "templates", "devices_config.yml")
@@ -57,20 +56,12 @@ def generate_device_configs():
                 for iface in device["interfaces"]:
                     config += f"no interface {iface['type']}{iface['number']}\n"
             else:
-                if vendor == "cisco":
-                    config += templates["interfaces_cisco"].render(
-                        interfaces=device["interfaces"]
-                    )
-                else:
-                    config += templates["interfaces"].render(
-                        interfaces=device["interfaces"]
-                    )
+                template_key = "interfaces_cisco" if vendor == "cisco" else "interfaces"
+                config += templates[template_key].render(interfaces=device["interfaces"])
 
         # Subinterfaces
         if "subinterfaces" in device:
-            config += templates["subinterfaces"].render(
-                subinterfaces=device["subinterfaces"]
-            )
+            config += templates["subinterfaces"].render(subinterfaces=device["subinterfaces"])
 
         # VLANs
         if "vlans" in device:
@@ -90,9 +81,7 @@ def generate_device_configs():
                 config += templates[template_key].render(
                     ospf_process=ospf_data["process_id"],
                     ospf_networks=ospf_data.get("networks", []),
-                    redistribute_connected=ospf_data.get(
-                        "redistribute_connected", False
-                    ),
+                    redistribute_connected=ospf_data.get("redistribute_connected", False),
                     redistribute_bgp=ospf_data.get("redistribute_bgp", False),
                 )
 
@@ -108,11 +97,17 @@ def generate_device_configs():
                     for net in family.get("networks", [])
                     if net.get("ip") and net.get("mask")
                 ]
+                neighbors = [
+                    neighbor
+                    for family in bgp_data.get("address_families", [])
+                    for neighbor in family.get("neighbors", [])
+                    if neighbor.get("ip") and neighbor.get("remote_as")
+                ]
                 template_key = "bgp_cisco" if vendor == "cisco" else "bgp"
                 config += templates[template_key].render(
                     bgp_as=bgp_data["as_number"],
                     bgp_networks=networks,
-                    bgp_neighbors=bgp_data.get("neighbors", []),
+                    bgp_neighbors=neighbors,
                 )
 
         # RIP
@@ -138,12 +133,12 @@ def generate_device_configs():
             else:
                 config += templates["dhcp"].render(dhcp=dhcp_data)
 
-        # Write to file
+        # Write config to file
         filename = os.path.join(config_dir, f"{hostname}.cfg")
         with open(filename, "w") as config_file:
             config_file.write(config)
 
-        print(f"Configuration generated for {hostname} and saved as {filename}")
+        print(f"✅ Configuration generated for {hostname} and saved to {filename}")
 
 
 def conf_gen():
