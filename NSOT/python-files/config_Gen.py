@@ -105,10 +105,9 @@ def generate_device_configs():
                 ]
                 template_key = "bgp_cisco" if vendor == "cisco" else "bgp"
                 config += templates[template_key].render(
-                    bgp_as=bgp_data["as_number"],
-                    bgp_networks=networks,
-                    bgp_neighbors=neighbors,
+                    bgp=bgp_data
                 )
+
 
         # RIP
         if "rip" in device:
