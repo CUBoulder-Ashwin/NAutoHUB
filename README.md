@@ -1,96 +1,135 @@
-<p align=center><img src=docs/images/gnmic-headline.svg?sanitize=true/></p>
+---
+# What is NAutoHUB?
 
-[![github release](https://img.shields.io/github/release/openconfig/gnmic.svg?style=flat-square&color=00c9ff&labelColor=bec8d2)](https://github.com/openconfig/gnmic/releases/)
-[![Github all releases](https://img.shields.io/github/downloads/openconfig/gnmic/total.svg?style=flat-square&color=00c9ff&labelColor=bec8d2)](https://github.com/openconfig/gnmic/releases/)
-[![Go Report](https://img.shields.io/badge/go%20report-A%2B-blue?style=flat-square&color=00c9ff&labelColor=bec8d2)](https://goreportcard.com/report/github.com/openconfig/gnmic)
-[![Doc](https://img.shields.io/badge/Docs-gnmic.openconfig.net-blue?style=flat-square&color=00c9ff&labelColor=bec8d2)](https://gnmic.openconfig.net)
-[![build](https://img.shields.io/github/actions/workflow/status/openconfig/gnmic/test.yml?branch=main&style=flat-square&labelColor=bec8d2)](https://github.com/openconfig/gnmic/releases/)
+NAutoHUB is an NMAS – Network Management and Automation System – designed to simplify network configuration, monitoring, and automation.
+It also functions as the Network Source of Truth (NSoT) by maintaining a centralized, version-controlled repository of device configurations, IP allocations, templates, telemetry, and state data.
+
+![Architecture](pictures/nhub-arch.jpeg)
+
+# What is NSOT?
+
+A Network Source of Truth provides a single, reliable reference for all network data — configurations, states, IPs, and inventory. 
+
+NSOT is the core of NAutoHUB. It includes:
+ - GUI/ – Web-based interface to manage network devices
+ - python-files/ – Scripts for config generation, deployment, and automation
+ - golden_configs/ – Pre-validated configuration templates
+ - golden_states/ – data captures of ideal device states
+ - IPAM/ – IP Address Management and device inventory
+ - templates/ – Jinja2 templates for building device configs
+ - datalake/ – Storage for SNMP/gNMI telemetry and performance metrics
+
+
+# Why CI/CD?
+
+CI/CD pipelines are the foundation for implementing Infrastructure as Code (IaC), allowing automated, consistent, and reliable network deployments from development to production.
+![cicd](pictures/nahub-cicd.png)
+
+
+# How NAutoHUB Fits
+
+- NAutoHUB supports virtual testing by running Jenkins pipeline tasks and simulating networks in Containerlab.
+- It serves as a tool for lab environments, allowing test engineers to quickly configure, validate, and troubleshoot networks.
+- Production Ready: NAutoHUB can be packaged and delivered to customers, acting as a single Network Source of Truth (NSOT) to manage and automate their existing network infrastructure.
+
+<br><br>
 
 ---
 
-`gnmic` (_pronoun.: gee·en·em·eye·see_) is a gNMI CLI client that provides full support for Capabilities, Get, Set and Subscribe RPCs with collector capabilities.
+# 🚀 NAutoHUB Setup Guide
 
-Documentation available at [https://gnmic.openconfig.net](https://gnmic.openconfig.net)
+This guide walks you through setting up the NAutoHUB
 
-## Features
+## 📦 Prerequisites
+- Ubuntu 20.04+
+- Git installed
+- Internet connection (LOL)
 
-* **Full support for gNMI RPCs**  
-  Every gNMI RPC has a [corresponding command](https://gnmic.openconfig.net/basic_usage/) with all of the RPC options configurable by means of the local and global flags.
-* **Flexible collector deployment**  
-  `gnmic` can be deployed as a gNMI collector that supports multiple output types ([NATS](https://gnmic.openconfig.net/user_guide/outputs/nats_output/), [Kafka](https://gnmic.openconfig.net/user_guide/outputs/kafka_output/), [Prometheus](https://gnmic.openconfig.net/user_guide/outputs/prometheus_output/), [InfluxDB](https://gnmic.openconfig.net/user_guide/outputs/influxdb_output/),...).  
-  The collector can be deployed either as a [single instance](https://gnmic.openconfig.net/deployments/deployments_intro/#single-instance), as part of a [cluster](https://gnmic.openconfig.net/user_guide/HA/), or used to form [data pipelines](https://gnmic.openconfig.net/deployments/deployments_intro/#pipelines).
-* **Support gRPC tunnel based dialout telemetry**  
-  `gnmic` can be deployed as a gNMI collector with an [embedded tunnel server](https://gnmic.openconfig.net/user_guide/tunnel_server/).
-* **gNMI data manipulation**  
-  `gnmic` collector has [data transformation](https://gnmic.openconfig.net/user_guide/event_processors/intro/) capabilities that can be used to adapt the collected data to your specific use case.
-* **Dynamic targets loading**  
-  `gnmic` support [target loading at runtime](https://gnmic.openconfig.net/user_guide/targets/target_discovery/discovery_intro/) based on input from external systems.
-* **YANG-based path suggestions**  
-  Your CLI magically becomes a YANG browser when `gnmic` is executed in [prompt](https://gnmic.openconfig.net/user_guide/prompt_suggestions/) mode. In this mode the flags that take XPATH values will get auto-suggestions based on the provided YANG modules. In other words - voodoo magic :exploding_head:
-* **Multi-target operations**  
-  Commands can operate on [multiple gNMI targets](https://gnmic.openconfig.net/user_guide/targets/) for bulk configuration/retrieval/subscription.
-* **Multiple configuration sources**  
-  gnmic supports [flags](https://gnmic.openconfig.net/user_guide/configuration_flags), [environment variables](https://gnmic.openconfig.net/user_guide/configuration_env/) as well as [file based]((https://gnmic.openconfig.net/user_guide/configuration_file/)) configurations.
-* **Inspect raw gNMI messages**  
-  With the `prototext` output format you can see the actual gNMI messages being sent/received. Its like having a gNMI looking glass!
-* **(In)secure gRPC connection**  
-  gNMI client supports both TLS and [non-TLS](https://gnmic.openconfig.net/global_flags/#insecure) transports so you can start using it in a lab environment without having to care about the PKI.
-* **Dial-out telemetry**  
-  The [dial-out telemetry server](https://gnmic.openconfig.net/cmd/listen/) is provided for Nokia SR OS.
-* **Pre-built multi-platform binaries**  
-  Statically linked [binaries](https://github.com/openconfig/gnmic/releases) made in our release pipeline are available for major operating systems and architectures. Making [installation](https://gnmic.openconfig.net/install/) a breeze!
-* **Extensive and friendly documentation**  
-  You won't be in need to dive into the source code to understand how `gnmic` works, our [documentation site](https://gnmic.openconfig.net) has you covered.
+## 🤖 Automated Setup
 
-## Quick start guide
+#### 1. Clone the repo:
 
-### Installation
+ ```bash
+ mkdir -p ~/projects
+ cd ~/projects
+ git clone https://github.com/CUBoulder-Ashwin/NAutoHUB.git
+ ```
 
-```
-bash -c "$(curl -sL https://get-gnmic.openconfig.net)"
-```
-
-### Capabilities request
-
-```
-gnmic -a 10.1.0.11:57400 -u admin -p admin --insecure capabilities
-```
-
-### Get request
-
-```
-gnmic -a 10.1.0.11:57400 -u admin -p admin --insecure \
-      get --path /state/system/platform
-```
-
-### Set request
-
-```
-gnmic -a 10.1.0.11:57400 -u admin -p admin --insecure \
-      set --update-path /configure/system/name \
-          --update-value gnmic_demo
-```
-
-### Subscribe request
-
-```
-gnmic -a 10.1.0.11:57400 -u admin -p admin --insecure \
-      sub --path "/state/port[port-id=1/1/c1/1]/statistics/in-packets"
-```
-
-### Prompt mode
-
-The [prompt mode](https://gnmic.openconfig.net/user_guide/prompt_suggestions/) is an interactive mode of the gnmic CLI client for user convenience.
+#### 2. Create executables:
 
 ```bash
-# clone repository with YANG models (Openconfig example)
-git clone https://github.com/openconfig/public
-cd public
+cd NAutoHUB/pilot-config
+chmod +x requirements.sh pilot.sh
+```
 
-# Start gnmic in prompt mode and read in all the modules:
+#### 3. `requirements.sh` installs Docker, Containerlab, InfluxDB, Grafana, Ngrok, Java, Jenkins and Python packages like snmp-mibs, easysnmp, netmiko, flask etc.
 
-gnmic --file release/models \
-      --dir third_party \
-      --exclude ietf-interfaces \
-      prompt
+```bash
+./requirements.sh
+```
+
+#### 4. `pilot.sh`,
+   - creates docker images necessary
+   - creates managment network interfaces and add routes for the containerlabs
+   - runs an example containerlab topology
+   - creates crafted services like ipam, snmp, ngrok, device health checks, etc
+   - initiates the frontend
+
+```bash
+./pilot.sh
+```
+
+## 🛠️ CI/CD Implemenetation: (Optional) 
+
+#### 1. Jenkins & Ngrok Configuration
+
+- Get your [Ngrok auth token](https://dashboard.ngrok.com/get-started/your-authtoken) and paste it into `/NAutoHUB/misc/ngrok_config.yml`:
+
+```yaml
+version: "2"
+agent:
+  authtoken: <your_token>
+  region: us
+tunnels:
+  jenkins:
+    addr: 8080
+    proto: http
+```
+- Restart the service
+
+```bash
+sudo systemctl restart ngrok.service
+ ```
+ 
+- Retrieve the initial admin password from jenkins service:
+
+ ```bash
+ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+ ```
+
+- Access the Ngrok URL from `/NAutoHUB/logs/ngrok.log`, complete Jenkins setup in browser.
+
+#### 2. GitHub Webhook
+
+- Push this repo to GitHub.
+- Go to GitHub → **Settings > Webhooks**
+- Use your Ngrok URL + `/github-webhook/`:
+
+```text
+https://<your-ngrok>.ngrok-free.app/github-webhook/
+```
+
+<br><br>
+
+---
+
+## ✅ Troubleshooting
+
+- If you're running into permission errors or your WSL Ubuntu user can't run sudo, it likely means your user isn't in the sudoers group. 
+
+Run the following in Command Prompt or PowerShell as Administrator:
+
+```bash
+  wsl -u root
+  usermod -aG sudo <your_wsl_username>
 ```
