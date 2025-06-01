@@ -1,0 +1,8 @@
+vlan 100
+   name mgmt
+!
+{% for i in range(1, total_interfaces + 1) %}
+interface Ethernet{{ i }}
+    switchport mode trunk
+!
+{% endfor %}
