@@ -1,7 +1,7 @@
 import os
 import yaml
 from collections import defaultdict
-from day0_config import generate_day0_config  # Ensure this exists in the Python path
+from day0_config import generate_day0_config, generate_mgmt_day0_config
 
 # Final path to save the topology YAML
 TOPO_PATH = os.path.abspath(
@@ -98,6 +98,9 @@ def build_clab_topology(topo_name, devices, links):
     interface_counts["mgmt"] += 1
 
     # Compose final YAML
+    mgmt_config_path = generate_mgmt_day0_config(interface_counts["mgmt"])
+    nodes["mgmt"]["startup-config"] = mgmt_config_path
+
     topo_data = {"name": topo_name, "topology": {"nodes": nodes, "links": yaml_links}}
 
     os.makedirs(os.path.dirname(TOPO_PATH), exist_ok=True)

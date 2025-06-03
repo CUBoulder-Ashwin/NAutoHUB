@@ -7,7 +7,6 @@ TEMPLATE_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "templates"))
 
 
 def generate_day0_config(device_name, mgmt_ip, username, password):
-    print(f"The management ip is {mgmt_ip}")
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
     template = env.get_template("day0_config.j2")
     rendered = template.render(
@@ -16,6 +15,18 @@ def generate_day0_config(device_name, mgmt_ip, username, password):
 
     os.makedirs(CONFIG_DIR, exist_ok=True)
     config_path = os.path.join(CONFIG_DIR, f"goldenconfigs_{device_name}.cfg")
+    with open(config_path, "w") as f:
+        f.write(rendered)
+    return config_path
+
+
+def generate_mgmt_day0_config(interface_count):
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+    template = env.get_template("mgmt_day0_config.j2")
+    rendered = template.render(total_interfaces=interface_count)
+
+    os.makedirs(CONFIG_DIR, exist_ok=True)
+    config_path = os.path.join(CONFIG_DIR, "goldenconfigs_mgmt.cfg")
     with open(config_path, "w") as f:
         f.write(rendered)
     return config_path

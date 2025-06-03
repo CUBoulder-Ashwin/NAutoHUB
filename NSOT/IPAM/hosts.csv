@@ -1,1 +1,7 @@
+<<<<<<< HEAD
 hostname,username,password,management_ip,old_password,new_password
+=======
+hostname,username,password,management_ip,old_password,new_password
+R1,admin,admin,10.0.101.1,,
+R2,admin,admin,10.0.101.2,,
+>>>>>>> 699137999f0cc448d3cff9859a720d071765ef50
