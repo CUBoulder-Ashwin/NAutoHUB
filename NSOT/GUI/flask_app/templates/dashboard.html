@@ -1,157 +1,17 @@
 {% extends "base.html" %}
-{% block content %}
+{% block title %}Dashboard - NAutoHUB{% endblock %}
 
-<h2 class="dashboard-title">Network Dashboard</h2>
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Network Dashboard</h1>
+  <p class="page-description">Real-time network monitoring and metrics</p>
+</div>
 
 <div class="iframe-container">
-    <iframe
-      id="grafanaFrame"
-      src="http://localhost:3000/goto/YF9Y51xHR?orgId=1"
-      frameborder="0"
-    ></iframe>
+  <iframe
+    id="grafanaFrame"
+    src="http://localhost:3000/goto/YF9Y51xHR?orgId=1"
+    title="Grafana Dashboard"
+  ></iframe>
 </div>
-
-<!-- <div id="dashboardBookmarks" class="bookmark-container">
-  <button class="bookmark-button" id="btn-cpu" onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/rZRM9lHwdzy9dP6hLvH5QSOv7ahnN10k', 0)">CPU Utilization</button>
-  <button class="bookmark-button" id="btn-interface" onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/AERfDDEPwfADL5p0AZwbyh9f22tkjkeX', 1)">Interface Status</button>
-  <button class="bookmark-button" id="btn-mtu" onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/pqrstuvwxyz', 2)">MTU</button>
-  <button class="bookmark-button" id="btn-temp" onclick="changeDashboard('https://snapshots.raintank.io/dashboard/snapshot/pqrstuvwxyz', 3)">CPU Temperature</button>
-</div>
-
-<script>
-  const dashboardUrls = [
-    'https://snapshots.raintank.io/dashboard/snapshot/rZRM9lHwdzy9dP6hLvH5QSOv7ahnN10k',
-    'https://snapshots.raintank.io/dashboard/snapshot/AERfDDEPwfADL5p0AZwbyh9f22tkjkeX',
-    'https://snapshots.raintank.io/dashboard/snapshot/pqrstuvwxyz',
-    'https://snapshots.raintank.io/dashboard/snapshot/pqrstuvwxyz'
-  ];
-
-  const buttons = document.querySelectorAll('.bookmark-button');
-  let currentDashboard = 0;
-  const cycleInterval = 5000;
-
-  function changeDashboard(url, index) {
-    document.getElementById('grafanaFrame').src = url;
-    highlightButton(index);
-  }
-
-  function highlightButton(index) {
-    buttons.forEach((button, i) => {
-      button.classList.toggle('active-tab', i === index);
-    });
-  }
-
-  function cycleDashboards() {
-    changeDashboard(dashboardUrls[currentDashboard], currentDashboard);
-    currentDashboard = (currentDashboard + 1) % dashboardUrls.length;
-  }
-
-  cycleDashboards();
-  setInterval(cycleDashboards, cycleInterval);
-</script> -->
-
-<style>
-:root {
-    --dark-bg: #0d0d0d;
-    --dark-accent: #d4a373;
-    --dark-hover: #eec68d;
-
-    --light-bg: #fdf6e3;
-    --light-accent: #8b5e3c;
-    --light-hover: #b07c59;
-}
-
-body.dark-mode {
-    background-color: var(--dark-bg);
-    color: #f0e6d2;
-}
-
-body.light-mode {
-    background-color: var(--light-bg);
-    color: #2e2e2e;
-}
-
-.dashboard-title {
-    text-align: center;
-    color: #734c24;
-    color: var(--dark-accent);
-    font-size: 2.5em;
-    margin-top: 20px;
-    font-family: 'Arial Black', sans-serif;
-}
-
-/* body.light-mode .dashboard-title {
-    color: var(--light-accent);
-} */
-
-.iframe-container {
-    max-width: 90%;
-    margin: 20px auto;
-    padding: 10px;
-    background-color: #121212;
-    border: 2px solid var(--dark-accent);
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(212, 163, 115, 0.4);
-}
-
-body.light-mode .iframe-container {
-    background-color: #fffdf6;
-    border-color: var(--light-accent);
-    box-shadow: 0 0 20px rgba(139, 94, 60, 0.3);
-}
-
-iframe {
-    width: 100%;
-    height: 800px;
-    border: none;
-}
-
-.bookmark-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 20px auto;
-    flex-wrap: wrap;
-}
-
-.bookmark-button {
-    padding: 10px 20px;
-    font-size: 1em;
-    border-radius: 5px;
-    border: 1px solid var(--dark-accent);
-    background-color: var(--dark-bg);
-    color: var(--dark-accent);
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s, color 0.3s;
-}
-
-.bookmark-button:hover {
-    background-color: var(--dark-hover);
-    color: #000;
-    transform: scale(1.05);
-}
-
-body.light-mode .bookmark-button {
-    background-color: #fff;
-    border: 1px solid var(--light-accent);
-    color: var(--light-accent);
-}
-
-body.light-mode .bookmark-button:hover {
-    background-color: var(--light-hover);
-    color: #000;
-}
-
-.active-tab {
-    background-color: var(--dark-hover);
-    color: #000;
-    transform: scale(1.05);
-}
-
-body.light-mode .active-tab {
-    background-color: var(--light-hover);
-    color: #000;
-}
-</style>
-
 {% endblock %}

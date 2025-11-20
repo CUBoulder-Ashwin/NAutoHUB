@@ -1,118 +1,187 @@
 {% extends "base.html" %}
+{% block title %}Add Device - NAutoHUB{% endblock %}
+
 {% block content %}
-
-<h2 class="page-title">Add Device</h2>
-
-<div class="tile-container">
-    <form method="POST" class="form-container" id="add-device-form" onsubmit="showLoading()">
-        <div class="device-form form-group grouped-form">
-            <div class="device-fields">
-                <label class="form-label">Device Name:</label>
-                <input type="text" name="device_name" class="form-input medium-input" required>
-
-                <label class="form-label">Kind:</label>
-                <select name="kind" id="kind-select" class="form-input" required onchange="toggleExecOrConfig()">
-                    <option value="">-- Select Kind --</option>
-                    <option value="ceos">ceos</option>
-                    <option value="linux">linux</option>
-                </select>
-
-                <label class="form-label">Docker Image:</label>
-                <select name="image" class="form-input" required>
-                    <option value="">-- Select Image --</option>
-                    {% for img in docker_images %}
-                        <option value="{{ img }}">{{ img }}</option>
-                    {% endfor %}
-                </select>
-
-                <div id="config-section" class="form-group" style="display: none;">
-                    <label class="form-label">Config File Path:</label>
-                    <input type="text" name="config" class="form-input medium-input" placeholder="/path/to/config.cfg">
-                </div>
-
-                <div id="exec-section" class="form-group" style="display: none;">
-                    <label class="form-label">Exec Commands (1 per line):</label>
-                    <textarea name="exec[]" rows="4" class="form-input medium-input" placeholder="ip link set eth1 up&#10;dhclient eth1"></textarea>
-                </div>
-
-                <label class="form-label">MAC Address (optional):</label>
-                <input type="text" name="mac_address" class="form-input medium-input">
-
-                <label class="form-label">Management IP Address (with subnet):</label>
-                <input type="text" name="ip_address" class="form-input medium-input" placeholder="10.0.0.1/24" required>
-
-                <label class="form-label">SSH Username:</label>
-                <input type="text" name="username" class="form-input medium-input" placeholder="admin" required>
-
-                <label class="form-label">SSH Password:</label>
-                <input type="password" name="password" class="form-input medium-input" placeholder="admin" required>
-
-                <label class="form-label">How many devices to connect to:</label>
-                <input type="number" name="connection_count" id="connection-count" class="form-input medium-input" min="0" max="10" value="0">
-
-                <div id="connection-dropdowns" class="form-group"></div>
-            </div>
-        </div>
-
-        {% if message %}
-        <div class="form-group text-center" style="margin-top: 15px;">
-            <p class="message-text">{{ message|safe }}</p>
-        </div>
-        {% endif %}
-
-        <div class="form-group text-center button-group">
-            <button type="submit" class="form-button csv-button">Add Device</button>
-        </div>
-    </form>
+<div class="page-header">
+  <h1 class="page-title">Add Device</h1>
+  <p class="page-description">Add a new device to your existing network topology</p>
 </div>
 
-<!-- LOADING OVERLAY -->
-<div id="loading-overlay" style="display:none;">
+<div class="card card-elevated" style="max-width: 700px; margin: 0 auto;">
+  <div class="card-body">
+    <form method="POST" class="form" id="add-device-form" onsubmit="showLoading()">
+      <div class="form-fieldset">
+        <legend class="form-legend">Device Information</legend>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Device Name</label>
+            <input type="text" name="device_name" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Kind</label>
+            <select name="kind" id="kind-select" class="form-select" required onchange="toggleExecOrConfig()">
+              <option value="">-- Select Kind --</option>
+              <option value="ceos">ceos</option>
+              <option value="linux">linux</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Docker Image</label>
+          <select name="image" class="form-select" required>
+            <option value="">-- Select Image --</option>
+            {% for img in docker_images %}
+              <option value="{{ img }}">{{ img }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div id="config-section" class="form-group" style="display: none;">
+          <label class="form-label">Config File Path</label>
+          <input type="text" name="config" class="form-input" placeholder="/path/to/config.cfg">
+        </div>
+
+        <div id="exec-section" class="form-group" style="display: none;">
+          <label class="form-label">Exec Commands (1 per line)</label>
+          <textarea name="exec[]" rows="4" class="form-textarea" placeholder="ip link set eth1 up&#10;dhclient eth1"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">MAC Address (optional)</label>
+          <input type="text" name="mac_address" class="form-input">
+        </div>
+      </div>
+
+      <div class="form-fieldset">
+        <legend class="form-legend">Network Configuration</legend>
+
+        <div class="form-group">
+          <label class="form-label">Management IP Address (with subnet)</label>
+          <input type="text" name="ip_address" class="form-input" placeholder="10.0.0.1/24" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">SSH Username</label>
+            <input type="text" name="username" class="form-input" placeholder="admin" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">SSH Password</label>
+            <input type="password" name="password" class="form-input" placeholder="admin" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">How many devices to connect to</label>
+          <input type="number" name="connection_count" id="connection-count" class="form-input" min="0" max="10" value="0" style="max-width: 150px;">
+        </div>
+
+        <div id="connection-dropdowns"></div>
+      </div>
+
+      {% if message %}
+      <div class="alert alert-success">
+        <span class="alert-icon">&#10003;</span>
+        <div class="alert-content">{{ message|safe }}</div>
+      </div>
+      {% endif %}
+
+      <div class="form-actions form-actions-center">
+        <button type="submit" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Add Device
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="modal-overlay" id="loading-overlay" style="display: none;">
+  <div class="loading-container">
     <div class="loading-spinner"></div>
     <p class="loading-text" id="loading-text">Initializing...</p>
+  </div>
 </div>
+
+<style>
+/* Loading overlay specific styles */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: opacity 0.5s ease-in-out;
+}
+</style>
 
 <script>
 function toggleExecOrConfig() {
-    const kind = document.getElementById("kind-select").value;
-    document.getElementById("config-section").style.display = kind === "ceos" ? "block" : "none";
-    document.getElementById("exec-section").style.display = kind === "linux" ? "block" : "none";
+  const kind = document.getElementById("kind-select").value;
+  document.getElementById("config-section").style.display = kind === "ceos" ? "block" : "none";
+  document.getElementById("exec-section").style.display = kind === "linux" ? "block" : "none";
 }
 
 function renderConnectionDropdowns() {
-    const count = parseInt(document.getElementById("connection-count").value);
-    const container = document.getElementById("connection-dropdowns");
-    container.innerHTML = "";
+  const count = parseInt(document.getElementById("connection-count").value);
+  const container = document.getElementById("connection-dropdowns");
+  container.innerHTML = "";
 
-    for (let i = 0; i < count; i++) {
-        const div = document.createElement("div");
-        div.classList.add("form-group");
-        div.innerHTML = `
-            <label class="form-label">Connect to Device ${i + 1}:</label>
-            <select name="connect_to_${i}" class="form-input" required>
-                <option value="">-- Select Device --</option>
-                {% for host in available_hosts %}
-                    <option value="{{ host }}">{{ host }}</option>
-                {% endfor %}
-            </select>
-        `;
-        container.appendChild(div);
-    }
+  for (let i = 0; i < count; i++) {
+    const div = document.createElement("div");
+    div.classList.add("form-group");
+    div.innerHTML = `
+      <label class="form-label">Connect to Device ${i + 1}</label>
+      <select name="connect_to_${i}" class="form-select" required>
+        <option value="">-- Select Device --</option>
+        {% for host in available_hosts %}
+          <option value="{{ host }}">{{ host }}</option>
+        {% endfor %}
+      </select>
+    `;
+    container.appendChild(div);
+  }
 }
 
 function showLoading() {
-    document.getElementById("loading-overlay").style.display = "flex";
+  document.getElementById("loading-overlay").style.display = "flex";
+  rotateTerms();
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    toggleExecOrConfig();
-    document.getElementById("connection-count").addEventListener("input", renderConnectionDropdowns);
+  toggleExecOrConfig();
+  document.getElementById("connection-count").addEventListener("input", renderConnectionDropdowns);
 });
+
 const terms = [
   "Routing BGP packets to Valhalla...",
   "Spinning up Layer 3 magic...",
   "Injecting routes into the Matrix...",
-  "Summoning OSPF daemons... ",
+  "Summoning OSPF daemons...",
   "Crafting VLAN potions...",
   "Talking to network oracles...",
   "Negotiating with DHCP spirits...",
@@ -124,14 +193,14 @@ const terms = [
   "Fragmenting datagrams with care...",
   "Conjuring MAC addresses...",
   "Programming the P4 gods...",
-  "Pinging the void... ",
+  "Pinging the void...",
   "Announcing routes like a prophet...",
   "Weaving MPLS labels into destiny...",
   "Encoding bits of truth...",
   "Assembling TCP handshakes...",
   "Peering with interdimensional routers...",
   "Binding interfaces with eldritch configs...",
-  "Casting 'show run' scrolls... ",
+  "Casting 'show run' scrolls...",
   "Parsing YANGs of destiny...",
   "Bridging subnets across galaxies...",
   "Extracting SNMP secrets from the vault...",
@@ -139,18 +208,21 @@ const terms = [
   "Configuring routers with dark magic...",
   "Recabling cables with thoughts alone...",
   "Blessing interfaces with zero drops...",
-  "Summoning Ceos spirits from the cloud... ",
+  "Summoning Ceos spirits from the cloud...",
   "Resurrecting containers from the abyss...",
   "Defragmenting reality into packets...",
-  "Rebooting layer zero... ",
+  "Rebooting layer zero...",
   "Beaming bits through wormholes...",
   "Unrolling IPv6 prophecies...",
   "Hacking the mainframe of the underlay...",
   "Teleporting configs into flash...",
 ];
 
+// Shuffle once to avoid repetition in each session
+terms.sort(() => Math.random() - 0.5);
 
 let index = 0;
+let rotateInterval;
 
 function rotateTerms() {
   const el = document.getElementById("loading-text");
@@ -160,237 +232,10 @@ function rotateTerms() {
     el.style.opacity = 1;
     index = (index + 1) % terms.length;
   }, 500);
+
+  if (!rotateInterval) {
+    rotateInterval = setInterval(rotateTerms, 7000);
+  }
 }
-
-// Shuffle once to avoid repetition in each session
-terms.sort(() => Math.random() - 0.5);
-
-setInterval(rotateTerms, 7000); // every 7 seconds
 </script>
-
-<style>
-:root {
-    --dark-bg: #0d0d0d;
-    --dark-accent: #d4a373;
-    --dark-hover: #eec68d;
-    --light-bg: #fdf6e3;
-    --light-accent: #8b5e3c;
-    --light-hover: #b07c59;
-}
-
-.page-title {
-    color: #734c24;
-    text-align: center;
-    font-family: 'Arial Black', sans-serif;
-    margin: 20px 0;
-}
-
-.tile-container {
-    max-width: 700px;
-    margin: 30px auto;
-    background-color: inherit;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(212, 163, 115, 0.25);
-    transition: box-shadow 0.3s ease;
-}
-
-body.light-mode .tile-container {
-    box-shadow: 0 0 20px rgba(139, 94, 60, 0.25);
-}
-
-.form-container {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.4);
-    background-color: inherit;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.grouped-form {
-    border: 1px solid;
-    border-radius: 10px;
-    padding: 20px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    position: relative;
-    transition: box-shadow 0.3s ease;
-}
-
-.grouped-form:hover {
-    box-shadow: 0 0 10px rgba(255,255,255,0.05);
-}
-
-.device-fields {
-    padding: 20px 40px 20px 20px;
-}
-
-.device-fields > * {
-    margin-bottom: 14px;
-}
-
-.form-input,
-select.form-input,
-textarea.form-input {
-    width: 100%;
-    padding: 8px 10px;
-    border-radius: 6px;
-    border: 1px solid;
-    background-color: inherit;
-    color: inherit;
-    transition: border-color 0.3s;
-    font-size: 14px;
-}
-
-.form-input:focus,
-select.form-input:focus {
-    outline: none;
-    box-shadow: 0 0 5px;
-}
-
-.form-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 4px;
-    font-size: 14px;
-}
-
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.transparent-button {
-    background-color: transparent;
-    color: inherit;
-    font-size: 14px;
-    padding: 6px 14px;
-    font-weight: bold;
-    border: 1px solid;
-    border-radius: 6px;
-    margin-top: 10px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.transparent-button:hover {
-    background-color: var(--dark-hover);
-    color: #000;
-}
-
-body.light-mode .transparent-button:hover {
-    background-color: var(--light-hover);
-    color: #fff;
-}
-
-.form-button.csv-button {
-    margin-top: 10px;
-    padding: 10px 22px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-body.light-mode .form-input,
-body.light-mode select.form-input,
-body.light-mode textarea.form-input {
-    background-color: #fff;
-    border-color: var(--light-accent);
-    color: #2e2e2e;
-}
-
-body.light-mode .form-button {
-    background-color: var(--light-accent);
-    color: #fff;
-}
-
-body.light-mode .form-button:hover {
-    background-color: var(--light-hover);
-}
-
-body.light-mode .grouped-form {
-    border-color: var(--light-accent);
-}
-
-body.dark-mode .form-input,
-body.dark-mode select.form-input,
-body.dark-mode textarea.form-input {
-    border-color: var(--dark-accent);
-    background-color: #0f0f0f;
-    color: #f0e6d2;
-}
-
-body.dark-mode .form-button {
-    background-color: var(--dark-accent);
-    color: #000;
-}
-
-body.dark-mode .form-button:hover {
-    background-color: var(--dark-hover);
-}
-
-body.dark-mode .grouped-form {
-    border-color: var(--dark-accent);
-}
-
-.message-text {
-    font-weight: bold;
-    text-align: center;
-    color: var(--dark-accent);
-}
-
-body.light-mode .message-text {
-    color: var(--light-accent);
-}
-
-.hidden {
-    display: none;
-}
-#loading-overlay {
-    position: fixed;
-    top: 0; left: 0;
-    height: 100vh;
-    width: 100vw;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    font-size: 20px;
-    font-weight: bold;
-}
-.loading-spinner {
-    width: 60px;
-    height: 60px;
-    border: 6px solid #ccc;
-    border-top-color: #d4a373;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.loading-text {
-    color: #d4a373;
-    font-size: 20px;
-    font-family: 'Arial Black', sans-serif;
-    transition: opacity 0.5s ease-in-out;
-}
-.medium-input {
-    max-width: 525px;  /* Adjust this value as needed */
-}
-</style>
-
 {% endblock %}

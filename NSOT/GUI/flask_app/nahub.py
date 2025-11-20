@@ -224,13 +224,14 @@ def add_hosts():
         usernames = request.form.getlist("username[]")
         passwords = request.form.getlist("password[]")
         management_ips = request.form.getlist("management_ip[]")
+        subnet_cidrs = request.form.getlist("subnet_cidr[]")
         save_mode = request.form.get("save_mode", "new")
 
         rows = []
         for i in range(len(hostnames)):
-            if hostnames[i] and usernames[i] and passwords[i] and management_ips[i]:
+            if hostnames[i] and usernames[i] and passwords[i] and management_ips[i] and subnet_cidrs[i]:
                 rows.append(
-                    [hostnames[i], usernames[i], passwords[i], management_ips[i]]
+                    [hostnames[i], usernames[i], passwords[i], management_ips[i], subnet_cidrs[i]]
                 )
 
         if rows:
@@ -239,6 +240,7 @@ def add_hosts():
             message = f"✅ {mode_label} hosts.csv with {len(rows)} new device(s)."
         else:
             message = "⚠️ No valid entries to save."
+            
 
     return render_template("add_hosts.html", message=message)
 

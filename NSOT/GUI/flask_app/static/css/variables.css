@@ -1,0 +1,229 @@
+/* ==========================================================================
+   NAutoHUB Design System - CSS Variables
+   ========================================================================== */
+
+:root {
+  /* ========== Color Palette - Light Mode ========== */
+  --color-bg-primary: #f8fafc;
+  --color-bg-secondary: #f1f5f9;
+  --color-bg-tertiary: #e2e8f0;
+  --color-surface: #ffffff;
+  --color-surface-elevated: #ffffff;
+  --color-surface-overlay: rgba(255, 255, 255, 0.8);
+
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #64748b;
+  --color-text-muted: #94a3b8;
+  --color-text-inverse: #ffffff;
+
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  --color-border-focus: #3b82f6;
+
+  /* Brand Colors */
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-active: #1e40af;
+  --color-primary-light: #dbeafe;
+
+  --color-secondary: #475569;
+  --color-secondary-hover: #334155;
+  --color-secondary-light: #f1f5f9;
+
+  --color-accent: #0891b2;
+  --color-accent-hover: #0e7490;
+  --color-accent-light: #cffafe;
+
+  /* Semantic Colors */
+  --color-success: #059669;
+  --color-success-hover: #047857;
+  --color-success-light: #d1fae5;
+  --color-success-bg: #ecfdf5;
+
+  --color-warning: #d97706;
+  --color-warning-hover: #b45309;
+  --color-warning-light: #fef3c7;
+  --color-warning-bg: #fffbeb;
+
+  --color-error: #dc2626;
+  --color-error-hover: #b91c1c;
+  --color-error-light: #fee2e2;
+  --color-error-bg: #fef2f2;
+
+  --color-info: #0284c7;
+  --color-info-light: #e0f2fe;
+
+  /* Special Effects */
+  --color-glow-primary: rgba(59, 130, 246, 0.5);
+  --color-glow-accent: rgba(6, 182, 212, 0.5);
+  --color-glow-success: rgba(16, 185, 129, 0.5);
+  --color-shadow: rgba(0, 0, 0, 0.1);
+  --color-shadow-lg: rgba(0, 0, 0, 0.15);
+
+  /* Navbar */
+  --navbar-bg: #ffffff;
+  --navbar-border: #e2e8f0;
+  --navbar-shadow: rgba(0, 0, 0, 0.05);
+
+  /* ========== Typography ========== */
+  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  --font-family-display: 'Bebas Neue', 'Impact', 'Arial Black', sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
+
+  --font-size-xs: 0.75rem;     /* 12px */
+  --font-size-sm: 0.875rem;    /* 14px */
+  --font-size-base: 1rem;      /* 16px */
+  --font-size-lg: 1.125rem;    /* 18px */
+  --font-size-xl: 1.25rem;     /* 20px */
+  --font-size-2xl: 1.5rem;     /* 24px */
+  --font-size-3xl: 1.875rem;   /* 30px */
+  --font-size-4xl: 2.25rem;    /* 36px */
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+
+  /* ========== Spacing ========== */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+
+  /* ========== Border Radius ========== */
+  --radius-sm: 0.25rem;   /* 4px */
+  --radius-md: 0.5rem;    /* 8px */
+  --radius-lg: 0.75rem;   /* 12px */
+  --radius-xl: 1rem;      /* 16px */
+  --radius-2xl: 1.5rem;   /* 24px */
+  --radius-full: 9999px;
+
+  /* ========== Shadows ========== */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  --shadow-glow: 0 0 20px var(--color-glow-primary);
+
+  /* ========== Transitions ========== */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 350ms ease;
+  --transition-slower: 500ms ease;
+
+  /* ========== Z-Index Scale ========== */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+  --z-toast: 800;
+
+  /* ========== Layout ========== */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
+
+  --navbar-height: 64px;
+  --sidebar-width: 280px;
+}
+
+/* ==========================================================================
+   Dark Mode Colors
+   ========================================================================== */
+
+[data-theme="dark"] {
+  --color-bg-primary: #0a0f1a;
+  --color-bg-secondary: #0f172a;
+  --color-bg-tertiary: #1e293b;
+  --color-surface: #131c2e;
+  --color-surface-elevated: #1e293b;
+  --color-surface-overlay: rgba(19, 28, 46, 0.9);
+
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-tertiary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-text-inverse: #0f172a;
+
+  --color-border: #1e293b;
+  --color-border-light: #334155;
+  --color-border-focus: #3b82f6;
+
+  /* Brand Colors - Dark Mode */
+  --color-primary: #3b82f6;
+  --color-primary-hover: #60a5fa;
+  --color-primary-active: #93c5fd;
+  --color-primary-light: rgba(59, 130, 246, 0.2);
+
+  --color-secondary: #64748b;
+  --color-secondary-hover: #94a3b8;
+  --color-secondary-light: rgba(100, 116, 139, 0.2);
+
+  --color-accent: #06b6d4;
+  --color-accent-hover: #22d3ee;
+  --color-accent-light: rgba(6, 182, 212, 0.2);
+
+  /* Semantic Colors - Dark Mode */
+  --color-success: #10b981;
+  --color-success-hover: #34d399;
+  --color-success-light: rgba(16, 185, 129, 0.2);
+  --color-success-bg: rgba(16, 185, 129, 0.1);
+
+  --color-warning: #f59e0b;
+  --color-warning-hover: #fbbf24;
+  --color-warning-light: rgba(245, 158, 11, 0.2);
+  --color-warning-bg: rgba(245, 158, 11, 0.1);
+
+  --color-error: #ef4444;
+  --color-error-hover: #f87171;
+  --color-error-light: rgba(239, 68, 68, 0.2);
+  --color-error-bg: rgba(239, 68, 68, 0.1);
+
+  --color-info: #0ea5e9;
+  --color-info-light: rgba(14, 165, 233, 0.2);
+
+  /* Special Effects - Dark Mode */
+  --color-glow-primary: rgba(59, 130, 246, 0.4);
+  --color-glow-accent: rgba(6, 182, 212, 0.4);
+  --color-glow-success: rgba(16, 185, 129, 0.4);
+  --color-shadow: rgba(0, 0, 0, 0.3);
+  --color-shadow-lg: rgba(0, 0, 0, 0.5);
+
+  /* Navbar - Dark Mode */
+  --navbar-bg: #0f172a;
+  --navbar-border: #1e293b;
+  --navbar-shadow: rgba(0, 0, 0, 0.3);
+
+  /* Shadows - Dark Mode */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+}

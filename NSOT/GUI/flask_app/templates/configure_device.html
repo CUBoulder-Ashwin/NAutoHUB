@@ -1,129 +1,266 @@
 {% extends "base.html" %}
+{% block title %}Configure Device - NAutoHUB{% endblock %}
+
 {% block content %}
+<div class="page-header">
+  <h1 class="page-title">Configure Device</h1>
+  <p class="page-description">Configure interfaces, VLANs, and routing protocols</p>
+</div>
 
-<h2 class="page-title themed-heading">Configure Device</h2>
-
-<div class="tile-container">
-    <form method="POST" class="form-container" id="config-form" onsubmit="return showLoading()">
+<div class="card card-elevated" style="max-width: 800px; margin: 0 auto;">
+  <div class="card-body">
+    <form method="POST" class="form" id="config-form" onsubmit="return showLoading()">
+      <div class="form-row">
         <div class="form-group">
-            <label class="form-label">Device Name:</label>
-            <select name="device_id" class="form-input" required>
-                <option value="" disabled selected>Select Device</option>
-                {% for device in devices %}
-                <option value="{{ device }}">{{ device }}</option>
-                {% endfor %}
-            </select>          
+          <label class="form-label">Device Name</label>
+          <select name="device_id" class="form-select" required>
+            <option value="" disabled selected>Select Device</option>
+            {% for device in devices %}
+            <option value="{{ device }}">{{ device }}</option>
+            {% endfor %}
+          </select>
         </div>
-
         <div class="form-group">
-            <label class="form-label">Device Vendor:</label>
-            <select name="device_vendor" class="form-input" required>
-                <option value="">Select Vendor</option>
-                <option value="arista">Arista</option>
-                <option value="cisco">Cisco</option> 
-                <option value="juniper">Juniper</option>
-            </select>
+          <label class="form-label">Device Vendor</label>
+          <select name="device_vendor" class="form-select" required>
+            <option value="">Select Vendor</option>
+            <option value="arista">Arista</option>
+            <option value="cisco">Cisco</option>
+            <option value="juniper">Juniper</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="router-sections">
+        <!-- Interfaces Section -->
+        <div class="form-fieldset" id="interface-section">
+          <legend class="form-legend">Interfaces</legend>
+          <div class="form-subsection"></div>
+          <div class="form-actions form-actions-center" style="border: none; padding: 0; margin: 0;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addInterface('interface-section')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add Interface
+            </button>
+          </div>
         </div>
 
-        <div id="router-sections">
-            <fieldset class="grouped-form" id="interface-section">
-                <legend class="section-title">Interfaces</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addInterface('interface-section')">+ Add</button>
-                </div>
-            </fieldset>
-
-            <fieldset class="grouped-form" id="subinterface-section">
-                <legend class="section-title">Subinterfaces</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addSubinterface('subinterface-section')">+ Add</button>
-                </div>
-            </fieldset>
-
-            <fieldset class="grouped-form" id="vlan-section">
-                <legend class="section-title">VLAN Configuration</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addVlan('vlan-section')">+ Add</button>
-                </div>
-            </fieldset>
-
-            <fieldset class="grouped-form" id="rip-section">
-                <legend class="section-title">RIP Configuration</legend>
-                <div class="form-subsection"></div>
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addRip('rip-section')">+ Add</button>
-                </div>
-            </fieldset>
-
-            <fieldset class="grouped-form" id="ospf-section">
-                <legend class="section-title">OSPF Configuration</legend>
-                <div class="form-subsection"></div>
-
-                <div class="checkbox-row">
-                    <label><input type="checkbox" name="ospf_redistribute_connected[]"> Redistribute Connected</label>
-                    <label><input type="checkbox" name="ospf_redistribute_bgp[]"> Redistribute BGP</label>
-                </div> 
-
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addOspf('ospf-section')">+ Add</button>
-                </div>
-            </fieldset>
-
-            <fieldset class="grouped-form" id="bgp-section">
-                <legend class="section-title">BGP Configuration</legend>
-            
-                <div class="device-fields">
-                    <label class="form-label">ASN:</label>
-                    <input type="text" name="bgp_asn" class="form-input short-input">
-                </div>
-            
-                <div class="form-subsection"></div>
-            
-                <div class="device-fields checkbox-row">
-                    <label><input type="checkbox" name="redistribute_ospf_into_bgp"> Redistribute OSPF into BGP</label>
-                    <label><input type="checkbox" name="redistribute_rip_into_bgp"> Redistribute RIP into BGP</label>
-                </div>
-            
-                <div class="button-group">
-                    <button type="button" class="transparent-button" onclick="addBgp('bgp-section')">+ Add</button>
-                </div>
-            </fieldset>
-            
+        <!-- Subinterfaces Section -->
+        <div class="form-fieldset" id="subinterface-section">
+          <legend class="form-legend">Subinterfaces</legend>
+          <div class="form-subsection"></div>
+          <div class="form-actions form-actions-center" style="border: none; padding: 0; margin: 0;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addSubinterface('subinterface-section')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add Subinterface
+            </button>
+          </div>
         </div>
-        {% if message %}
-        <div class="form-group text-center">
-            <p class="message-text">{{ message }}</p>
+
+        <!-- VLAN Section -->
+        <div class="form-fieldset" id="vlan-section">
+          <legend class="form-legend">VLAN Configuration</legend>
+          <div class="form-subsection"></div>
+          <div class="form-actions form-actions-center" style="border: none; padding: 0; margin: 0;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addVlan('vlan-section')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add VLAN
+            </button>
+          </div>
         </div>
-        {% endif %}
-        <div class="form-group text-center" id="push-message"></div>
-        <div class="form-group text-center button-group">
-            <button type="submit" class="form-button csv-button">Generate Configuration</button>
+
+        <!-- RIP Section -->
+        <div class="form-fieldset" id="rip-section">
+          <legend class="form-legend">RIP Configuration</legend>
+          <div class="form-subsection"></div>
+          <div class="form-actions form-actions-center" style="border: none; padding: 0; margin: 0;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addRip('rip-section')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add RIP Network
+            </button>
+          </div>
         </div>
+
+        <!-- OSPF Section -->
+        <div class="form-fieldset" id="ospf-section">
+          <legend class="form-legend">OSPF Configuration</legend>
+          <div class="form-subsection"></div>
+
+          <div class="checkbox-group">
+            <label class="form-check">
+              <input type="checkbox" name="ospf_redistribute_connected[]" class="form-check-input">
+              <span class="form-check-label">Redistribute Connected</span>
+            </label>
+            <label class="form-check">
+              <input type="checkbox" name="ospf_redistribute_bgp[]" class="form-check-input">
+              <span class="form-check-label">Redistribute BGP</span>
+            </label>
+          </div>
+
+          <div class="form-actions form-actions-center" style="border: none; padding: 0; margin: 0;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addOspf('ospf-section')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add OSPF Network
+            </button>
+          </div>
+        </div>
+
+        <!-- BGP Section -->
+        <div class="form-fieldset" id="bgp-section">
+          <legend class="form-legend">BGP Configuration</legend>
+
+          <div class="form-group">
+            <label class="form-label">ASN</label>
+            <input type="text" name="bgp_asn" class="form-input" style="max-width: 200px;">
+          </div>
+
+          <div class="form-subsection"></div>
+
+          <div class="checkbox-group">
+            <label class="form-check">
+              <input type="checkbox" name="redistribute_ospf_into_bgp" class="form-check-input">
+              <span class="form-check-label">Redistribute OSPF into BGP</span>
+            </label>
+            <label class="form-check">
+              <input type="checkbox" name="redistribute_rip_into_bgp" class="form-check-input">
+              <span class="form-check-label">Redistribute RIP into BGP</span>
+            </label>
+          </div>
+
+          <div class="form-actions form-actions-center" style="border: none; padding: 0; margin: 0;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addBgp('bgp-section')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add BGP Neighbor
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {% if message %}
+      <div class="alert alert-success">
+        <span class="alert-icon">&#10003;</span>
+        <div class="alert-content">{{ message }}</div>
+      </div>
+      {% endif %}
+
+      <div id="push-message"></div>
+
+      <div class="form-actions form-actions-center">
+        <button type="submit" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          Generate Configuration
+        </button>
+      </div>
     </form>
-    <div id="loading-overlay" style="display:none;">
-        <div class="loading-spinner"></div>
-        <p class="loading-text" id="loading-text">Initializing...</p>
-    </div>
+
     {% if jenkins_result == 'jenkins_success' %}
-    <div class="form-group text-center button-group" id="push-button-wrapper" style="display: flex;">
-        <button type="button" class="form-button csv-button" onclick="pushConfig()">Push Configuration</button>
+    <div class="form-actions form-actions-center" id="push-button-wrapper" style="margin-top: var(--space-4); border: none;">
+      <button type="button" class="btn btn-primary" onclick="pushConfig()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 2L11 13"/>
+          <path d="M22 2L15 22 11 13 2 9 22 2z"/>
+        </svg>
+        Push Configuration
+      </button>
     </div>
     {% endif %}
+  </div>
 </div>
+
+<!-- Loading Overlay -->
+<div class="modal-overlay" id="loading-overlay" style="display: none;">
+  <div class="loading-container">
+    <div class="loading-spinner"></div>
+    <p class="loading-text" id="loading-text">Initializing...</p>
+  </div>
+</div>
+
+<style>
+/* Loading overlay specific styles */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Checkbox group styling */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin: var(--space-4) 0;
+}
+
+/* Dynamic config block styling */
+.config-block {
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.config-block .form-row {
+  margin-bottom: var(--space-3);
+}
+
+.config-block .form-row:last-child {
+  margin-bottom: 0;
+}
+</style>
 
 <script>
 function showLoading() {
-    document.getElementById("loading-overlay").style.display = "flex";
-    return true; // allow native form POST
+  document.getElementById("loading-overlay").style.display = "flex";
+  rotateTerms();
+  return true;
 }
+
 const terms = [
   "Routing BGP packets to Valhalla...",
   "Spinning up Layer 3 magic...",
   "Injecting routes into the Matrix...",
-  "Summoning OSPF daemons... ",
+  "Summoning OSPF daemons...",
   "Crafting VLAN potions...",
   "Talking to network oracles...",
   "Negotiating with DHCP spirits...",
@@ -135,14 +272,14 @@ const terms = [
   "Fragmenting datagrams with care...",
   "Conjuring MAC addresses...",
   "Programming the P4 gods...",
-  "Pinging the void... ",
+  "Pinging the void...",
   "Announcing routes like a prophet...",
   "Weaving MPLS labels into destiny...",
   "Encoding bits of truth...",
   "Assembling TCP handshakes...",
   "Peering with interdimensional routers...",
   "Binding interfaces with eldritch configs...",
-  "Casting 'show run' scrolls... ",
+  "Casting 'show run' scrolls...",
   "Parsing YANGs of destiny...",
   "Bridging subnets across galaxies...",
   "Extracting SNMP secrets from the vault...",
@@ -150,10 +287,10 @@ const terms = [
   "Configuring routers with dark magic...",
   "Recabling cables with thoughts alone...",
   "Blessing interfaces with zero drops...",
-  "Summoning Ceos spirits from the cloud... ",
+  "Summoning Ceos spirits from the cloud...",
   "Resurrecting containers from the abyss...",
   "Defragmenting reality into packets...",
-  "Rebooting layer zero... ",
+  "Rebooting layer zero...",
   "Beaming bits through wormholes...",
   "Unrolling IPv6 prophecies...",
   "Hacking the mainframe of the underlay...",
@@ -161,6 +298,8 @@ const terms = [
 ];
 
 let index = 0;
+let rotateInterval;
+
 function rotateTerms() {
   const el = document.getElementById("loading-text");
   el.style.opacity = 0;
@@ -169,400 +308,291 @@ function rotateTerms() {
     el.style.opacity = 1;
     index = (index + 1) % terms.length;
   }, 500);
+
+  if (!rotateInterval) {
+    rotateInterval = setInterval(rotateTerms, 7000);
+  }
 }
+
 terms.sort(() => Math.random() - 0.5);
-setInterval(rotateTerms, 7000);
 
 function getInterfaceBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">Interface Type:</label>
-            <input type="text" name="interface_type[]" class="form-input short-input">
-            <label class="form-label">Interface Number:</label>
-            <input type="text" name="interface_number[]" class="form-input short-input">
-            <label class="form-label">IP Address:</label>
-            <input type="text" name="interface_ip[]" class="form-input short-input">
-            <label class="form-label">Subnet Mask:</label>
-            <input type="text" name="interface_mask[]" class="form-input short-input">
-            <label class="form-label">Switchport:</label>
-            <select name="switchport[]" class="form-input">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
+  return `
+    <div class="config-block">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Interface Type</label>
+          <input type="text" name="interface_type[]" class="form-input" placeholder="Ethernet">
         </div>
-    `;
+        <div class="form-group">
+          <label class="form-label">Interface Number</label>
+          <input type="text" name="interface_number[]" class="form-input" placeholder="1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">IP Address</label>
+          <input type="text" name="interface_ip[]" class="form-input" placeholder="10.0.0.1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subnet Mask</label>
+          <input type="text" name="interface_mask[]" class="form-input" placeholder="255.255.255.0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="max-width: 200px;">
+          <label class="form-label">Switchport</label>
+          <select name="switchport[]" class="form-select">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+        </div>
+      </div>
+      <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('.config-block').remove()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+        Remove
+      </button>
+    </div>
+  `;
 }
 
 function getSubinterfaceBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">Parent Interface:</label>
-            <input type="text" name="subinterface_parent[]" class="form-input short-input">
-            <label class="form-label">Subinterface ID:</label>
-            <input type="text" name="subinterface_id[]" class="form-input short-input">
-            <label class="form-label">Encapsulation VLAN:</label>
-            <input type="text" name="subinterface_vlan[]" class="form-input short-input">
-            <label class="form-label">IP Address:</label>
-            <input type="text" name="subinterface_ip[]" class="form-input short-input">
-            <label class="form-label">Subnet Mask:</label>
-            <input type="text" name="subinterface_mask[]" class="form-input short-input">
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
+  return `
+    <div class="config-block">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Parent Interface</label>
+          <input type="text" name="subinterface_parent[]" class="form-input" placeholder="Ethernet1">
         </div>
-    `;
+        <div class="form-group">
+          <label class="form-label">Subinterface ID</label>
+          <input type="text" name="subinterface_id[]" class="form-input" placeholder="100">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Encapsulation VLAN</label>
+          <input type="text" name="subinterface_vlan[]" class="form-input" placeholder="100">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">IP Address</label>
+          <input type="text" name="subinterface_ip[]" class="form-input" placeholder="10.0.1.1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subnet Mask</label>
+          <input type="text" name="subinterface_mask[]" class="form-input" placeholder="255.255.255.0">
+        </div>
+      </div>
+      <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('.config-block').remove()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+        Remove
+      </button>
+    </div>
+  `;
 }
 
 function getVlanBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">VLAN ID:</label>
-            <input type="text" name="vlan_id[]" class="form-input short-input">
-            <label class="form-label">VLAN Name:</label>
-            <input type="text" name="vlan_name[]" class="form-input short-input">
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
+  return `
+    <div class="config-block">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">VLAN ID</label>
+          <input type="text" name="vlan_id[]" class="form-input" placeholder="100">
         </div>
-    `;
+        <div class="form-group">
+          <label class="form-label">VLAN Name</label>
+          <input type="text" name="vlan_name[]" class="form-input" placeholder="Management">
+        </div>
+      </div>
+      <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('.config-block').remove()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+        Remove
+      </button>
+    </div>
+  `;
 }
 
 function getRipBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">RIP Version:</label>
-            <input type="text" name="rip_version[]" class="form-input short-input">
-            <label class="form-label">Network IP:</label>
-            <input type="text" name="rip_network[]" class="form-input short-input">
-            <label class="form-label">Redistribute BGP ASN:</label>
-            <input type="text" name="rip_bgp_as[]" class="form-input short-input">
-            <label class="form-label">Metric:</label>
-            <input type="text" name="rip_bgp_metric[]" class="form-input short-input">
-            <input type="checkbox" name="rip_redistribute" class="switchport"> <label class="form-label">Redistribute</label>
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
+  return `
+    <div class="config-block">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">RIP Version</label>
+          <input type="text" name="rip_version[]" class="form-input" placeholder="2">
         </div>
-    `;
+        <div class="form-group">
+          <label class="form-label">Network IP</label>
+          <input type="text" name="rip_network[]" class="form-input" placeholder="10.0.0.0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Redistribute BGP ASN</label>
+          <input type="text" name="rip_bgp_as[]" class="form-input" placeholder="65001">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Metric</label>
+          <input type="text" name="rip_bgp_metric[]" class="form-input" placeholder="1">
+        </div>
+      </div>
+      <label class="form-check">
+        <input type="checkbox" name="rip_redistribute" class="form-check-input">
+        <span class="form-check-label">Redistribute</span>
+      </label>
+      <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('.config-block').remove()" style="margin-top: var(--space-3);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+        Remove
+      </button>
+    </div>
+  `;
 }
 
 function getOspfBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">Process ID:</label>
-            <input type="text" name="ospf_process_id[]" class="form-input short-input">
-            <label class="form-label">Network IP:</label>
-            <input type="text" name="ospf_network[]" class="form-input short-input">
-            <label class="form-label">Wildcard Mask:</label>
-            <input type="text" name="ospf_wildcard[]" class="form-input short-input">
-            <label class="form-label">Area:</label>
-            <input type="text" name="ospf_area[]" class="form-input short-input">
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
+  return `
+    <div class="config-block">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Process ID</label>
+          <input type="text" name="ospf_process_id[]" class="form-input" placeholder="1">
         </div>
-    `;
+        <div class="form-group">
+          <label class="form-label">Network IP</label>
+          <input type="text" name="ospf_network[]" class="form-input" placeholder="10.0.0.0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Wildcard Mask</label>
+          <input type="text" name="ospf_wildcard[]" class="form-input" placeholder="0.0.0.255">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Area</label>
+          <input type="text" name="ospf_area[]" class="form-input" placeholder="0">
+        </div>
+      </div>
+      <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('.config-block').remove()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+        Remove
+      </button>
+    </div>
+  `;
 }
 
 function getBgpBlock() {
-    return `
-        <div class="device-fields">
-            <label class="form-label">Neighbor IP:</label>
-            <input type="text" name="bgp_neighbor[]" class="form-input short-input">
-            <label class="form-label">Remote ASN:</label>
-            <input type="text" name="bgp_remote_as[]" class="form-input short-input">
-            <label class="form-label">Address Family:</label>
-            <input type="text" name="bgp_address_family[]" class="form-input short-input">
-            <label class="form-label">Advertised Network:</label>
-            <input type="text" name="bgp_network[]" class="form-input short-input">
-            <label class="form-label">Subnet Mask:</label>
-            <input type="text" name="bgp_mask[]" class="form-input short-input">
-            <div class="delete-button-wrapper">
-                <button type="button" class="transparent-button" onclick="this.closest('.device-fields').remove()">- Delete</button>
-            </div>
+  return `
+    <div class="config-block">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Neighbor IP</label>
+          <input type="text" name="bgp_neighbor[]" class="form-input" placeholder="10.0.0.2">
         </div>
-    `;
+        <div class="form-group">
+          <label class="form-label">Remote ASN</label>
+          <input type="text" name="bgp_remote_as[]" class="form-input" placeholder="65002">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Address Family</label>
+          <input type="text" name="bgp_address_family[]" class="form-input" placeholder="ipv4">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Advertised Network</label>
+          <input type="text" name="bgp_network[]" class="form-input" placeholder="10.0.0.0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subnet Mask</label>
+          <input type="text" name="bgp_mask[]" class="form-input" placeholder="255.255.255.0">
+        </div>
+      </div>
+      <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('.config-block').remove()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+        Remove
+      </button>
+    </div>
+  `;
 }
-
 
 function addInterface(sectionId) {
-    document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getInterfaceBlock());
+  document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getInterfaceBlock());
 }
+
 function addSubinterface(sectionId) {
-    document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getSubinterfaceBlock());
+  document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getSubinterfaceBlock());
 }
+
 function addVlan(sectionId) {
-    document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getVlanBlock());
+  document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getVlanBlock());
 }
+
 function addRip(sectionId) {
-    document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getRipBlock());
+  document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getRipBlock());
 }
+
 function addOspf(sectionId) {
-    document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getOspfBlock());
+  document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getOspfBlock());
 }
+
 function addBgp(sectionId) {
-    document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getBgpBlock());
+  document.querySelector(`#${sectionId} .form-subsection`).insertAdjacentHTML('beforeend', getBgpBlock());
 }
 
 async function pushConfig() {
-    const deviceId = document.querySelector("input[name='device_id']").value;
-    const response = await fetch("/push-config", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ device_id: deviceId }),
-    });
+  const deviceId = document.querySelector("select[name='device_id']").value;
+  const response = await fetch("/push-config", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ device_id: deviceId }),
+  });
 
-    const result = await response.json();
-    const messageContainer = document.getElementById("push-message");
-    const pushWrapper = document.getElementById("push-button-wrapper");
+  const result = await response.json();
+  const messageContainer = document.getElementById("push-message");
+  const pushWrapper = document.getElementById("push-button-wrapper");
 
-    if (result.status === "success") {
-        messageContainer.innerHTML = `<p class="message-text">Configuration pushed successfully.</p>`;
-        
-        // Hide the push button
-        if (pushWrapper) {
-            pushWrapper.style.display = "none";
-        }
+  if (result.status === "success") {
+    messageContainer.innerHTML = `
+      <div class="alert alert-success">
+        <span class="alert-icon">&#10003;</span>
+        <div class="alert-content">Configuration pushed successfully.</div>
+      </div>
+    `;
 
-        // Clear form inputs and dynamic fields
-        document.getElementById("config-form").reset();
-        document.querySelectorAll(".form-subsection").forEach(section => section.innerHTML = "");
-    } else {
-        messageContainer.innerHTML = `<p class="message-text">Push failed: ${result.message}</p>`;
-        // Keep form as-is so user can retry
+    if (pushWrapper) {
+      pushWrapper.style.display = "none";
     }
-}
 
+    document.getElementById("config-form").reset();
+    document.querySelectorAll(".form-subsection").forEach(section => section.innerHTML = "");
+  } else {
+    messageContainer.innerHTML = `
+      <div class="alert alert-error">
+        <span class="alert-icon">&#10007;</span>
+        <div class="alert-content">Push failed: ${result.message}</div>
+      </div>
+    `;
+  }
+}
 </script>
-
-<style>
-.page-title {
-    color: #734c24;
-    text-align: center;
-    font-family: 'Arial Black', sans-serif;
-    margin: 20px 0;
-}
-
-/* .themed-heading {
-    color: var(--dark-accent);
-}
-body.light-mode .themed-heading {
-    color: var(--light-accent);
-} */
-
-.tile-container {
-    max-width: 700px;
-    margin: 30px auto;
-    background-color: inherit;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(212, 163, 115, 0.25);
-}
-
-body.light-mode .tile-container {
-    box-shadow: 0 0 20px rgba(139, 94, 60, 0.25);
-}
-
-.form-container {
-    background-color: inherit;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.short-input {
-    max-width: 595px;  /* Adjust this value as needed */
-}
-
-.medium-input {
-    max-width: 675px;  /* Adjust this value as needed */
-}
-
-.form-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-    font-size: 14px;
-}
-
-.grouped-form {
-    border: 1px solid;
-    border-radius: 10px;
-    padding: 20px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    transition: box-shadow 0.3s ease;
-}
-
-.grouped-form:hover {
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
-}
-
-.device-fields {
-    padding: 20px;
-}
-
-.device-fields > * {
-    margin-bottom: 14px;
-}
-
-.form-input,
-select.form-input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid;
-    transition: border-color 0.3s;
-    font-size: 14px;
-}
-
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-top: 15px;
-}
-
-.transparent-button {
-    background-color: transparent;
-    color: inherit;
-    font-size: 14px;
-    padding: 6px 14px;
-    font-weight: bold;
-    border: 1px solid;
-    border-radius: 6px;
-    margin-top: 10px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.transparent-button:hover {
-    background-color: var(--dark-hover);
-    color: #000;
-}
-
-body.light-mode .transparent-button:hover {
-    background-color: var(--light-hover);
-    color: #fff;
-}
-
-.form-button.csv-button {
-    margin-top: 10px;
-    padding: 10px 22px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-/* Light Theme */
-body.light-mode .form-label,
-body.light-mode .grouped-form {
-    color: var(--light-accent);
-    border-color: var(--light-accent);
-}
-body.light-mode .form-button.csv-button {
-    background-color: var(--light-accent);
-    color: #fff;
-}
-body.light-mode .form-input,
-body.light-mode select.form-input {
-    background-color: #fff;
-    border-color: var(--light-accent);
-    color: #2e2e2e;
-}
-
-/* Dark Theme */
-body.dark-mode .form-label,
-body.dark-mode .grouped-form {
-    color: var(--dark-accent);
-    border-color: var(--dark-accent);
-}
-body.dark-mode .form-button.csv-button {
-    background-color: var(--dark-accent);
-    color: #000;
-}
-body.dark-mode .form-input,
-body.dark-mode select.form-input {
-    background-color: #0f0f0f;
-    border-color: var(--dark-accent);
-    color: #f0e6d2;
-}
-body.dark-mode select.form-input option {
-    background-color: #0f0f0f;
-    color: #f0e6d2;
-}
-
-body.dark-mode .form-input:focus,
-body.dark-mode select.form-input:focus {
-    outline: none;
-    border-color: var(--dark-accent); /* bronze/golden glow */
-    box-shadow: 0 0 8px var(--dark-accent);
-}
-#loading-overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.85);
-    z-index: 9999;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-.loading-spinner {
-    width: 60px; height: 60px;
-    border: 6px solid #ccc;
-    border-top-color: #d4a373;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
-}
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-.loading-text {
-    color: #d4a373;
-    font-size: 20px;
-    font-family: 'Arial Black', sans-serif;
-    transition: opacity 0.5s ease-in-out;
-}
-.message-text {
-    font-weight: bold;
-    text-align: center;
-}
-body.dark-mode .message-text {
-    color: var(--dark-accent);
-}
-body.light-mode .message-text {
-    color: var(--light-accent);
-}
-.checkbox-row {
-    display: flex;
-    flex-direction: row;
-    gap: 30px;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.checkbox-row label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-
-</style>
-
 {% endblock %}

@@ -1,0 +1,350 @@
+/* ==========================================================================
+   NAutoHUB Design System - Navbar
+   ========================================================================== */
+
+/* ========== Main Navbar ========== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--navbar-height);
+  padding: 0 var(--space-6);
+  background-color: var(--navbar-bg);
+  border-bottom: 1px solid var(--navbar-border);
+  box-shadow: 0 1px 3px var(--navbar-shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ========== Navbar Sections ========== */
+.navbar-left,
+.navbar-center,
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-left {
+  flex: 1;
+  justify-content: flex-start;
+  gap: var(--space-3);
+}
+
+.navbar-center {
+  flex: 0;
+  justify-content: center;
+}
+
+.navbar-right {
+  flex: 1;
+  justify-content: flex-end;
+  gap: var(--space-4);
+}
+
+/* ========== Logo ========== */
+.navbar-logo {
+  font-family: var(--font-family-display);
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color var(--transition-fast);
+}
+
+.navbar-logo:hover {
+  color: var(--color-primary);
+}
+
+.navbar-logo-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ========== Back Button ========== */
+.navbar-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+  font-size: var(--font-size-lg);
+  text-decoration: none;
+}
+
+.navbar-back:hover {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+/* ========== Theme Toggle ========== */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  border: none;
+}
+
+.theme-toggle:hover {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+/* ========== Status Indicator ========== */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-full);
+  background-color: var(--color-bg-secondary);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transition: all var(--transition-base);
+}
+
+.status-dot.neutral {
+  background-color: var(--color-text-muted);
+}
+
+.status-dot.online {
+  background-color: var(--color-success);
+  box-shadow: 0 0 8px var(--color-glow-success);
+  animation: status-pulse 2s ease-in-out infinite;
+}
+
+.status-dot.offline {
+  background-color: var(--color-error);
+}
+
+@keyframes status-pulse {
+  0%, 100% {
+    box-shadow: 0 0 4px var(--color-glow-success);
+  }
+  50% {
+    box-shadow: 0 0 12px var(--color-glow-success);
+  }
+}
+
+/* ========== Menu Button ========== */
+.navbar-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xl);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  border: none;
+}
+
+.navbar-menu-btn:hover {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+/* ========== Side Menu / Hamburger ========== */
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 320px;
+  height: 100vh;
+  background-color: var(--color-surface);
+  border-left: 1px solid var(--color-border);
+  box-shadow: var(--shadow-2xl);
+  transform: translateX(100%);
+  transition: transform var(--transition-slow);
+  z-index: var(--z-modal);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-menu.open {
+  transform: translateX(0);
+}
+
+/* Side Menu Header */
+.side-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.side-menu-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.side-menu-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.side-menu-close:hover {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+/* Side Menu Content */
+.side-menu-content {
+  flex: 1;
+  padding: var(--space-4) 0;
+}
+
+/* Side Menu Links */
+.side-menu-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.side-menu-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-fast);
+  border-left: 3px solid transparent;
+}
+
+.side-menu-link:hover {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border-left-color: var(--color-primary);
+}
+
+.side-menu-link.active {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+}
+
+.side-menu-link-icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.7;
+}
+
+/* Side Menu Sections */
+.side-menu-section {
+  padding: var(--space-4) var(--space-5) var(--space-2);
+}
+
+.side-menu-section-title {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-muted);
+}
+
+/* Side Menu Footer */
+.side-menu-footer {
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+
+/* ========== Menu Overlay ========== */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-base);
+  z-index: calc(var(--z-modal) - 1);
+}
+
+.menu-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ========== Breadcrumb ========== */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.breadcrumb-item {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.breadcrumb-item:hover {
+  color: var(--color-text-primary);
+}
+
+.breadcrumb-separator {
+  color: var(--color-text-muted);
+}
+
+.breadcrumb-current {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 var(--space-4);
+  }
+
+  .navbar-logo {
+    font-size: var(--font-size-lg);
+  }
+
+  .status-indicator span {
+    display: none;
+  }
+
+  .side-menu {
+    width: 100%;
+  }
+}

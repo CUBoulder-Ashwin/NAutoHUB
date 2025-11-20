@@ -2,6 +2,11 @@
 hostname,username,password,management_ip,old_password,new_password
 =======
 hostname,username,password,management_ip,old_password,new_password
+<<<<<<< Updated upstream
 R1,admin,admin,10.0.101.1,,
 R2,admin,admin,10.0.101.2,,
 >>>>>>> 699137999f0cc448d3cff9859a720d071765ef50
+=======
+R1,admin,admin,10.0.101.1,gAAAAABpHmk76uS8x8BjfOlS0Ip6to0F-754i1VfU_MR2rY9vc4VqhvsC_cDEm9fQqYPLD9WLKPK2SBDyQojBMuEMaJXpfCDAg==,gAAAAABpHmk72UR8fpCT7N2AhBeqEd8cQZnfhIP4WAXP8C4iM51xkKemuPP60bInXKpwAAj2HiJR08XJjh-lu-rNf5UxDTBSTA==
+R2,admin,admin,10.0.101.2,gAAAAABpHmk7jKsEGXZqsQ4a9MlsgV9Q7ZnusneOCMu6C8grwGaTBXy1wfxYjS5m7sLJyhTtt-_XBKnU2Dmfl7O7rr-wj4ZayA==,gAAAAABpHmk7i4fK0mYbaYW5cmjOEjVGFGFKqbf90Lqt5bvBMUZ-yflSMNXm7G9qOUW8YAIxIr69jEfEO7O9FloAYSmfoHJiww==
+>>>>>>> Stashed changes

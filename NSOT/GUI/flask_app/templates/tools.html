@@ -1,264 +1,144 @@
 {% extends "base.html" %}
+{% block title %}Tools - NAutoHUB{% endblock %}
+
 {% block content %}
+<div class="page-header">
+  <h1 class="page-title">Network Tools</h1>
+  <p class="page-description">Diagnostic and management utilities for your network</p>
+</div>
 
-<h2 class="page-title">Tools</h2>
-
-<div class="tile-container">
-    <div class="tool-tile">
-        <h3>Golden Config Generator</h3>
-        <form method="POST" class="form-container">
-            <label for="device">Enter Device Name:</label>
-            <input type="text" name="device" id="device-name" class="form-input-small"><br><br>
-            <div class="checkbox-container">
-                <label for="select-all" class="checkbox-label">
-                    Select All Devices from IPAM:
-                    <input type="checkbox" id="select-all" name="select_all" onclick="toggleInputFields()" class="switchport">
-                </label>
-            </div><br>
-            <div class="form-group text-center">
-                <button type="submit" class="form-button small">Generate Config</button>
-            </div>
-        </form>
-        {% if config_result %}
-        <div class="output">
-            {{ config_result|safe }}
-        </div>
-        {% endif %}
+<div class="grid grid-cols-3 gap-6">
+  <!-- Golden Config Generator -->
+  <div class="tool-card">
+    <div class="tool-card-header">
+      <h3 class="tool-card-title">Golden Config Generator</h3>
+      <p class="tool-card-description">Generate golden configuration snapshots</p>
     </div>
+    <div class="tool-card-body">
+      <form method="POST" class="form">
+        <div class="form-group">
+          <label class="form-label">Device Name</label>
+          <input type="text" name="device" id="device-name" class="form-input" placeholder="Enter device name">
+        </div>
+        <div class="form-group">
+          <label class="form-check">
+            <input type="checkbox" id="select-all" name="select_all" class="form-check-input" onclick="toggleInputFields()">
+            <span class="form-check-label">Select all devices from IPAM</span>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Generate Config</button>
+      </form>
+      {% if config_result %}
+      <div class="output-container mt-4">{{ config_result|safe }}</div>
+      {% endif %}
+    </div>
+  </div>
 
-    <div class="tool-tile">
-        <h3>Show Configs</h3>
-        <form method="POST" class="form-container">
-            <label for="device-select">Select Device:</label>
-            <select name="selected_device" id="device-select" class="form-input-small">
-                <option value="" disabled selected>Select Device</option>
-                {% for device in devices %}
-                <option value="{{ device }}">{{ device }}</option>
-                {% endfor %}
+  <!-- Show Configs -->
+  <div class="tool-card">
+    <div class="tool-card-header">
+      <h3 class="tool-card-title">Show Configs</h3>
+      <p class="tool-card-description">Execute show commands on devices</p>
+    </div>
+    <div class="tool-card-body">
+      <form method="POST" class="form">
+        <div class="form-group">
+          <label class="form-label">Select Device</label>
+          <select name="selected_device" id="device-select" class="form-select">
+            <option value="" disabled selected>Select Device</option>
+            {% for device in devices %}
+            <option value="{{ device }}">{{ device }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Command Category</label>
+          <div class="grid grid-cols-1 gap-2">
+            <select id="routing-dropdown" class="form-select form-input-sm" onchange="updateCommandField(this.value)">
+              <option value="" disabled selected>Routing Protocols</option>
+              <option value="show ip bgp summary">BGP Summary</option>
+              <option value="show ip ospf neighbor">OSPF Neighbor</option>
+              <option value="show ip rip database">RIP Database</option>
             </select>
-            <br><br>
-            <label for="command-category">Select Show Command:</label>
-            <div class="command-dropdowns">
-                <select id="routing-dropdown" class="dropdown-button small" onchange="updateCommandField(this.value)">
-                    <option value="" disabled selected>Routing Protocols</option>
-                    <option value="show ip bgp summary">BGP Summary</option>
-                    <option value="show ip ospf neighbor">OSPF Neighbor</option>
-                    <option value="show ip rip database">RIP Database</option>
-                </select>
-                <select id="layer2-dropdown" class="dropdown-button small" onchange="updateCommandField(this.value)">
-                    <option value="" disabled selected>Layer 2 Info</option>
-                    <option value="show mac address-table">MAC Address Table</option>
-                    <option value="show lldp neighbors">LLDP Neighbors</option>
-                    <option value="show vlan brief">VLAN Brief</option>
-                </select>
-                <select id="general-dropdown" class="dropdown-button small" onchange="updateCommandField(this.value)">
-                    <option value="" disabled selected>General Info</option>
-                    <option value="show version">Version</option>
-                    <option value="show running-config">Running Config</option>
-                    <option value="show ip interface brief">IP Interface Brief</option>
-                </select>
-            </div>
-            <br>
-            <label for="custom-command">Or Enter Custom Command:</label>
-            <input type="text" id="custom-command" name="command" placeholder="e.g., show version" class="form-input-small"><br>
-            <div class="form-group text-center" style="margin-top: 15px;">
-                <button type="submit" class="form-button small">Show Config</button>
-            </div>
-        </form>
-    </div>
-
-    <div class="tool-tile">
-        <h3>Ping Test</h3>
-        <form method="POST" class="form-container">
-            <label for="source">Enter Source IP:</label>
-            <input type="text" name="source" placeholder="localhost" required class="form-input-small"><br><br>
-            <label for="destination">Enter Destination IP:</label>
-            <input type="text" name="destination" required class="form-input-small"><br><br>
-            <label for="username">SSH Username (for remote ping):</label>
-            <input type="text" name="username" placeholder="root" class="form-input-small"><br><br>
-            <label for="password">SSH Password (for remote ping):</label>
-            <input type="password" name="password" class="form-input-small"><br><br>
-            <div class="form-group text-center">
-                <button type="submit" class="form-button small">Ping</button>
-            </div>
-        </form>
-        {% if ping_result %}
-        <div class="output">
-            {{ ping_result|safe }}
+            <select id="layer2-dropdown" class="form-select form-input-sm" onchange="updateCommandField(this.value)">
+              <option value="" disabled selected>Layer 2 Info</option>
+              <option value="show mac address-table">MAC Address Table</option>
+              <option value="show lldp neighbors">LLDP Neighbors</option>
+              <option value="show vlan brief">VLAN Brief</option>
+            </select>
+            <select id="general-dropdown" class="form-select form-input-sm" onchange="updateCommandField(this.value)">
+              <option value="" disabled selected>General Info</option>
+              <option value="show version">Version</option>
+              <option value="show running-config">Running Config</option>
+              <option value="show ip interface brief">IP Interface Brief</option>
+            </select>
+          </div>
         </div>
-        {% endif %}
+        <div class="form-group">
+          <label class="form-label">Custom Command</label>
+          <input type="text" id="custom-command" name="command" class="form-input" placeholder="e.g., show version">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Execute Command</button>
+      </form>
     </div>
+  </div>
+
+  <!-- Ping Test -->
+  <div class="tool-card">
+    <div class="tool-card-header">
+      <h3 class="tool-card-title">Ping Test</h3>
+      <p class="tool-card-description">Test network connectivity</p>
+    </div>
+    <div class="tool-card-body">
+      <form method="POST" class="form">
+        <div class="form-group">
+          <label class="form-label">Source IP</label>
+          <input type="text" name="source" class="form-input" placeholder="localhost" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Destination IP</label>
+          <input type="text" name="destination" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">SSH Username</label>
+          <input type="text" name="username" class="form-input" placeholder="root">
+        </div>
+        <div class="form-group">
+          <label class="form-label">SSH Password</label>
+          <input type="password" name="password" class="form-input">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Run Ping Test</button>
+      </form>
+      {% if ping_result %}
+      <div class="output-container mt-4">{{ ping_result|safe }}</div>
+      {% endif %}
+    </div>
+  </div>
 </div>
 
 {% if show_result %}
-<div class="output-row">
-    <div class="output-tile">
-        <pre>{{ show_result|safe }}</pre>
-    </div>
+<div class="card card-elevated mt-6">
+  <div class="card-header">
+    <h4>Command Output</h4>
+  </div>
+  <div class="card-body">
+    <pre class="output-container" style="max-height: 400px;">{{ show_result|safe }}</pre>
+  </div>
 </div>
 {% endif %}
 
 <script>
 function toggleInputFields() {
-    const selectAll = document.getElementById('select-all');
-    const deviceName = document.getElementById('device-name');
-    deviceName.disabled = selectAll.checked;
+  const selectAll = document.getElementById('select-all');
+  const deviceName = document.getElementById('device-name');
+  deviceName.disabled = selectAll.checked;
+  if (selectAll.checked) {
+    deviceName.value = '';
+  }
 }
+
 function updateCommandField(value) {
-    document.getElementById('custom-command').value = value;
+  document.getElementById('custom-command').value = value;
 }
 </script>
-
-<style>
-body.dark-mode {
-    background-color: #0d0d0d;
-    color: #f0e6d2;
-}
-body.light-mode {
-    background-color: #fdf6e3;
-    color: #2e2e2e;
-}
-.page-title {
-    color: #734c24;
-    text-align: center;
-    font-family: 'Arial Black', sans-serif;
-    margin-bottom: 20px;
-}
-/* body.dark-mode .page-title {
-    color: #d4a373;
-}
-body.light-mode .page-title {
-    color: #8b5e3c;
-} */
-.tile-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
-    margin: 40px auto;
-    max-width: 1500px;
-}
-.tool-tile {
-    width: 300px;
-    border-radius: 10px;
-    padding: 20px;
-    transition: transform 0.3s, box-shadow 0.3s;
-    overflow: hidden;
-}
-body.dark-mode .tool-tile {
-    background-color: #0d0d0d;
-    box-shadow: 0 0 20px rgba(212, 163, 115, 0.2);
-}
-body.light-mode .tool-tile {
-    background-color: #fffdf5;
-    box-shadow: 0 0 20px rgba(139, 94, 60, 0.2);
-}
-.tool-tile h3 {
-    font-size: 1.5em;
-    margin-bottom: 15px;
-    text-align: center;
-}
-body.dark-mode .tool-tile h3,
-body.dark-mode label,
-body.dark-mode .checkbox-label {
-    color: #d4a373;
-}
-body.light-mode .tool-tile h3,
-body.light-mode label,
-body.light-mode .checkbox-label {
-    color: #8b5e3c;
-}
-.form-input-small {
-    width: 95%;
-    padding: 8px;
-    border-radius: 5px;
-    outline: none;
-}
-body.dark-mode .form-input-small {
-    border: 1px solid #d4a373;
-    background-color: #0d0d0d;
-    color: #ffffff;
-}
-body.light-mode .form-input-small {
-    border: 1px solid #8b5e3c;
-    background-color: #fffaf0;
-    color: #2e2e2e;
-}
-.form-button.small {
-    padding: 10px 20px;
-    font-size: 14px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-body.dark-mode .form-button.small {
-    background-color: #d4a373;
-    color: #0d0d0d;
-}
-body.dark-mode .form-button.small:hover {
-    background-color: #eec68d;
-}
-body.light-mode .form-button.small {
-    background-color: #8b5e3c;
-    color: #ffffff;
-}
-body.light-mode .form-button.small:hover {
-    background-color: #b07c59;
-}
-.command-dropdowns {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 15px;
-}
-.dropdown-button.small {
-    width: 100%;
-    padding: 8px 15px;
-    border-radius: 5px;
-    font-size: 12px;
-    transition: background-color 0.3s;
-}
-body.dark-mode .dropdown-button.small {
-    background-color: #d4a373;
-    color: #0d0d0d;
-}
-body.dark-mode .dropdown-button.small:hover {
-    background-color: #eec68d;
-}
-body.light-mode .dropdown-button.small {
-    background-color: #8b5e3c;
-    color: #ffffff;
-}
-body.light-mode .dropdown-button.small:hover {
-    background-color: #b07c59;
-}
-.output-row {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
-}
-.output-tile {
-    width: 90%;
-    max-width: 1000px;
-    border-radius: 10px;
-    padding: 20px;
-    font-family: monospace;
-    white-space: pre-wrap;
-    word-break: break-word;
-    overflow-x: auto;
-}
-body.dark-mode .output-tile {
-    background-color: #0d0d0d;
-    color: #d4a373;
-    box-shadow: 0 0 20px rgba(212, 163, 115, 0.3);
-}
-body.light-mode .output-tile {
-    background-color: #fffdf0;
-    color: #8b5e3c;
-    box-shadow: 0 0 20px rgba(139, 94, 60, 0.2);
-}
-</style>
-
 {% endblock %}

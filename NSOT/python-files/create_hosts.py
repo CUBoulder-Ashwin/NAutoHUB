@@ -14,6 +14,7 @@ def write_hosts_csv(data_rows, append=False):
         "username",
         "password",
         "management_ip",
+        "subnet_cidr",
         "old_password",
         "new_password",
     ]

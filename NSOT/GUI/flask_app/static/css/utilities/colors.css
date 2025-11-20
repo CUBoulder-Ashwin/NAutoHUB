@@ -1,0 +1,116 @@
+/* ==========================================================================
+   NAutoHUB Design System - Color Utilities
+   ========================================================================== */
+
+/* ========== Background Colors ========== */
+.bg-primary { background-color: var(--color-bg-primary); }
+.bg-secondary { background-color: var(--color-bg-secondary); }
+.bg-tertiary { background-color: var(--color-bg-tertiary); }
+.bg-surface { background-color: var(--color-surface); }
+.bg-transparent { background-color: transparent; }
+
+/* Brand backgrounds */
+.bg-brand { background-color: var(--color-primary); }
+.bg-brand-light { background-color: var(--color-primary-light); }
+.bg-accent { background-color: var(--color-accent); }
+.bg-accent-light { background-color: var(--color-accent-light); }
+
+/* Semantic backgrounds */
+.bg-success { background-color: var(--color-success); }
+.bg-success-light { background-color: var(--color-success-light); }
+.bg-warning { background-color: var(--color-warning); }
+.bg-warning-light { background-color: var(--color-warning-light); }
+.bg-error { background-color: var(--color-error); }
+.bg-error-light { background-color: var(--color-error-light); }
+.bg-info { background-color: var(--color-info); }
+.bg-info-light { background-color: var(--color-info-light); }
+
+/* ========== Border Colors ========== */
+.border-default { border-color: var(--color-border); }
+.border-light { border-color: var(--color-border-light); }
+.border-brand { border-color: var(--color-primary); }
+.border-accent { border-color: var(--color-accent); }
+.border-success { border-color: var(--color-success); }
+.border-warning { border-color: var(--color-warning); }
+.border-error { border-color: var(--color-error); }
+.border-transparent { border-color: transparent; }
+
+/* ========== Border Styles ========== */
+.border { border: 1px solid var(--color-border); }
+.border-0 { border: 0; }
+.border-2 { border-width: 2px; }
+.border-t { border-top: 1px solid var(--color-border); }
+.border-r { border-right: 1px solid var(--color-border); }
+.border-b { border-bottom: 1px solid var(--color-border); }
+.border-l { border-left: 1px solid var(--color-border); }
+
+/* ========== Border Radius ========== */
+.rounded-none { border-radius: 0; }
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-xl { border-radius: var(--radius-xl); }
+.rounded-2xl { border-radius: var(--radius-2xl); }
+.rounded-full { border-radius: var(--radius-full); }
+
+/* ========== Box Shadow ========== */
+.shadow-none { box-shadow: none; }
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-xl { box-shadow: var(--shadow-xl); }
+.shadow-2xl { box-shadow: var(--shadow-2xl); }
+.shadow-inner { box-shadow: var(--shadow-inner); }
+
+/* ========== Opacity ========== */
+.opacity-0 { opacity: 0; }
+.opacity-25 { opacity: 0.25; }
+.opacity-50 { opacity: 0.5; }
+.opacity-75 { opacity: 0.75; }
+.opacity-100 { opacity: 1; }
+
+/* ========== Visibility ========== */
+.visible { visibility: visible; }
+.invisible { visibility: hidden; }
+
+/* ========== Display ========== */
+.hidden { display: none; }
+.block { display: block; }
+.inline { display: inline; }
+.inline-block { display: inline-block; }
+
+/* ========== Overflow ========== */
+.overflow-auto { overflow: auto; }
+.overflow-hidden { overflow: hidden; }
+.overflow-visible { overflow: visible; }
+.overflow-scroll { overflow: scroll; }
+.overflow-x-auto { overflow-x: auto; }
+.overflow-y-auto { overflow-y: auto; }
+
+/* ========== Position ========== */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+.static { position: static; }
+
+/* ========== Cursor ========== */
+.cursor-auto { cursor: auto; }
+.cursor-pointer { cursor: pointer; }
+.cursor-wait { cursor: wait; }
+.cursor-text { cursor: text; }
+.cursor-move { cursor: move; }
+.cursor-not-allowed { cursor: not-allowed; }
+
+/* ========== Pointer Events ========== */
+.pointer-events-none { pointer-events: none; }
+.pointer-events-auto { pointer-events: auto; }
+
+/* ========== Z-Index ========== */
+.z-0 { z-index: 0; }
+.z-10 { z-index: 10; }
+.z-20 { z-index: 20; }
+.z-30 { z-index: 30; }
+.z-40 { z-index: 40; }
+.z-50 { z-index: 50; }
+.z-auto { z-index: auto; }

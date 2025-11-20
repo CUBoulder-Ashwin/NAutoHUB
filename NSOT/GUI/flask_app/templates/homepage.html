@@ -1,236 +1,425 @@
 {% extends "base.html" %}
+{% block title %}NAutoHUB - Network Automation Hub{% endblock %}
+
 {% block content %}
-
-<!-- First Row -->
-<div class="category-container-row">
-    <div class="category-title">Build</div>
-    <div class="tile-container">
-        <div class="tile">
-            <a href="{{ url_for('add_hosts') }}">
-                <div class="tile-content">
-                    <h2>Add Hosts</h2>
-                    <p>Build / Append data to hosts.csv</p>
-                </div>
-            </a>
-        </div>
-        <div class="tile">
-            <a href="{{ url_for('build_topology') }}">
-                <div class="tile-content">
-                    <h2>Build Topology</h2>
-                    <p>Generate / Build / Delete Topology</p>
-                </div>
-            </a>
-        </div>
-    </div>
+<!-- Hero Section -->
+<div class="homepage-hero">
+  <h1 class="homepage-title">Network Automation Hub</h1>
+  <p class="homepage-subtitle">Build, configure, manage, and monitor your network infrastructure with ease</p>
 </div>
 
-<!-- First Row -->
-<div class="category-container-row">
-    <div class="category-title">Configure</div>
-    <div class="tile-container">
-        <div class="tile">
-            <a href="{{ url_for('add_device') }}">
-                <div class="tile-content">
-                    <h2>Add Device</h2>
-                    <p>Add a device to existing network</p>
-                </div>
-            </a>
-        </div>
-        <div class="tile">
-            <a href="{{ url_for('configure_device') }}">
-                <div class="tile-content">
-                    <h2>Configure Device</h2>
-                    <p>Configure a device in the network</p>
-                </div>
-            </a>
-        </div>
-    </div>
-</div>
+<!-- Pipeline Navigation -->
+<div class="pipeline-container">
+  <!-- Pipeline Header -->
+  <div class="pipeline-header">
+    <div class="pipeline-label">NMAS</div>
+    <div class="pipeline-connector-line"></div>
+  </div>
 
-<!-- Second Row -->
-<div class="category-container-row">
-    <div class="category-title">Manage</div>
-    <div class="tile-container">
-        <div class="tile">
-            <a href="{{ url_for('tools') }}">
-                <div class="tile-content">
-                    <h2>Tools</h2>
-                    <p>Network management tools</p>
-                </div>
-            </a>
+  <!-- Pipeline Stages -->
+  <div class="pipeline-stages">
+    <!-- Stage 1: Build -->
+    <div class="pipeline-stage">
+      <div class="stage-header">
+        <div class="stage-number">1</div>
+        <div class="stage-info">
+          <h3 class="stage-title">Build</h3>
+          <p class="stage-subtitle">Create your infrastructure</p>
         </div>
-        <div class="tile">
-            <a href="/ipam">
-                <div class="tile-content">
-                    <h2>IPAM</h2>
-                    <p>IP address inventory</p>
-                </div>
-            </a>
-        </div>
+      </div>
+      <div class="stage-actions">
+        <a href="{{ url_for('add_hosts') }}" class="stage-action">
+          <div class="action-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="8.5" cy="7" r="4"/>
+              <line x1="20" y1="8" x2="20" y2="14"/>
+              <line x1="23" y1="11" x2="17" y2="11"/>
+            </svg>
+          </div>
+          <div class="action-content">
+            <span class="action-title">Add Hosts</span>
+            <span class="action-desc">Build hosts.csv inventory</span>
+          </div>
+          <div class="action-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+        <a href="{{ url_for('build_topology') }}" class="stage-action">
+          <div class="action-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+              <polyline points="2 17 12 22 22 17"/>
+              <polyline points="2 12 12 17 22 12"/>
+            </svg>
+          </div>
+          <div class="action-content">
+            <span class="action-title">Build Topology</span>
+            <span class="action-desc">Generate & deploy topology</span>
+          </div>
+          <div class="action-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+      </div>
+      <div class="stage-connector">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </div>
     </div>
-</div>
 
-<!-- Third Row -->
-<div class="category-container-row">
-    <div class="category-title">Monitor</div>
-    <div class="tile-container">
-        <div class="tile">
-            <a href="/dashboard">
-                <div class="tile-content">
-                    <h2>Dashboard</h2>
-                    <p>Grafana for network overview</p>
-                </div>
-            </a>
+    <!-- Stage 2: Configure -->
+    <div class="pipeline-stage">
+      <div class="stage-header">
+        <div class="stage-number">2</div>
+        <div class="stage-info">
+          <h3 class="stage-title">Configure</h3>
+          <p class="stage-subtitle">Set up your devices</p>
         </div>
-        <div class="tile">
-            <a href="/topology">
-                <div class="tile-content">
-                    <h2>Topology</h2>
-                    <p>Network Diagram</p>
-                </div>
-            </a>
-        </div>
+      </div>
+      <div class="stage-actions">
+        <a href="{{ url_for('add_device') }}" class="stage-action">
+          <div class="action-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
+              <line x1="12" y1="8" x2="12" y2="16"/>
+              <line x1="8" y1="12" x2="16" y2="12"/>
+            </svg>
+          </div>
+          <div class="action-content">
+            <span class="action-title">Add Device</span>
+            <span class="action-desc">Add to existing network</span>
+          </div>
+          <div class="action-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+        <a href="{{ url_for('configure_device') }}" class="stage-action">
+          <div class="action-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </div>
+          <div class="action-content">
+            <span class="action-title">Configure Device</span>
+            <span class="action-desc">Interfaces, VLANs, routing</span>
+          </div>
+          <div class="action-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+      </div>
+      <div class="stage-connector">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </div>
     </div>
+
+    <!-- Stage 3: Manage -->
+    <div class="pipeline-stage">
+      <div class="stage-header">
+        <div class="stage-number">3</div>
+        <div class="stage-info">
+          <h3 class="stage-title">Manage</h3>
+          <p class="stage-subtitle">Operate your network</p>
+        </div>
+      </div>
+      <div class="stage-actions">
+        <a href="{{ url_for('tools') }}" class="stage-action">
+          <div class="action-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+            </svg>
+          </div>
+          <div class="action-content">
+            <span class="action-title">Tools</span>
+            <span class="action-desc">Diagnostics & utilities</span>
+          </div>
+          <div class="action-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+        <a href="{{ url_for('ipam') }}" class="stage-action">
+          <div class="action-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+            </svg>
+          </div>
+          <div class="action-content">
+            <span class="action-title">IPAM</span>
+            <span class="action-desc">IP address management</span>
+          </div>
+          <div class="action-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+      </div>
+      <div class="stage-connector">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Stage 4: Monitor -->
+    <div class="pipeline-stage">
+      <div class="stage-header">
+        <div class="stage-number">4</div>
+        <div class="stage-info">
+          <h3 class="stage-title">Monitor</h3>
+          <p class="stage-subtitle">Observe & analyze</p>
+        </div>
+      </div>
+      <div class="stage-actions">
+        <a href="{{ url_for('dashboard') }}" class="stage-action">
+          <div class="action-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+            </svg>
+          </div>
+          <div class="action-content">
+            <span class="action-title">Dashboard</span>
+            <span class="action-desc">Grafana monitoring</span>
+          </div>
+          <div class="action-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+        <a href="{{ url_for('topology') }}" class="stage-action">
+          <div class="action-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="18" cy="18" r="3"/>
+              <circle cx="6" cy="6" r="3"/>
+              <path d="M13 6h3a2 2 0 0 1 2 2v7"/>
+              <line x1="6" y1="9" x2="6" y2="21"/>
+            </svg>
+          </div>
+          <div class="action-content">
+            <span class="action-title">Topology</span>
+            <span class="action-desc">Network visualization</span>
+          </div>
+          <div class="action-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
 
 <style>
-.category-container-row {
-    position: relative;
-    border: 2px solid #4a3728;
-    border-radius: 15px;
-    margin: 30px auto;
-    max-width: 750px;
-    height: 250px;
-    box-shadow: 0 0 15px rgba(80, 50, 20, 0.3);
-    background-color: rgba(240, 222, 200, 0.25);
-    overflow: hidden;
-    display: flex;
+/* Pipeline Container */
+.pipeline-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-6) 0;
+}
+
+.pipeline-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.pipeline-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.pipeline-connector-line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent), transparent);
+  border-radius: var(--radius-full);
+}
+
+/* Pipeline Stages */
+.pipeline-stages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.pipeline-stage {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.pipeline-stage:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
+
+/* Stage Header */
+.stage-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.stage-number {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: white;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stage-info {
+  flex: 1;
+}
+
+.stage-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.stage-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+/* Stage Actions */
+.stage-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.stage-action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--transition-fast);
+}
+
+.stage-action:hover {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+  transform: translateX(4px);
+}
+
+.action-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.action-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.action-title {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.action-desc {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.action-arrow {
+  color: var(--color-text-muted);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: all var(--transition-fast);
+}
+
+.stage-action:hover .action-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Stage Connector */
+.stage-connector {
+  position: absolute;
+  left: 50%;
+  bottom: -20px;
+  transform: translateX(-50%);
+  color: var(--color-border);
+  z-index: 1;
+}
+
+.pipeline-stage:last-child .stage-connector {
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stage-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .stage-header {
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
 
-body.dark-mode .category-container-row {
-    background-color: #0a0a0a;
-    border-color: #2b2b2b;
-}
-
-body.light-mode .category-container-row {
-    border: none;
-}
-
-.category-title {
-    font-size: 3em;
-    font-weight: bold;
-    color: #734c24;
-    background-color: transparent;
-    width: 100%;
-    text-align: center;
-    padding: 100px 0;
-    position: absolute;
-    z-index: 1;
-    opacity: 1;
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-    pointer-events: none;
-}
-
-.category-container-row:hover .category-title {
-    animation: fade-out 0.5s ease-out forwards;
-}
-
-@keyframes fade-out {
-    0% { opacity: 1; transform: scale(1); }
-    100% { opacity: 0; transform: scale(1.1); }
-}
-
-.tile-container {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: center;
-    gap: 30px;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
-    z-index: 2;
-    pointer-events: none;
-}
-
-.category-container-row:hover .tile-container {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: all;
-}
-
-.tile {
-    width: 250px;
-    background-color: #fff6eb;
-    border-radius: 10px;
-    box-shadow: 0 0 12px rgba(120, 80, 40, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.tile a {
-    color: #4e342e;
-    text-decoration: none;
-    display: block;
-    padding: 20px;
-    text-align: center;
-}
-
-.tile-content h2 {
-    color: #5d4037;
-    font-size: 1.5em;
-    margin-bottom: 10px;
-}
-
-.tile-content p {
-    color: #6d4c41;
-    font-size: 0.85em;
-    margin-top: 6px;
-}
-
-
-.tile:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(120, 80, 40, 0.4);
-}
-
-.tile:hover h2 {
-    color: #8d6e63;
-}
-
-.tile:hover p {
-    color: #a1887f;
-}
-
-/* Dark Mode */
-body.dark-mode .tile {
-    background-color: #121212;
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
-}
-
-body.dark-mode .tile a {
-    color: #eeeeee;
-}
-
-body.dark-mode .tile-content h2 {
-    color: #fafafa;
-}
-
-body.dark-mode .tile-content p {
-    color: #cccccc;
-    font-size: 0.85em;
-    margin-top: 6px;
-}
-
-
-body.dark-mode .tile:hover h2 {
-    color: #ffb74d;
-}
-
-body.dark-mode .tile:hover p {
-    color: #ffe0b2;
+  .pipeline-container {
+    padding: var(--space-4) 0;
+  }
 }
 </style>
-
 {% endblock %}

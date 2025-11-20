@@ -1,136 +1,73 @@
 {% extends "base.html" %}
+{% block title %}IPAM - NAutoHUB{% endblock %}
+
 {% block content %}
-
-<h2 class="page-title">IP Address Management</h2>
-
-<div class="tile-container">
-    <table class="ipam-table">
-        <thead>
-            <tr>
-                <th>Device Name</th>
-                <th>Interface Name</th>
-                <th>IP Address</th>
-                <th>Subnet Mask</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% set current_device = None %}
-            {% for row in ipam_data %}
-                {% set device_class = "device-" + row["Device Name"]|lower|replace(" ", "-") %}
-                <tr class="{{ device_class }}">
-                    {% if row.get("rowspan") %}
-                        <td rowspan="{{ row.rowspan }}" class="device-name">{{ row["Device Name"] }}</td>
-                    {% endif %}
-                    <td>{{ row["Interface Name"] }}</td>
-                    <td>{{ row["IP Address"] }}</td>
-                    <td>{{ row["Subnet Mask"] }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="page-header">
+  <h1 class="page-title">IP Address Management</h1>
+  <p class="page-description">View and manage your network's IP address inventory</p>
 </div>
 
-<style>
-.page-title {
-    text-align: center;
-    color: #734c24;
-    font-family: 'Arial Black', sans-serif;
-    margin-bottom: 20px;
-}
+<div class="table-container">
+  <table class="table table-striped table-ipam">
+    <thead>
+      <tr>
+        <th>Device Name</th>
+        <th>Interface Name</th>
+        <th>IP Address</th>
+        <th>Subnet Mask</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% set current_device = None %}
+      {% for row in ipam_data %}
+        {% set device_class = "device-" + row["Device Name"]|lower|replace(" ", "-") %}
+        <tr class="{{ device_class }}" data-device="{{ device_class }}">
+          {% if row.get("rowspan") %}
+            <td rowspan="{{ row.rowspan }}" class="hostname">{{ row["Device Name"] }}</td>
+          {% endif %}
+          <td>{{ row["Interface Name"] }}</td>
+          <td class="ip-address font-mono">{{ row["IP Address"] }}</td>
+          <td class="font-mono">{{ row["Subnet Mask"] }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
-/* Table structure */
-.ipam-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px auto;
-    font-family: Arial, sans-serif;
-    text-align: left;
-}
-
-/* Light Mode
-body.light-mode .page-title {
-    color: #8b5e3c;
-} */
-body.light-mode .ipam-table {
-    background-color: #fdf6e3;
-    color: #2e2e2e;
-}
-body.light-mode .ipam-table th {
-    background-color: #8b5e3c;
-    color: #ffffff;
-}
-body.light-mode .ipam-table td,
-body.light-mode .ipam-table th {
-    border: 1px solid #b07c59;
-    padding: 15px;
-}
-body.light-mode .ipam-table tr:nth-child(even) {
-    background-color: #f4ecdc;
-}
-body.light-mode .ipam-table td.hovered {
-    background-color: #d4a373 !important;
-    color: #0d0d0d !important;
-    border-color: #8b5e3c !important;
-}
-
-/* Dark Mode
-body.dark-mode .page-title {
-    color: #d4a373;
-} */
-body.dark-mode .ipam-table {
-    background-color: #0d0d0d;
-    color: #f0e6d2;
-}
-body.dark-mode .ipam-table th {
-    background-color: #8b5e3c;
-    color: #ffffff;
-}
-body.dark-mode .ipam-table td,
-body.dark-mode .ipam-table th {
-    border: 1px solid #d4a373;
-    padding: 15px;
-}
-body.dark-mode .ipam-table tr:nth-child(even) {
-    background-color: #1a1a1a;
-}
-body.dark-mode .ipam-table td.hovered {
-    background-color: #d4a373 !important;
-    color: #0d0d0d !important;
-    border-color: #5e4522 !important; /* MAKE BORDER VISIBLE */
-}
-
-/* Shared */
-.ipam-table td {
-    transition: all 0.3s ease;
-}
-.ipam-table tr:hover {
-    cursor: pointer;
-}
-</style>
+{% if not ipam_data %}
+<div class="empty-state">
+  <div class="empty-state-icon">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <ellipse cx="12" cy="5" rx="9" ry="3"/>
+      <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+      <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+    </svg>
+  </div>
+  <h3 class="empty-state-title">No IP addresses found</h3>
+  <p class="empty-state-description">Deploy a topology to populate the IPAM database</p>
+</div>
+{% endif %}
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const rows = document.querySelectorAll('.ipam-table tbody tr');
+  const rows = document.querySelectorAll('.table-ipam tbody tr');
 
-    rows.forEach(row => {
-        const deviceClass = Array.from(row.classList).find(cls => cls.startsWith('device-'));
-        if (!deviceClass) return;
+  rows.forEach(row => {
+    const deviceClass = row.dataset.device;
+    if (!deviceClass) return;
 
-        row.addEventListener('mouseenter', () => {
-            document.querySelectorAll('.' + deviceClass).forEach(r => {
-                r.classList.add('hovered');
-                r.querySelectorAll('td').forEach(cell => cell.classList.add('hovered'));
-            });
-        });
-
-        row.addEventListener('mouseleave', () => {
-            document.querySelectorAll('.' + deviceClass).forEach(r => {
-                r.classList.remove('hovered');
-                r.querySelectorAll('td').forEach(cell => cell.classList.remove('hovered'));
-            });
-        });
+    row.addEventListener('mouseenter', () => {
+      document.querySelectorAll(`[data-device="${deviceClass}"]`).forEach(r => {
+        r.style.backgroundColor = 'var(--color-primary-light)';
+      });
     });
+
+    row.addEventListener('mouseleave', () => {
+      document.querySelectorAll(`[data-device="${deviceClass}"]`).forEach(r => {
+        r.style.backgroundColor = '';
+      });
+    });
+  });
 });
 </script>
-
 {% endblock %}

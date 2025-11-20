@@ -1,0 +1,315 @@
+/* ==========================================================================
+   NAutoHUB Design System - Main Entry Point
+   Import this file to include the complete design system
+   ========================================================================== */
+
+/* ========== Foundation ========== */
+@import url('./variables.css');
+@import url('./reset.css');
+@import url('./base.css');
+
+/* ========== Layouts ========== */
+@import url('./layouts/grid.css');
+@import url('./layouts/flex.css');
+
+/* ========== Components ========== */
+@import url('./components/buttons.css');
+@import url('./components/cards.css');
+@import url('./components/forms.css');
+@import url('./components/tables.css');
+@import url('./components/navbar.css');
+@import url('./components/chatbot.css');
+@import url('./components/alerts.css');
+@import url('./components/modal.css');
+
+/* ========== Utilities ========== */
+@import url('./utilities/spacing.css');
+@import url('./utilities/typography.css');
+@import url('./utilities/colors.css');
+
+/* ==========================================================================
+   Page-Specific Styles
+   ========================================================================== */
+
+/* ========== Homepage ========== */
+.homepage-hero {
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+}
+
+.homepage-title {
+  font-family: var(--font-family-display);
+  font-size: 3.5rem;
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.homepage-subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-tertiary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ========== Page Header ========== */
+.page-header {
+  margin-bottom: var(--space-8);
+}
+
+.page-title {
+  font-family: var(--font-family-display);
+  font-size: 2rem;
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.page-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}
+
+/* ========== Section Headers ========== */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.section-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-muted);
+}
+
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-border), transparent);
+}
+
+/* ========== Result/Output Display ========== */
+.output-container {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  max-height: 300px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.output-container:empty::before {
+  content: "Output will appear here...";
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.output-success {
+  border-color: var(--color-success);
+  background-color: var(--color-success-bg);
+}
+
+.output-error {
+  border-color: var(--color-error);
+  background-color: var(--color-error-bg);
+}
+
+/* ========== Empty States ========== */
+.empty-state {
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+  color: var(--color-text-muted);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-4);
+  opacity: 0.5;
+}
+
+.empty-state-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.empty-state-description {
+  font-size: var(--font-size-sm);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* ========== Iframe Container ========== */
+.iframe-container {
+  width: 100%;
+  height: calc(100vh - var(--navbar-height) - var(--space-12));
+  min-height: 500px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: var(--color-surface);
+}
+
+.iframe-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Dark mode filter for iframes */
+[data-theme="dark"] .iframe-invert {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* ========== Tool Cards ========== */
+.tool-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.tool-card-header {
+  margin-bottom: var(--space-4);
+}
+
+.tool-card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.tool-card-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}
+
+.tool-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.tool-card-output {
+  flex: 1;
+  min-height: 150px;
+}
+
+/* ========== Responsive Utilities ========== */
+@media (max-width: 1024px) {
+  .hide-lg {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .hide-md {
+    display: none;
+  }
+
+  .container {
+    padding: var(--space-4);
+  }
+
+  .page-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .homepage-title {
+    font-size: var(--font-size-3xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .hide-sm {
+    display: none;
+  }
+}
+
+/* ========== Animations ========== */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in var(--transition-base) ease-out;
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in-up var(--transition-base) ease-out;
+}
+
+/* Staggered animation for grid items */
+.stagger-animation > * {
+  opacity: 0;
+  animation: fade-in var(--transition-base) ease-out forwards;
+}
+
+.stagger-animation > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-animation > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-animation > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-animation > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-animation > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-animation > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-animation > *:nth-child(7) { animation-delay: 300ms; }
+.stagger-animation > *:nth-child(8) { animation-delay: 350ms; }
+
+/* ========== Print Styles ========== */
+@media print {
+  .navbar,
+  .chat-toggle,
+  .chat-container,
+  .side-menu {
+    display: none !important;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 0;
+  }
+}
