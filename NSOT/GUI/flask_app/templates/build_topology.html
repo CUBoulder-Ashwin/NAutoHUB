@@ -46,8 +46,8 @@
       </div>
 
       {% if message %}
-      <div class="alert alert-success">
-        <span class="alert-icon">&#10003;</span>
+      <div class="alert {% if 'Failed' in message or '❌' in message %}alert-error{% else %}alert-success{% endif %}">
+        <span class="alert-icon">{% if 'Failed' in message or '❌' in message %}&#10007;{% else %}&#10003;{% endif %}</span>
         <div class="alert-content">{{ message|safe }}</div>
       </div>
       {% endif %}
@@ -188,6 +188,18 @@ const terms = [
   "Unrolling IPv6 prophecies...",
   "Hacking the mainframe of the underlay...",
   "Teleporting configs into flash...",
+  "Establishing adjacency with the cosmos...",
+  "Redistributing routes from alternate dimensions...",
+  "Encrypting secrets with quantum keys...",
+  "Converging the network state of reality...",
+  "Flapping links to confuse evil spirits...",
+  "Calculating shortest path to enlightenment...",
+  "Draining queues of existential packets...",
+  "Gracefully restarting the universe...",
+  "Applying ACLs to chaos...",
+  "Synchronizing clocks across timelines...",
+  "Spawning virtual routers in the ether...",
+  "Debugging the fabric of spacetime...",
 ];
 terms.sort(() => Math.random() - 0.5);
 let index = 0;

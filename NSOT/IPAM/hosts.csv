@@ -1,12 +1,3 @@
-<<<<<<< HEAD
 hostname,username,password,management_ip,old_password,new_password
-=======
-hostname,username,password,management_ip,old_password,new_password
-<<<<<<< Updated upstream
-R1,admin,admin,10.0.101.1,,
-R2,admin,admin,10.0.101.2,,
->>>>>>> 699137999f0cc448d3cff9859a720d071765ef50
-=======
-R1,admin,admin,10.0.101.1,gAAAAABpHmk76uS8x8BjfOlS0Ip6to0F-754i1VfU_MR2rY9vc4VqhvsC_cDEm9fQqYPLD9WLKPK2SBDyQojBMuEMaJXpfCDAg==,gAAAAABpHmk72UR8fpCT7N2AhBeqEd8cQZnfhIP4WAXP8C4iM51xkKemuPP60bInXKpwAAj2HiJR08XJjh-lu-rNf5UxDTBSTA==
-R2,admin,admin,10.0.101.2,gAAAAABpHmk7jKsEGXZqsQ4a9MlsgV9Q7ZnusneOCMu6C8grwGaTBXy1wfxYjS5m7sLJyhTtt-_XBKnU2Dmfl7O7rr-wj4ZayA==,gAAAAABpHmk7i4fK0mYbaYW5cmjOEjVGFGFKqbf90Lqt5bvBMUZ-yflSMNXm7G9qOUW8YAIxIr69jEfEO7O9FloAYSmfoHJiww==
->>>>>>> Stashed changes
+R1,admin,admin,10.0.101.1,gAAAAABpH6CFZL-UJzhZYZc9O5h-c66BrwLBNpQbKi8N_UjM1nPdIsxF9PQcwiTsZhAz0ve3PkV1FtJICgCS5qWq1R8lW7VaRQ==,gAAAAABpH6eSwxTH0HYCPXidnz1ollE10juBy39n-1S5LaI4Gcc7fVK7k3W82gDBG2Bqitgx2d_APsqKQeHYFfhqFg12Ek1aQw==
+R2,admin,admin,10.0.101.2,gAAAAABpH6CFfy2SDWGD2w0eIZX64FASwU3T40SSgz1XEjF3ldEF-nqfzzM5OHpDTRdxFFnzgMupxIRsIkN0AcFcFXdlLI0Z4A==,gAAAAABpH6eSLbXucyy34n4yZs1b6Kb3c-V0o-Dd0dyQJpj0GqutEZTrSIOhSfeaDOtwqmHDXBk519mtxNl6IJPFJrJZfueukw==

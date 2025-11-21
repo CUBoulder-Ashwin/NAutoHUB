@@ -56,6 +56,8 @@ from dhcp_updates import configure_dhcp_relay, configure_dhcp_server
 from update_hosts import update_hosts_csv, regenerate_hosts_csv
 from git_jenkins import push_and_monitor_jenkins
 from push_config import push_configuration
+from push_uploaded_config import push_uploaded_config
+from config_backup import rollback_to_golden_config
 from read_IPAM import IPAMReader
 from read_hosts import HostsReader
 from clab_builder import build_clab_topology
@@ -81,7 +83,8 @@ env = Environment(loader=FileSystemLoader(templates_dir))
 
 @app.route("/")
 def homepage():
-    return render_template("homepage.html")
+    devices = hosts_reader.get_devices()
+    return render_template("homepage.html", devices=devices)
 
 
 @app.route("/chat-query", methods=["POST"])
@@ -748,6 +751,73 @@ def push_config():
         return jsonify({"status": "success", "message": push_status})
     else:
         return jsonify({"status": "error", "message": push_status})
+
+
+@app.route("/upload-config", methods=["POST"])
+def upload_config():
+    """
+    Handle uploaded configuration file and push to device using Netmiko
+    """
+    try:
+        # Get form data
+        device_id = request.form.get("device_id")
+        device_vendor = request.form.get("device_vendor")
+        config_file = request.files.get("config_file")
+
+        # Validate inputs
+        if not device_id or not device_vendor:
+            return jsonify(
+                {"status": "error", "message": "Device ID and vendor are required"}
+            )
+
+        if not config_file:
+            return jsonify({"status": "error", "message": "No config file provided"})
+
+        # Read file content
+        config_content = config_file.read().decode("utf-8")
+
+        if not config_content.strip():
+            return jsonify({"status": "error", "message": "Config file is empty"})
+
+        # Push configuration using Netmiko
+        success, message = push_uploaded_config(device_id, device_vendor, config_content)
+
+        if success:
+            return jsonify({"status": "success", "message": message})
+        else:
+            return jsonify({"status": "error", "message": message})
+
+    except Exception as e:
+        print(f"Error in /upload-config: {e}")
+        return jsonify({"status": "error", "message": f"Error processing upload: {str(e)}"})
+
+
+@app.route("/rollback", methods=["POST"])
+def rollback_device():
+    """
+    Rollback a device to its golden configuration
+    """
+    try:
+        data = request.get_json()
+        device_id = data.get("device_id")
+        device_vendor = data.get("device_vendor")
+
+        if not device_id or not device_vendor:
+            return jsonify(
+                {"status": "error", "message": "Device ID and vendor are required"}
+            )
+
+        # Perform rollback
+        success, message = rollback_to_golden_config(device_id, device_vendor)
+
+        if success:
+            return jsonify({"status": "success", "message": message})
+        else:
+            return jsonify({"status": "error", "message": message})
+
+    except Exception as e:
+        print(f"Error in /rollback: {e}")
+        return jsonify({"status": "error", "message": f"Rollback error: {str(e)}"})
 
 
 @app.route("/tools", methods=["GET", "POST"])

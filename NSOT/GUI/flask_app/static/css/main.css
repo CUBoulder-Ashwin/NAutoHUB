@@ -57,6 +57,11 @@
 /* ========== Page Header ========== */
 .page-header {
   margin-bottom: var(--space-8);
+  padding-bottom: var(--space-6);
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--color-primary), var(--color-accent), transparent) 1;
+  position: relative;
+  animation: slide-in-up 0.4s ease-out;
 }
 
 .page-title {
@@ -67,11 +72,26 @@
   margin-bottom: var(--space-2);
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  position: relative;
+  display: inline-block;
+}
+
+.page-title::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: var(--radius-full);
 }
 
 .page-description {
   font-size: var(--font-size-sm);
   color: var(--color-text-tertiary);
+  max-width: 700px;
+  line-height: var(--line-height-relaxed);
 }
 
 /* ========== Section Headers ========== */

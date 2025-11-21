@@ -8,6 +8,80 @@
   <p class="homepage-subtitle">Build, configure, manage, and monitor your network infrastructure with ease</p>
 </div>
 
+<!-- Rollback Section -->
+<div class="rollback-banner">
+  <div class="rollback-content">
+    <div class="rollback-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="1 4 1 10 7 10"/>
+        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+      </svg>
+    </div>
+    <div class="rollback-info">
+      <h3 class="rollback-title">Configuration Rollback</h3>
+      <p class="rollback-desc">Instantly restore devices to their golden configuration</p>
+    </div>
+    <button class="btn-rollback" onclick="showRollbackModal()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="1 4 1 10 7 10"/>
+        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+      </svg>
+      Rollback Device
+    </button>
+  </div>
+</div>
+
+<!-- Rollback Modal -->
+<div class="modal-overlay" id="rollbackModal" style="display: none;" onclick="closeRollbackModal(event)">
+  <div class="rollback-modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">Rollback to Golden Configuration</h2>
+      <button class="modal-close" onclick="closeRollbackModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Device</label>
+        <select id="rollbackDevice" class="form-select">
+          <option value="">Select Device</option>
+          {% for device in devices %}
+          <option value="{{ device }}">{{ device }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Vendor</label>
+        <select id="rollbackVendor" class="form-select">
+          <option value="">Select Vendor</option>
+          <option value="arista">Arista</option>
+          <option value="cisco">Cisco</option>
+          <option value="juniper">Juniper</option>
+        </select>
+      </div>
+      <div class="alert alert-warning" style="margin-top: var(--space-4);">
+        <span class="alert-icon">⚠️</span>
+        <div class="alert-content">
+          <strong>Warning:</strong> This will restore the device to its last saved golden configuration. Any changes made after the backup will be lost.
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeRollbackModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="executeRollback()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="1 4 1 10 7 10"/>
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+        </svg>
+        Execute Rollback
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Pipeline Navigation -->
 <div class="pipeline-container">
   <!-- Pipeline Header -->
@@ -421,5 +495,228 @@
     padding: var(--space-4) 0;
   }
 }
+
+/* Rollback Banner */
+.rollback-banner {
+  max-width: 900px;
+  margin: 0 auto var(--space-8) auto;
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.4);
+  position: relative;
+  overflow: hidden;
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.rollback-banner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { left: -100%; }
+  50% { left: 100%; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.4);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(220, 38, 38, 0.6);
+  }
+}
+
+.rollback-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  position: relative;
+  z-index: 1;
+}
+
+.rollback-icon {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.rollback-info {
+  flex: 1;
+}
+
+.rollback-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: white;
+  margin-bottom: var(--space-1);
+  font-family: var(--font-family-display);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rollback-desc {
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.btn-rollback {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-6);
+  background: white;
+  color: #dc2626;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-rollback:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  background: #fef2f2;
+}
+
+.btn-rollback:active {
+  transform: translateY(0) scale(1);
+}
+
+/* Rollback Modal */
+.rollback-modal {
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-xl);
+  animation: slideIn 0.3s ease-out;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modal-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.modal-close:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.modal-body {
+  padding: var(--space-5);
+}
+
+.modal-footer {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+  padding: var(--space-5);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
+}
+
+@media (max-width: 768px) {
+  .rollback-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .btn-rollback {
+    width: 100%;
+  }
+}
 </style>
+
+<script>
+function showRollbackModal() {
+  document.getElementById('rollbackModal').style.display = 'flex';
+}
+
+function closeRollbackModal(event) {
+  if (!event || event.target === event.currentTarget) {
+    document.getElementById('rollbackModal').style.display = 'none';
+    document.getElementById('rollbackDevice').value = '';
+    document.getElementById('rollbackVendor').value = '';
+  }
+}
+
+async function executeRollback() {
+  const deviceId = document.getElementById('rollbackDevice').value;
+  const deviceVendor = document.getElementById('rollbackVendor').value;
+
+  if (!deviceId || !deviceVendor) {
+    alert('Please select both device and vendor');
+    return;
+  }
+
+  if (!confirm(`Are you sure you want to rollback ${deviceId} to its golden configuration?`)) {
+    return;
+  }
+
+  try {
+    const response = await fetch('/rollback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        device_id: deviceId,
+        device_vendor: deviceVendor
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.status === 'success') {
+      alert(`✅ ${data.message}`);
+      closeRollbackModal();
+    } else {
+      alert(`❌ ${data.message}`);
+    }
+  } catch (error) {
+    alert(`❌ Error: ${error.message}`);
+  }
+}
+</script>
 {% endblock %}

@@ -7,26 +7,56 @@
   display: flex;
   align-items: flex-start;
   gap: var(--space-3);
-  padding: var(--space-4);
+  padding: var(--space-4) var(--space-5);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
   background-color: var(--color-surface);
   font-size: var(--font-size-sm);
   line-height: var(--line-height-relaxed);
+  margin: var(--space-4) 0;
+  box-shadow: var(--shadow-sm);
 }
 
 .alert-icon {
   flex-shrink: 0;
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-xl);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  font-weight: var(--font-weight-bold);
 }
 
 .alert-content {
   flex: 1;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  color: var(--color-text-primary);
+}
+
+/* Scrollable content for long messages */
+.alert-content pre,
+.alert-content code {
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.15);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-2);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .alert-title {
   font-weight: var(--font-weight-semibold);
   margin-bottom: var(--space-1);
+  font-size: var(--font-size-base);
 }
 
 .alert-description {
@@ -59,28 +89,64 @@
 .alert-info {
   background-color: var(--color-info-light);
   border-color: var(--color-info);
+  border-left: 4px solid var(--color-info);
+}
+
+.alert-info .alert-icon {
   color: var(--color-info);
+  background-color: rgba(14, 165, 233, 0.15);
+}
+
+.alert-info .alert-content {
+  color: var(--color-text-primary);
 }
 
 /* Success */
 .alert-success {
   background-color: var(--color-success-bg);
   border-color: var(--color-success);
+  border-left: 4px solid var(--color-success);
+}
+
+.alert-success .alert-icon {
   color: var(--color-success);
+  background-color: rgba(16, 185, 129, 0.15);
+}
+
+.alert-success .alert-content {
+  color: var(--color-text-primary);
 }
 
 /* Warning */
 .alert-warning {
   background-color: var(--color-warning-bg);
   border-color: var(--color-warning);
+  border-left: 4px solid var(--color-warning);
+}
+
+.alert-warning .alert-icon {
   color: var(--color-warning);
+  background-color: rgba(245, 158, 11, 0.15);
+}
+
+.alert-warning .alert-content {
+  color: var(--color-text-primary);
 }
 
 /* Error */
 .alert-error {
   background-color: var(--color-error-bg);
   border-color: var(--color-error);
+  border-left: 4px solid var(--color-error);
+}
+
+.alert-error .alert-icon {
   color: var(--color-error);
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+.alert-error .alert-content {
+  color: var(--color-text-primary);
 }
 
 /* ========== Toast Notifications ========== */
