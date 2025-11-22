@@ -80,6 +80,16 @@ app = Flask(__name__)
 # Set up Jinja2 environment to load templates from 'NSOT/templates' folder
 env = Environment(loader=FileSystemLoader(templates_dir))
 
+# Context processor to make devices available in all templates
+@app.context_processor
+def inject_devices():
+    try:
+        devices = hosts_reader.get_devices()
+        return dict(devices=devices)
+    except Exception as e:
+        print(f"Error loading devices for context: {e}")
+        return dict(devices=[])
+
 
 @app.route("/")
 def homepage():
